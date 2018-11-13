@@ -1,0 +1,134 @@
+<?xml version="1.0" encoding="utf-8"?>
+<android.support.constraint.ConstraintLayout
+        xmlns:android="http://schemas.android.com/apk/res/android"
+        xmlns:tools="http://schemas.android.com/tools"
+        xmlns:app="http://schemas.android.com/apk/res-auto"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        tools:context=".CatalogActivity">
+    <LinearLayout android:layout_width="match_parent"
+                  android:layout_height="match_parent"
+                  android:orientation="vertical">
+        <RelativeLayout android:layout_width="match_parent"
+                        android:layout_height="100dp"
+                        android:padding="10dp"
+                        app:elevation="3dp"
+                        android:background="#ffffff">
+            <TextView android:id="@+id/book_name"
+                      android:text="斗破苍穹asdfaegasef"
+                      android:textSize="20sp"
+                      android:gravity="center_vertical"
+                      android:maxWidth="150dp"
+                      android:maxLines="1"
+                      android:ellipsize="end"
+                      android:layout_width="wrap_content"
+                      android:layout_height="30dp"/>
+
+
+            <TextView android:id="@+id/book_lastUpdateChapter"
+                      android:layout_width="match_parent"
+                      android:layout_height="25dp"
+                      android:gravity="center_vertical"
+                      android:text="最新：大结局"
+                      android:maxLines="1"
+                      android:ellipsize="end"
+                      android:layout_centerVertical="true"
+                      android:layout_alignLeft="@id/book_name"/>
+
+            <TextView android:id="@+id/book_lastUpdateTime"
+                      android:text="2018.11.1asdgaegaafdsasdf"
+                      android:textSize="12sp"
+                      android:layout_alignParentRight="true"
+                      android:layout_alignBottom="@id/book_name"
+                      android:layout_width="wrap_content"
+                      android:maxWidth="130dp"
+                      android:maxLines="1"
+                      android:ellipsize="end"
+                      android:gravity="right|center_vertical"
+                      android:layout_height="wrap_content"
+                      android:layout_alignParentEnd="true"/>
+
+            <LinearLayout android:layout_width="match_parent"
+                          android:layout_height="25dp"
+                          android:gravity="center_vertical"
+                          android:orientation="horizontal"
+                          android:layout_alignParentBottom="true">
+
+                <ImageView android:layout_width="14sp"
+                           android:layout_height="14sp"
+                           android:layout_gravity="center_vertical"/>
+
+                <TextView android:id="@+id/book_author"
+                          android:transitionName="book_author"
+                          android:text="天蚕土豆"
+                          android:maxWidth="200dp"
+                          android:maxLines="1"
+                          android:ellipsize="end"
+                          android:layout_marginStart="10dp"
+                          android:gravity="center_vertical"
+                          android:layout_width="0dp"
+                          android:layout_weight="1"
+                          android:layout_height="match_parent"
+                          android:layout_marginLeft="10dp"/>
+
+                <TextView android:id="@+id/book_site"
+                          android:text="笔趣阁"
+                          android:maxLines="1"
+                          android:padding="2dp"
+                          android:textSize="12sp"
+                          android:layout_marginStart="20dp"
+                          android:gravity="end|bottom"
+                          android:maxWidth="100dp"
+                          android:ellipsize="end"
+                          android:layout_width="wrap_content"
+                          android:layout_height="wrap_content"
+                          android:layout_marginLeft="20dp"/>
+            </LinearLayout>
+        </RelativeLayout>
+
+        <FrameLayout android:layout_width="match_parent"
+                     android:layout_height="0dp"
+                     android:layout_weight="1">
+            <android.support.v7.widget.RecyclerView
+                    android:id="@+id/catalogRv"
+                    android:scrollbars="vertical"
+                    android:scrollbarSize="6dp"
+                    android:fadeScrollbars="true"
+                    android:scrollbarAlwaysDrawVerticalTrack="true"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"/>
+            <TextView
+                    android:id="@+id/book_loading"
+                    android:text="加载中..."
+                    android:background="#ffffff"
+                    android:gravity="center"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"/>
+        </FrameLayout>
+
+        <LinearLayout android:layout_width="match_parent"
+                      android:layout_height="wrap_content"
+                      android:orientation="horizontal"
+                      android:elevation="3dp">
+            <TextView
+                    android:id="@+id/book_download"
+                    android:layout_width="0dp"
+                    android:text="下载"
+                    android:layout_weight="1"
+                    android:textSize="16sp"
+                    android:padding="10dp"
+                    android:gravity="center"
+                    android:layout_height="wrap_content"/>
+
+            <TextView
+                    android:id="@+id/book_favorite"
+                    android:layout_width="0dp"
+                    android:text="加入书架"
+                    android:layout_weight="1"
+                    android:textSize="16sp"
+                    android:padding="10dp"
+                    android:gravity="center"
+                    android:layout_height="wrap_content"/>
+        </LinearLayout>
+    </LinearLayout>
+</android.support.constraint.ConstraintLayout>
