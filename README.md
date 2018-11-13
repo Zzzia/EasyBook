@@ -1,4 +1,4 @@
-### Java/Android小说爬虫工具，
+### Java/Android小说爬虫工具
 
 [![](https://jitpack.io/v/Zzzia/EasyBook.svg)](https://jitpack.io/#Zzzia/EasyBook)
 
@@ -10,7 +10,7 @@
 
 <img src="https://github.com/Zzzia/EasyBook/blob/master/screenshot/book2.png" width="280"><img src="https://github.com/Zzzia/EasyBook/blob/master/screenshot/book3.png" width="280"><img src="https://github.com/Zzzia/EasyBook/blob/master/screenshot/book4.png" width="280">
 
-#### Android
+#### Android平台
 **Step 1**. Add the JitPack repository to your build file
 
 ~~~gradle
@@ -31,7 +31,7 @@ dependencies {
 ~~~
 
 
-#### Java
+#### IDEA平台
 
 将release内的压缩包下载下来，解压后依次添加依赖，一共有7个jar。
 
