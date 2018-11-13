@@ -70,11 +70,17 @@ class MainActivity : AppCompatActivity(), SearchAdapter.BookSelectListener {
         if (progress != null) {
             dialog.progress = progress
         }
+        if (!dialog.isShowing){
+            dialog.show()
+        }
     }
 
     private fun updateDialog(msg: String?) {
         if (msg != null) {
             dialog.setMessage(msg)
+        }
+        if (!dialog.isShowing){
+            dialog.show()
         }
     }
 

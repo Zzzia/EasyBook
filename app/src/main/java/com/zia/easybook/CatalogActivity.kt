@@ -76,7 +76,11 @@ class CatalogActivity : AppCompatActivity(), CatalogAdapter.CatalogSelectListene
         }
     }
 
+    /**
+     * 没有添加动态权限，需要手动打开一下
+     */
     private fun download(type: Type) {
+        Toast.makeText(this@CatalogActivity,"请手动打开文件读写权限",Toast.LENGTH_SHORT).show()
         disposable = EasyBook.download(book)
             .setType(type)
             .setThreadCount(150)
