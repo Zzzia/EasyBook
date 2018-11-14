@@ -39,6 +39,7 @@ public class DownloadObserver implements Observer<File>, Disposable {
 
     volatile private boolean needFreshProcess = true;
     volatile private int tempProgress = 0;
+    volatile private boolean attachView = true;
 
     public DownloadObserver(Book book) {
         this.book = book;
@@ -56,7 +57,7 @@ public class DownloadObserver implements Observer<File>, Disposable {
                     }
                     concurrentDownload(subscriber, file);
                 } catch (final Exception e) {
-                    platform.defaultCallbackExecutor().execute(new Runnable() {
+                    post(new Runnable() {
                         @Override
                         public void run() {
                             subscriber.onError(e);
@@ -71,11 +72,18 @@ public class DownloadObserver implements Observer<File>, Disposable {
 
     @Override
     public void dispose() {
+        attachView = false;
         shutdown();
     }
 
+    private void post(Runnable runnable) {
+        if (attachView) {
+            platform.defaultCallbackExecutor().execute(runnable);
+        }
+    }
+
     void concurrentDownload(final Subscriber<File> subscriber, final File file) {
-        platform.defaultCallbackExecutor().execute(new Runnable() {
+        post(new Runnable() {
             @Override
             public void run() {
                 subscriber.onProgress(0);
@@ -89,7 +97,7 @@ public class DownloadObserver implements Observer<File>, Disposable {
         try {
             catalogHtml = NetUtil.getHtml(book.getUrl(), site.getEncodeType());
         } catch (final IOException e) {
-            platform.defaultCallbackExecutor().execute(new Runnable() {
+            post(new Runnable() {
                 @Override
                 public void run() {
                     subscriber.onMessage("获取目录页面失败");
@@ -106,7 +114,7 @@ public class DownloadObserver implements Observer<File>, Disposable {
                 catalogs.get(i).setIndex(i + 1);
             }
         } catch (final Exception e) {
-            platform.defaultCallbackExecutor().execute(new Runnable() {
+            post(new Runnable() {
                 @Override
                 public void run() {
                     subscriber.onMessage("网站目录结构更改，请联系作者修复");
@@ -117,7 +125,7 @@ public class DownloadObserver implements Observer<File>, Disposable {
         }
 
         if (catalogs.size() == 0) {
-            platform.defaultCallbackExecutor().execute(new Runnable() {
+            post(new Runnable() {
                 @Override
                 public void run() {
                     subscriber.onMessage("没有解析到目录...");
@@ -131,7 +139,7 @@ public class DownloadObserver implements Observer<File>, Disposable {
         chapters = new ArrayList<>(catalogs.size() + 1);
         catalogQueue = new LinkedList<>(catalogs);
 
-        platform.defaultCallbackExecutor().execute(new Runnable() {
+        post(new Runnable() {
             @Override
             public void run() {
                 subscriber.onMessage("一共" + catalogs.size() + "张，开始下载...");
@@ -159,7 +167,7 @@ public class DownloadObserver implements Observer<File>, Disposable {
                     try {
                         queueLock.wait(1000);
                     } catch (final InterruptedException e) {
-                        platform.defaultCallbackExecutor().execute(new Runnable() {
+                        post(new Runnable() {
                             @Override
                             public void run() {
                                 subscriber.onMessage("下载时发生并发错误");
@@ -179,14 +187,14 @@ public class DownloadObserver implements Observer<File>, Disposable {
                                     if (needFreshProcess) {
                                         tempProgress = (int) (((errorBook.getCount() - leftBook.getCount()) / (float) (2 * catalogSize - errorBook.getCount())) * 100);
                                         needFreshProcess = false;
-                                        platform.defaultCallbackExecutor().execute(new Runnable() {
+                                        post(new Runnable() {
                                             @Override
                                             public void run() {
                                                 subscriber.onProgress(tempProgress);
                                             }
                                         });
                                     }
-                                    platform.defaultCallbackExecutor().execute(new Runnable() {
+                                    post(new Runnable() {
                                         @Override
                                         public void run() {
                                             subscriber.onMessage(finalCatalog.getChapterName());
@@ -199,14 +207,14 @@ public class DownloadObserver implements Observer<File>, Disposable {
                                     if (needFreshProcess) {
                                         tempProgress = (int) (((errorBook.getCount() - leftBook.getCount()) / (float) (2 * catalogSize - errorBook.getCount())) * 100);
                                         needFreshProcess = false;
-                                        platform.defaultCallbackExecutor().execute(new Runnable() {
+                                        post(new Runnable() {
                                             @Override
                                             public void run() {
                                                 subscriber.onProgress(tempProgress);
                                             }
                                         });
                                     }
-                                    platform.defaultCallbackExecutor().execute(new Runnable() {
+                                    post(new Runnable() {
                                         @Override
                                         public void run() {
                                             subscriber.onMessage(e.getMessage() + "  重试章节 ： " + finalCatalog.getChapterName());
@@ -230,7 +238,7 @@ public class DownloadObserver implements Observer<File>, Disposable {
                 return o1.getIndex() - o2.getIndex();
             }
         });
-        platform.defaultCallbackExecutor().execute(new Runnable() {
+        post(new Runnable() {
             @Override
             public void run() {
                 subscriber.onMessage("下载完成(" + chapters.size() + "章)，等待保存");
@@ -246,14 +254,14 @@ public class DownloadObserver implements Observer<File>, Disposable {
                     SaveUtil.saveEpub(chapters, book, savePath);
                     break;
             }
-            platform.defaultCallbackExecutor().execute(new Runnable() {
+            post(new Runnable() {
                 @Override
                 public void run() {
                     subscriber.onFinish(file);
                 }
             });
         } catch (final IOException e) {
-            platform.defaultCallbackExecutor().execute(new Runnable() {
+            post(new Runnable() {
                 @Override
                 public void run() {
                     subscriber.onMessage("保存文件时发生错误");
@@ -265,7 +273,7 @@ public class DownloadObserver implements Observer<File>, Disposable {
 
     private void shutdown() {
         if (threadPool != null) {
-            threadPool.shutdown();
+            threadPool.shutdownNow();
         }
         if (timer != null) {
             timer.cancel();

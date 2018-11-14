@@ -9,12 +9,15 @@ import android.view.View
 import android.widget.Toast
 import com.zia.easybookmodule.bean.Book
 import com.zia.easybookmodule.engine.EasyBook
+import com.zia.easybookmodule.rx.Disposable
 import com.zia.easybookmodule.rx.Subscriber
 import kotlinx.android.synthetic.main.activity_main.*
 
 class MainActivity : AppCompatActivity(), SearchAdapter.BookSelectListener {
 
     private lateinit var bookAdapter: SearchAdapter
+    private var searchDisposable: Disposable? = null
+
     private val dialog by lazy {
         val dialog = ProgressDialog(this@MainActivity)
         dialog.setCancelable(true)
@@ -23,6 +26,7 @@ class MainActivity : AppCompatActivity(), SearchAdapter.BookSelectListener {
         dialog.setMessage("")
         dialog.setProgressStyle(ProgressDialog.STYLE_HORIZONTAL)
         dialog.show()
+        dialog.setOnCancelListener { searchDisposable?.dispose() }
         dialog
     }
 
@@ -36,7 +40,7 @@ class MainActivity : AppCompatActivity(), SearchAdapter.BookSelectListener {
 
         main_bt.setOnClickListener {
             val bookName = main_et.text.toString()
-            EasyBook.search(bookName)
+            searchDisposable = EasyBook.search(bookName)
                 .subscribe(object : Subscriber<List<Book>> {
                     override fun onFinish(t: List<Book>) {
                         bookAdapter.freshBooks(ArrayList(t))
@@ -70,7 +74,7 @@ class MainActivity : AppCompatActivity(), SearchAdapter.BookSelectListener {
         if (progress != null) {
             dialog.progress = progress
         }
-        if (!dialog.isShowing){
+        if (!dialog.isShowing) {
             dialog.show()
         }
     }
@@ -79,12 +83,17 @@ class MainActivity : AppCompatActivity(), SearchAdapter.BookSelectListener {
         if (msg != null) {
             dialog.setMessage(msg)
         }
-        if (!dialog.isShowing){
+        if (!dialog.isShowing) {
             dialog.show()
         }
     }
 
     private fun hideDialog() {
         dialog.dismiss()
+    }
+
+    override fun onDestroy() {
+        searchDisposable?.dispose()
+        super.onDestroy()
     }
 }
