@@ -26,7 +26,8 @@ allprojects {
 
 ~~~java
 dependencies {
-	implementation 'com.github.Zzzia:EasyBook:2.1'
+	implementation 'com.squareup.okhttp3:okhttp:3.11.0'
+    implementation 'com.github.Zzzia:EasyBook:2.1'
 }
 ~~~
 
