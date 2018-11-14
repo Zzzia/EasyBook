@@ -15,9 +15,9 @@ public abstract class Site {
 
     protected abstract List<Book> search(String bookName) throws Exception;
 
-    protected abstract List<Catalog> parseCatalog(String catalogHtml, String url);
+    public abstract List<Catalog> parseCatalog(String catalogHtml, String url);
 
-    protected abstract List<String> parseContent(String chapterHtml);
+    public abstract List<String> parseContent(String chapterHtml);
 
 
     public abstract String getSiteName();
