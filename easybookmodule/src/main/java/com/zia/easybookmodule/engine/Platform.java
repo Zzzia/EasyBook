@@ -49,6 +49,7 @@ class Platform {
     }
 
     static class Android extends Platform {
+
         @Override
         public Executor defaultCallbackExecutor() {
             return new MainThreadExecutor();

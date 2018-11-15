@@ -8,6 +8,8 @@ import com.zia.easybookmodule.rx.Observer;
 import com.zia.easybookmodule.rx.Subscriber;
 
 import java.util.List;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
 
 /**
  * Created by zia on 2018/11/15.
@@ -19,6 +21,7 @@ public class ContentObserver implements Observer<List<String>>, Disposable {
 
     private Platform platform = Platform.get();
     volatile private boolean attachView = true;
+    private ExecutorService service = Executors.newCachedThreadPool();
 
     public ContentObserver(Book book, Catalog catalog) {
         this.book = book;
@@ -32,7 +35,7 @@ public class ContentObserver implements Observer<List<String>>, Disposable {
 
     @Override
     public Disposable subscribe(final Subscriber<List<String>> subscriber) {
-        new Thread(new Runnable() {
+        service.execute(new Runnable() {
             @Override
             public void run() {
                 try {
@@ -45,15 +48,21 @@ public class ContentObserver implements Observer<List<String>>, Disposable {
                             subscriber.onFinish(list);
                         }
                     });
-                } catch (Exception e) {
-                    subscriber.onError(e);
+                } catch (final Exception e) {
+                    post(new Runnable() {
+                        @Override
+                        public void run() {
+                            subscriber.onError(e);
+                        }
+                    });
                 }
             }
-        }).start();
+        });
         return this;
     }
 
     private void post(Runnable runnable) {
+        service.shutdownNow();
         if (attachView) {
             platform.defaultCallbackExecutor().execute(runnable);
         }

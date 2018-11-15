@@ -31,12 +31,12 @@ public class SearchObserver implements Observer<List<Book>>, Disposable {
     public SearchObserver(String bookName, List<Site> sites) {
         this.bookName = bookName;
         this.sites = sites;
-        service = Executors.newFixedThreadPool(sites.size());
+        service = Executors.newFixedThreadPool(sites.size() + 1);
     }
 
     @Override
     public Disposable subscribe(final Subscriber<List<Book>> subscriber) {
-        new Thread(new Runnable() {
+        service.execute(new Runnable() {
             @Override
             public void run() {
                 final CountDownLatch countDownLatch = new CountDownLatch(sites.size());
@@ -86,6 +86,7 @@ public class SearchObserver implements Observer<List<Book>>, Disposable {
                         }
                     });
                 }
+                //等待全部搜索完毕
                 try {
                     countDownLatch.await();
                 } catch (final InterruptedException e) {
@@ -167,7 +168,7 @@ public class SearchObserver implements Observer<List<Book>>, Disposable {
                     }
                 });
             }
-        }).start();
+        });
         return this;
     }
 

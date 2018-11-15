@@ -25,7 +25,8 @@ class CatalogActivity : AppCompatActivity(), CatalogAdapter.CatalogSelectListene
     private lateinit var book: Book
     private lateinit var adapter: CatalogAdapter
     //控制内存泄漏
-    private var disposable: Disposable? = null
+    private var downloadDisposable: Disposable? = null
+    private var searchDisposable: Disposable? = null
 
     private val dialog by lazy {
         val dialog = ProgressDialog(this@CatalogActivity)
@@ -48,7 +49,7 @@ class CatalogActivity : AppCompatActivity(), CatalogAdapter.CatalogSelectListene
         catalogRv.layoutManager = LinearLayoutManager(this)
         catalogRv.adapter = adapter
 
-        EasyBook.getCatalog(book)
+        searchDisposable = EasyBook.getCatalog(book)
             .subscribe(object : Subscriber<List<Catalog>> {
                 override fun onFinish(t: List<Catalog>) {
                     val arrayList = ArrayList<Catalog>(t)
@@ -81,7 +82,7 @@ class CatalogActivity : AppCompatActivity(), CatalogAdapter.CatalogSelectListene
      */
     private fun download(type: Type) {
         Toast.makeText(this@CatalogActivity,"请手动打开文件读写权限",Toast.LENGTH_SHORT).show()
-        disposable = EasyBook.download(book)
+        downloadDisposable = EasyBook.download(book)
             .setType(type)
             .setThreadCount(150)
             .setSavePath(Environment.getExternalStorageDirectory().path + File.separator + "book")
@@ -108,7 +109,8 @@ class CatalogActivity : AppCompatActivity(), CatalogAdapter.CatalogSelectListene
     }
 
     override fun onDestroy() {
-        disposable?.dispose()
+        downloadDisposable?.dispose()
+        searchDisposable?.dispose()
         super.onDestroy()
     }
 

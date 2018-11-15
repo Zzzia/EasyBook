@@ -40,6 +40,9 @@ class MainActivity : AppCompatActivity(), SearchAdapter.BookSelectListener {
 
         main_bt.setOnClickListener {
             val bookName = main_et.text.toString()
+            if (bookName.isEmpty()) return@setOnClickListener
+            updateDialog(0)
+            updateDialog("")
             searchDisposable = EasyBook.search(bookName)
                 .subscribe(object : Subscriber<List<Book>> {
                     override fun onFinish(t: List<Book>) {

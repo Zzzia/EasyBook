@@ -8,6 +8,8 @@ import com.zia.easybookmodule.rx.Observer;
 import com.zia.easybookmodule.rx.Subscriber;
 
 import java.util.List;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
 
 /**
  * Created by zia on 2018/11/15.
@@ -16,8 +18,9 @@ public class CatalogObserver implements Observer<List<Catalog>>, Disposable {
 
     private Book book;
 
-    private Platform platform = Platform.get();
+    private Platform platform;
     volatile private boolean attachView = true;
+    private ExecutorService service = Executors.newCachedThreadPool();
 
     public CatalogObserver(Book book) {
         this.book = book;
@@ -26,16 +29,19 @@ public class CatalogObserver implements Observer<List<Catalog>>, Disposable {
     @Override
     public void dispose() {
         attachView = false;
+        service.shutdownNow();
     }
 
     @Override
     public Disposable subscribe(final Subscriber<List<Catalog>> subscriber) {
-        new Thread(new Runnable() {
+        platform = Platform.get();
+        service.execute(new Runnable() {
             @Override
             public void run() {
+                String html = "";
+                Site site = book.getSite();
                 try {
-                    Site site = book.getSite();
-                    String html = NetUtil.getHtml(book.getUrl(), site.getEncodeType());
+                    html = NetUtil.getHtml(book.getUrl(), site.getEncodeType());
                     final List<Catalog> list = site.parseCatalog(html, book.getUrl());
                     post(new Runnable() {
                         @Override
@@ -43,11 +49,16 @@ public class CatalogObserver implements Observer<List<Catalog>>, Disposable {
                             subscriber.onFinish(list);
                         }
                     });
-                } catch (Exception e) {
-                    subscriber.onError(e);
+                } catch (final Exception e) {
+                    post(new Runnable() {
+                        @Override
+                        public void run() {
+                            subscriber.onError(e);
+                        }
+                    });
                 }
             }
-        }).start();
+        });
         return this;
     }
 
