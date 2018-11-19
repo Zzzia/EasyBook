@@ -13,7 +13,7 @@ import java.util.List;
  */
 public abstract class Site {
 
-    protected abstract List<Book> search(String bookName) throws Exception;
+    public abstract List<Book> search(String bookName) throws Exception;
 
     public abstract List<Catalog> parseCatalog(String catalogHtml, String url);
 

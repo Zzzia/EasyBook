@@ -1,7 +1,9 @@
-package com.zia.easybookmodule.engine;
+package com.zia.easybookmodule.engine.parser;
 
 import com.zia.easybookmodule.bean.Book;
 import com.zia.easybookmodule.bean.Catalog;
+import com.zia.easybookmodule.engine.Platform;
+import com.zia.easybookmodule.engine.Site;
 import com.zia.easybookmodule.net.NetUtil;
 import com.zia.easybookmodule.rx.Disposable;
 import com.zia.easybookmodule.rx.Observer;

@@ -11,10 +11,10 @@ import java.util.concurrent.Executor;
  * Created by zia on 2018/11/13.
  * 不同平台的线程切换工具，java不知道怎么弄，目前只有Android有用
  */
-class Platform {
+public class Platform {
     private static final Platform PLATFORM = findPlatform();
 
-    static Platform get() {
+    public static Platform get() {
         return PLATFORM;
     }
 
@@ -35,7 +35,7 @@ class Platform {
     }
 
     @Nullable
-    Executor defaultCallbackExecutor() {
+    public Executor defaultCallbackExecutor() {
         return new Executor() {
             @Override
             public void execute(Runnable command) {

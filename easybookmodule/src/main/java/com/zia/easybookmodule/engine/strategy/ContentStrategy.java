@@ -1,4 +1,4 @@
-package com.zia.easybookmodule.util;
+package com.zia.easybookmodule.engine.strategy;
 
 import com.zia.easybookmodule.bean.Book;
 import com.zia.easybookmodule.bean.Chapter;
@@ -11,61 +11,79 @@ import java.io.*;
 import java.util.List;
 
 /**
- * Created by zia on 2018/11/2.
+ * Created by zia on 2018/11/19.
+ * 文本格式策略，用来自定义小说空行等格式
+ * 继承该类可修改
  */
-public class SaveUtil {
+public class ContentStrategy {
 
-    private static final String cssName = "book";
+    private static final String cssName = "bookCss";
 
-    public static File saveEpub(List<Chapter> chapters, Book book, String savePath) throws IOException {
+    /**
+     * 生成一章Epub格式的小说
+     * 可通过继承{@link #getHtml(String, String)}修改html格式
+     * 可通过继承{@link #getCss()}修改css样式
+     * @param chapter 章节，包含章节名(chapterName)和章节内容(contents)
+     * @return 章节完整Html
+     */
+    public String parseEpubContent(Chapter chapter) {
+        StringBuilder content = new StringBuilder();
+        for (String line : chapter.getContents()) {
+            if (!line.isEmpty()) {
+                content.append("<p>");
+                content.append("    ");
+                content.append(line);
+                content.append("</p>");
+            }
+        }
+        return getHtml(chapter.getChapterName(), content.toString());
+    }
+
+    public String parseTxtContent(Chapter chapter) {
+        StringBuilder sb = new StringBuilder();
+        sb.append(chapter.getChapterName());
+        sb.append("\n");
+        for (String line : chapter.getContents()) {
+            //4个空格+正文+换行
+            sb.append("        ");
+            sb.append(line);
+            sb.append("\n");
+        }
+        //章节结束空三行，用来分割下一章节
+        sb.append("\n\n");
+        return sb.toString();
+    }
+
+    final public File saveEpub(List<Chapter> chapters, Book book, String savePath) throws IOException {
         String bookName = book.getBookName() + "-" + book.getSiteName();
         File file = new File(savePath + File.separator + bookName + ".epub");
         nl.siegmann.epublib.domain.Book epub = new nl.siegmann.epublib.domain.Book();
-        epub.getResources().add(new Resource(SaveUtil.getCss().getBytes(), cssName + ".css"));
+        epub.getResources().add(new Resource(getCss().getBytes(), cssName + ".css"));
         Metadata metadata = epub.getMetadata();
         metadata.addTitle(bookName);
         metadata.addAuthor(new Author(book.getAuthor()));
         for (Chapter chapter : chapters) {
-            StringBuilder content = new StringBuilder();
-            for (String line : chapter.getContents()) {
-                if (!line.isEmpty()) {
-                    content.append("<p>");
-                    content.append("    ");
-                    content.append(line);
-                    content.append("</p>");
-                }
-            }
             epub.addSection(chapter.getChapterName(),
-                    new Resource(SaveUtil.getHtml(chapter.getChapterName(), content.toString(), cssName).getBytes()
-                            , chapter.getChapterName() + ".html"));
+                    new Resource(parseEpubContent(chapter).getBytes(), chapter.getChapterName() + ".html"));
         }
         EpubWriter epubWriter = new EpubWriter();
         epubWriter.write(epub, new FileOutputStream(file));
         return file;
     }
 
-    public static File saveTxt(List<Chapter> chapters, Book book, String savePath) throws IOException {
+    final public File saveTxt(List<Chapter> chapters, Book book, String savePath) throws IOException {
         String bookName = book.getBookName() + "-" + book.getSiteName();
         savePath += File.separator + bookName + ".txt";
         File file = new File(savePath);
         BufferedWriter bufferedWriter = new BufferedWriter(
                 new OutputStreamWriter(new FileOutputStream(file)));
         for (Chapter chapter : chapters) {
-            bufferedWriter.write(chapter.getChapterName());
-            bufferedWriter.write("\n\n");
-            for (String line : chapter.getContents()) {
-                //4个空格+正文+换行+空行
-                bufferedWriter.write("    ");
-                bufferedWriter.write(line);
-                bufferedWriter.write("\n\n");
-            }
-            //章节结束空三行，用来分割下一章节
-            bufferedWriter.write("\n\n\n");
+            bufferedWriter.write(parseTxtContent(chapter));
         }
         return file;
     }
 
-    public static String getHtml(String title, String content, String cssName) {
+    protected String getHtml(String title, String content) {
         return "<html xmlns=\"http://www.w3.org/1999/xhtml\" xml:lang=\"zh-CN\">\n<head>\n\t<title>" +
                 title +
                 "</title>\n\t<meta http-equiv=\"Content-Type\" content=\"text/html; charset=utf-8\" />\n\t<link rel=\"stylesheet\" type=\"text/css\" href=\"../" +
@@ -77,7 +95,7 @@ public class SaveUtil {
                 "\n\n</div>\n</body>\n</html>\n";
     }
 
-    private static String getCss() {
+    protected String getCss() {
         return "body{\n" +
                 " margin:10px;\n" +
                 " font-size: 1.0em;word-wrap:break-word;\n" +

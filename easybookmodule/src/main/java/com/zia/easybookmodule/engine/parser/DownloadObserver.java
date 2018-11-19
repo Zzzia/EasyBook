@@ -1,14 +1,16 @@
-package com.zia.easybookmodule.engine;
+package com.zia.easybookmodule.engine.parser;
 
 import com.zia.easybookmodule.bean.Book;
 import com.zia.easybookmodule.bean.Catalog;
 import com.zia.easybookmodule.bean.Chapter;
 import com.zia.easybookmodule.bean.Type;
+import com.zia.easybookmodule.engine.Platform;
+import com.zia.easybookmodule.engine.Site;
+import com.zia.easybookmodule.engine.strategy.ContentStrategy;
 import com.zia.easybookmodule.net.NetUtil;
 import com.zia.easybookmodule.rx.Disposable;
 import com.zia.easybookmodule.rx.Observer;
 import com.zia.easybookmodule.rx.Subscriber;
-import com.zia.easybookmodule.util.SaveUtil;
 
 import java.io.File;
 import java.io.IOException;
@@ -29,6 +31,7 @@ public class DownloadObserver implements Observer<File>, Disposable {
     private Type type = Type.EPUB;
     private Book book;
     private Platform platform = Platform.get();
+    private ContentStrategy strategy = new ContentStrategy();
 
     private ArrayList<Chapter> chapters;
     private LinkedList<Catalog> catalogQueue;
@@ -248,10 +251,10 @@ public class DownloadObserver implements Observer<File>, Disposable {
         try {
             switch (type) {
                 case TXT:
-                    SaveUtil.saveTxt(chapters, book, savePath);
+                    strategy.saveTxt(chapters, book, savePath);
                     break;
                 case EPUB:
-                    SaveUtil.saveEpub(chapters, book, savePath);
+                    strategy.saveEpub(chapters, book, savePath);
                     break;
             }
             post(new Runnable() {
@@ -312,6 +315,11 @@ public class DownloadObserver implements Observer<File>, Disposable {
 
     public DownloadObserver setType(Type type) {
         this.type = type;
+        return this;
+    }
+
+    public DownloadObserver setStrategy(ContentStrategy strategy) {
+        this.strategy = strategy;
         return this;
     }
 }

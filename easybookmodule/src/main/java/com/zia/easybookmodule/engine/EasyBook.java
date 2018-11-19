@@ -2,6 +2,10 @@ package com.zia.easybookmodule.engine;
 
 import com.zia.easybookmodule.bean.Book;
 import com.zia.easybookmodule.bean.Catalog;
+import com.zia.easybookmodule.engine.parser.CatalogObserver;
+import com.zia.easybookmodule.engine.parser.ContentObserver;
+import com.zia.easybookmodule.engine.parser.DownloadObserver;
+import com.zia.easybookmodule.engine.parser.SearchObserver;
 import com.zia.easybookmodule.rx.Observer;
 
 import java.util.List;
