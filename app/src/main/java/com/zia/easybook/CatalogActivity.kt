@@ -8,6 +8,7 @@ import android.os.Environment
 import android.support.v7.app.AlertDialog
 import android.support.v7.app.AppCompatActivity
 import android.support.v7.widget.LinearLayoutManager
+import android.util.Log
 import android.view.View
 import android.widget.Toast
 import com.zia.easybookmodule.bean.Book
@@ -81,7 +82,7 @@ class CatalogActivity : AppCompatActivity(), CatalogAdapter.CatalogSelectListene
      * 没有添加动态权限，需要手动打开一下
      */
     private fun download(type: Type) {
-        Toast.makeText(this@CatalogActivity,"请手动打开文件读写权限",Toast.LENGTH_SHORT).show()
+        Toast.makeText(this@CatalogActivity, "请手动打开文件读写权限", Toast.LENGTH_SHORT).show()
         downloadDisposable = EasyBook.download(book)
             .setType(type)
             .setThreadCount(150)
@@ -89,6 +90,7 @@ class CatalogActivity : AppCompatActivity(), CatalogAdapter.CatalogSelectListene
             .subscribe(object : Subscriber<File> {
                 override fun onFinish(t: File) {
                     hideDialog()
+                    Log.e("CatalogActivity", t.path)
                     Toast.makeText(this@CatalogActivity, "保存成功，位置在${t.path}", Toast.LENGTH_SHORT).show()
                 }
 
@@ -115,9 +117,9 @@ class CatalogActivity : AppCompatActivity(), CatalogAdapter.CatalogSelectListene
     }
 
     override fun onCatalogSelect(itemView: View, position: Int, catalog: Catalog) {
-        val intent = Intent(this@CatalogActivity,PreviewActivity::class.java)
-        intent.putExtra("catalog",catalog)
-        intent.putExtra("book",book)
+        val intent = Intent(this@CatalogActivity, PreviewActivity::class.java)
+        intent.putExtra("catalog", catalog)
+        intent.putExtra("book", book)
         startActivity(intent)
     }
 

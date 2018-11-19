@@ -249,18 +249,20 @@ public class DownloadObserver implements Observer<File>, Disposable {
             }
         });
         try {
+            File resultFile = null;
             switch (type) {
                 case TXT:
-                    strategy.saveTxt(chapters, book, savePath);
+                    resultFile = strategy.saveTxt(chapters, book, savePath);
                     break;
                 case EPUB:
-                    strategy.saveEpub(chapters, book, savePath);
+                    resultFile = strategy.saveEpub(chapters, book, savePath);
                     break;
             }
+            final File finalResultFile = resultFile;
             post(new Runnable() {
                 @Override
                 public void run() {
-                    subscriber.onFinish(file);
+                    subscriber.onFinish(finalResultFile);
                 }
             });
         } catch (final IOException e) {
