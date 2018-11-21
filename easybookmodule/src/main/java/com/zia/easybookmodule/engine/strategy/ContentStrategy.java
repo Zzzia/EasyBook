@@ -49,8 +49,8 @@ public class ContentStrategy {
             sb.append(line);
             sb.append("\n");
         }
-        //章节结束空三行，用来分割下一章节
-        sb.append("\n\n");
+        //章节结束空一行，用来分割下一章节
+        sb.append("\n");
         return sb.toString();
     }
 
@@ -90,9 +90,9 @@ public class ContentStrategy {
                 cssName +
                 ".css\" />\n</head>\n<body>\n<h2><span style=\"border-bottom:1px solid\">" +
                 title +
-                "</span></h2>\n<div>\n\n" +
+                "</span></h2>\n<div>\n" +
                 content +
-                "\n\n</div>\n</body>\n</html>\n";
+                "\n</div>\n</body>\n</html>\n";
     }
 
     protected String getCss() {

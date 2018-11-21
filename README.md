@@ -6,7 +6,9 @@
 使用简单的几行代码，打造你自己的小说开源软件，多站点解析，并发搜索下载。
 
 
-[Android下载体验](http://qiniu.zzzia.net/book_v1.2.2.apk)
+[App体验](https://github.com/Zzzia/Book)
+
+QQ群交流：29527219
 
 <img src="https://github.com/Zzzia/EasyBook/blob/master/screenshot/book2.png" width="280"><img src="https://github.com/Zzzia/EasyBook/blob/master/screenshot/book3.png" width="280"><img src="https://github.com/Zzzia/EasyBook/blob/master/screenshot/book4.png" width="280">
 
@@ -27,7 +29,7 @@ allprojects {
 ~~~java
 dependencies {
 	implementation 'com.squareup.okhttp3:okhttp:3.11.0'
-    implementation 'com.github.Zzzia:EasyBook:2.24'
+    implementation 'com.github.Zzzia:EasyBook:2.25'
 }
 ~~~
 
@@ -128,3 +130,9 @@ void onDestroy(){
 //添加一个自己解析的站点类，叫Zhuishushenqi，需要继承Site
 SiteCollection.getInstance().addSite(Zhuishushenqi());
 ~~~
+
+# Thanks
+
+* okHttp
+* epublib
+* jsoup
