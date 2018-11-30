@@ -3,6 +3,7 @@ package com.zia.easybookmodule.site;
 import com.zia.easybookmodule.bean.Book;
 import com.zia.easybookmodule.bean.Catalog;
 import com.zia.easybookmodule.engine.Site;
+import com.zia.easybookmodule.net.NetUtil;
 import com.zia.easybookmodule.util.BookGriper;
 import com.zia.easybookmodule.util.RegexUtil;
 
@@ -25,10 +26,6 @@ public class Bishenge extends Site {
         return BookGriper.baidu( bookName,getSiteName(), "7751645214184726687");
     }
 
-    public static void main(String[] args) throws Exception {
-        System.out.println(new Bishenge().search("斗破苍穹"));
-    }
-
     @Override
     public List<Catalog> parseCatalog(String catalogHtml, String url) {
         return BookGriper.parseBqgCatalogs(catalogHtml, url);
@@ -38,5 +35,13 @@ public class Bishenge extends Site {
     public List<String> parseContent(String chapterHtml) {
         String content = RegexUtil.regexExcept("<div id=\"content\">", "</div>", chapterHtml).get(0);
         return BookGriper.getContentsByBR(content);
+    }
+
+    public static void main(String[] args) throws Exception {
+        Site site = new Bishenge();
+        String url = "https://www.bimo.cc/id6167/";
+        System.out.println(site.search("天行"));
+        System.out.println(site.parseCatalog(NetUtil.getHtml(url, site.getEncodeType()), url));
+        System.out.println(site.parseContent(NetUtil.getHtml("https://www.bimo.cc/id6167/4723726.html", site.getEncodeType())));
     }
 }
