@@ -27,6 +27,10 @@ public class Dingdian extends Site {
         return BookGriper.baidu(bookName, getSiteName(), "5334330359795686106");
     }
 
+    public static void main(String[] args) throws Exception {
+        System.out.println(new Dingdian().search("斗破苍穹"));
+    }
+
     @Override
     public List<Catalog> parseCatalog(String catalogHtml, String url) {
         Element listElement = Jsoup.parse(catalogHtml).getElementById("list");

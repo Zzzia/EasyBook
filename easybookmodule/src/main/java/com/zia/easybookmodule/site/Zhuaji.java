@@ -55,9 +55,14 @@ public class Zhuaji extends Site {
             String bkUrl = li.getElementsByTag("h3").first().getElementsByTag("a").first().attr("href");
             String author = li.getElementsByTag("p").first().getElementsByTag("span").first().text();
             String lastChapterName = li.getElementsByTag("p").get(1).getElementsByTag("a").first().text();
-            bookList.add(new Book(bkName, author, bkUrl, "未知", lastUpdateTime, lastChapterName, getSiteName()));
+            String imageUrl = li.getElementsByTag("img").first().attr("src");
+            bookList.add(new Book(bkName, author, bkUrl, imageUrl, "未知", lastUpdateTime, lastChapterName, getSiteName()));
         }
         return bookList;
+    }
+
+    public static void main(String[] args) throws Exception {
+        System.out.println(new Zhuaji().search("斗破苍穹"));
     }
 
     @Override

@@ -26,6 +26,7 @@ public class SearchObserver implements Observer<List<Book>>, Disposable {
     private List<Site> sites;
     private ConcurrentLinkedQueue<List<Book>> bookListList = new ConcurrentLinkedQueue<>();
     private ExecutorService service;
+    private int maxResult = 100;
 
     private Platform platform = Platform.get();
     volatile private boolean attachView = true;
@@ -119,7 +120,7 @@ public class SearchObserver implements Observer<List<Book>>, Disposable {
                 //混合插入，让每个站点依次加入集合，有利于结果正确性
                 final ArrayList<Book> bookList = new ArrayList<>();
                 int index = 0;
-                while (bookList.size() < resultSize && bookList.size() <= 100) {
+                while (bookList.size() < resultSize && bookList.size() <= maxResult) {
                     for (List<Book> bl : bookListList) {
                         if (index < bl.size()) {
                             bookList.add(bl.get(index));
@@ -162,11 +163,7 @@ public class SearchObserver implements Observer<List<Book>>, Disposable {
                     @Override
                     public void run() {
                         subscriber.onMessage("搜索到" + bookList.size() + "本相关书籍");
-                        if (bookList.size() > 40) {
-                            subscriber.onFinish(new ArrayList<>(bookList.subList(0, 40)));
-                        } else {
-                            subscriber.onFinish(bookList);
-                        }
+                        subscriber.onFinish(bookList);
                     }
                 });
             }
@@ -186,5 +183,10 @@ public class SearchObserver implements Observer<List<Book>>, Disposable {
         if (attachView) {
             platform.defaultCallbackExecutor().execute(runnable);
         }
+    }
+
+    public SearchObserver setMaxResult(int maxResult) {
+        this.maxResult = maxResult;
+        return this;
     }
 }

@@ -19,7 +19,6 @@ public abstract class Site {
 
     public abstract List<String> parseContent(String chapterHtml);
 
-
     public abstract String getSiteName();
 
     public String getEncodeType() {

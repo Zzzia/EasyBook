@@ -18,11 +18,14 @@ public class SiteCollection {
      */
     private SiteCollection() {
         //normal
+        sites.add(new Zhuishu());
+        sites.add(new Xbiquge());
         sites.add(new Shunong());
         sites.add(new Biquge());
         sites.add(new Zhuaji());
         sites.add(new Kanshenzuo());
-        sites.add(new Xbiquge());
+        sites.add(new Wulin());
+        sites.add(new Wenxuemi());
         sites.add(new Bishenge());
         sites.add(new Dingdian());
         sites.add(new Mainhuatang());
@@ -32,8 +35,8 @@ public class SiteCollection {
         sites.add(new Daocaoren());
 
         //h
-        sites.add(new Jidian());
         sites.add(new Shouji());
+        sites.add(new Jidian());
 //        sites.add(new Zhai());
     }
 

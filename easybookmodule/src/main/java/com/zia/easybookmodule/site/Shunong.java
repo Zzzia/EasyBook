@@ -67,9 +67,14 @@ public class Shunong extends Site {
             String bkName = li.getElementsByTag("font").first().text().replace("在线阅读", "");
             String href = root + li.getElementsByTag("a").first().attr("href");
             String author = li.getElementsByTag("div").first().getElementsByTag("a").first().text();
-            books.add(new Book(bkName, author, href, "未知", "未知", "未知", getSiteName()));
+            String imageUrl = root + li.getElementsByTag("img").first().attr("src");
+            books.add(new Book(bkName, author, href, imageUrl, "未知", "未知", "未知", getSiteName()));
         }
         return books;
+    }
+
+    public static void main(String[] args) throws Exception {
+        System.out.println(new Shunong().search("斗破苍穹"));
     }
 
     @Override

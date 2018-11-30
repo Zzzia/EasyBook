@@ -25,19 +25,13 @@ public class Bishenge extends Site {
         return BookGriper.baidu( bookName,getSiteName(), "7751645214184726687");
     }
 
+    public static void main(String[] args) throws Exception {
+        System.out.println(new Bishenge().search("斗破苍穹"));
+    }
+
     @Override
     public List<Catalog> parseCatalog(String catalogHtml, String url) {
-        String sub = RegexUtil.regexExcept("<div id=\"list\">", "</div>", catalogHtml).get(0);
-        String ssub = sub.split("正文</dt>")[1];
-        List<String> as = RegexUtil.regexInclude("<a", "</a>", ssub);
-        List<Catalog> list = new ArrayList<>();
-        for (String s : as) {
-            RegexUtil.Tag tag = new RegexUtil.Tag(s);
-            String name = tag.getText();
-            String href = url + tag.getValue("href");
-            list.add(new Catalog(name, href));
-        }
-        return list;
+        return BookGriper.parseBqgCatalogs(catalogHtml, url);
     }
 
     @Override

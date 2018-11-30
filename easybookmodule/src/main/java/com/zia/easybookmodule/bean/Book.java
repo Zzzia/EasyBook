@@ -12,6 +12,7 @@ public class Book implements Serializable {
     private String bookName;
     private String author;
     private String url;
+    private String imageUrl;
     private String chapterSize;
     private String lastUpdateTime;
     private String lastChapterName;
@@ -27,9 +28,14 @@ public class Book implements Serializable {
     }
 
     public Book(String bookName, String author, String url, String chapterSize, String lastUpdateTime, String lastChapterName, String siteName) {
+        this(bookName, author, url, "", chapterSize, lastUpdateTime, lastChapterName, siteName);
+    }
+
+    public Book(String bookName, String author, String url, String imageUrl, String chapterSize, String lastUpdateTime, String lastChapterName, String siteName) {
         this.bookName = bookName;
         this.author = author;
         this.url = url;
+        this.imageUrl = imageUrl;
         this.chapterSize = chapterSize;
         this.lastUpdateTime = lastUpdateTime;
         this.lastChapterName = lastChapterName;
@@ -42,11 +48,20 @@ public class Book implements Serializable {
                 "bookName='" + bookName + '\'' +
                 ", author='" + author + '\'' +
                 ", url='" + url + '\'' +
+                ", imageUrl='" + imageUrl + '\'' +
                 ", chapterSize='" + chapterSize + '\'' +
                 ", lastUpdateTime='" + lastUpdateTime + '\'' +
                 ", lastChapterName='" + lastChapterName + '\'' +
                 ", siteName='" + siteName + '\'' +
                 '}';
+    }
+
+    public String getImageUrl() {
+        return imageUrl;
+    }
+
+    public void setImageUrl(String imageUrl) {
+        this.imageUrl = imageUrl;
     }
 
     public String getSiteName() {

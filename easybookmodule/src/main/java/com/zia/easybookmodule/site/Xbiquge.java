@@ -38,22 +38,28 @@ public class Xbiquge extends Site {
         String html = NetUtil.getHtml("https://www.xbiquge6.com/search.php?keyword="
                 + URLEncoder.encode(bookName, getEncodeType()), getEncodeType());
 
-        Elements items = Jsoup.parse(html).getElementsByClass("result-game-item-detail");
+        Elements items = Jsoup.parse(html).getElementsByClass("result-item result-game-item");
         if (items == null || items.size() <= 0) {
             throw new IOException();
         }
 
         List<Book> bookList = new ArrayList<>();
         for (Element item : items) {
-            String bkName = item.getElementsByTag("a").first().attr("title");
-            String url = item.getElementsByTag("a").first().attr("href");
-            Elements tags = item.getElementsByClass("result-game-item-info-tag");
+            Element detail = item.getElementsByClass("result-game-item-detail").first();
+            String bkName = detail.getElementsByTag("a").first().attr("title");
+            String url = detail.getElementsByTag("a").first().attr("href");
+            Elements tags = detail.getElementsByClass("result-game-item-info-tag");
             String author = tags.get(0).getElementsByTag("span").get(1).text();
             String lastUpdateTime = tags.get(2).getElementsByTag("span").get(1).text();
             String lastChapterName = tags.get(3).getElementsByTag("a").text();
-            bookList.add(new Book(bkName, author, url, "未知", lastUpdateTime, lastChapterName, getSiteName()));
+            String imageUrl = item.getElementsByTag("img").get(0).attr("src");
+            bookList.add(new Book(bkName, author, url, imageUrl, "未知", lastUpdateTime, lastChapterName, getSiteName()));
         }
         return bookList;
+    }
+
+    public static void main(String[] args) throws Exception {
+        System.out.println(new Xbiquge().search("天行"));
     }
 
     @Override

@@ -5,6 +5,7 @@ import android.content.Intent
 import android.os.Bundle
 import android.support.v7.app.AppCompatActivity
 import android.support.v7.widget.LinearLayoutManager
+import android.util.Log
 import android.view.View
 import android.widget.Toast
 import com.zia.easybookmodule.bean.Book
@@ -46,12 +47,15 @@ class MainActivity : AppCompatActivity(), SearchAdapter.BookSelectListener {
             searchDisposable = EasyBook.search(bookName)
                 .subscribe(object : Subscriber<List<Book>> {
                     override fun onFinish(t: List<Book>) {
+                        Log.e("MainActivity", t.toString())
                         bookAdapter.freshBooks(ArrayList(t))
                         hideDialog()
                     }
 
                     override fun onError(e: Exception) {
-                        e.printStackTrace()
+                        if (e.message != null) {
+                            Log.e("MainActivity", e.message)
+                        }
                         hideDialog()
                         Toast.makeText(this@MainActivity, e.message, Toast.LENGTH_SHORT).show()
                     }
