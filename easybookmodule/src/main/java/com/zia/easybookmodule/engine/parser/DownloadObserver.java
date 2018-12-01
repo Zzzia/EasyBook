@@ -257,7 +257,6 @@ public class DownloadObserver implements Observer<File>, Disposable {
             }
         });
         ArrayList<Chapter> newChapters = new ArrayList<>(chapters);
-        chapters = null;
         Collections.sort(newChapters, new Comparator<Chapter>() {
             @Override
             public int compare(Chapter o1, Chapter o2) {
