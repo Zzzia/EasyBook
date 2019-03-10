@@ -58,12 +58,8 @@ public class Xbiquge extends Site {
         return bookList;
     }
 
-    public static void main(String[] args) throws Exception {
-        System.out.println(new Xbiquge().search("天行"));
-    }
-
     @Override
-    public List<Catalog> parseCatalog(String catalogHtml, String url) {
+    public List<Catalog> parseCatalog(String catalogHtml, String rootUrl) {
         Element listElement = Jsoup.parse(catalogHtml).getElementById("list");
         List<Catalog> catalogs = new ArrayList<>();
         for (Element a : listElement.getElementsByTag("a")) {

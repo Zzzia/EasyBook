@@ -1,9 +1,13 @@
 package com.zia.easybookmodule.site;
 
+import android.support.annotation.NonNull;
 import com.zia.easybookmodule.bean.Book;
 import com.zia.easybookmodule.bean.Catalog;
+import com.zia.easybookmodule.bean.Type;
+import com.zia.easybookmodule.engine.EasyBook;
 import com.zia.easybookmodule.engine.Site;
 import com.zia.easybookmodule.net.NetUtil;
+import com.zia.easybookmodule.rx.Subscriber;
 import com.zia.easybookmodule.util.BookGriper;
 import okhttp3.FormBody;
 import okhttp3.RequestBody;
@@ -12,6 +16,7 @@ import org.jsoup.nodes.Element;
 import org.jsoup.nodes.TextNode;
 import org.jsoup.select.Elements;
 
+import java.io.File;
 import java.net.URLEncoder;
 import java.util.ArrayList;
 import java.util.List;
@@ -19,18 +24,18 @@ import java.util.List;
 
 /**
  * Created By zia on 2018/11/1.
- * 冰火中文 https://www.binhuo.com/
+ * 冰火中文 https://www.bhzw.cc/
  */
 public class Binhuo extends Site {
 
-    private static final String root = "https://www.binhuo.com";
+    private static final String root = "https://www.bhzw.cc/";
 
     @Override
-    public List<Catalog> parseCatalog(String catalogHtml, String url) {
+    public List<Catalog> parseCatalog(String catalogHtml, String rootUrl) {
         Elements as = Jsoup.parse(catalogHtml).getElementsByClass("float-list fill-block").first().getElementsByTag("a");
         List<Catalog> catalogs = new ArrayList<>();
         for (Element a : as) {
-            String href = url + a.attr("href");
+            String href = rootUrl + a.attr("href");
             String name = a.text();
             catalogs.add(new Catalog(name, href));
         }
@@ -45,7 +50,7 @@ public class Binhuo extends Site {
 
     @Override
     public List<Book> search(String bookName) throws Exception {
-        String url = "https://www.binhuo.com/modules/article/search.php";
+        String url = "https://www.bhzw.cc/modules/article/search.php";
         RequestBody requestBody = new FormBody.Builder()
                 .addEncoded("searchkey", URLEncoder.encode(bookName, getEncodeType()))
                 .build();

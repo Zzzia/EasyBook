@@ -24,7 +24,7 @@ public class Zhai extends Site {
     private static final String root = "https://www.zhaiyuedu.com";
 
     @Override
-    public List<Catalog> parseCatalog(String catalogHtml, String url) {
+    public List<Catalog> parseCatalog(String catalogHtml, String rootUrl) {
         Elements as1 = Jsoup.parse(catalogHtml).getElementsByClass("col xs-4 chapter-table").get(0).getElementsByTag("a");
         Elements as2 = Jsoup.parse(catalogHtml).getElementsByClass("col xs-4 chapter-table").get(1).getElementsByTag("a");
         Elements as3 = Jsoup.parse(catalogHtml).getElementsByClass("col xs-4 chapter-table").get(2).getElementsByTag("a");

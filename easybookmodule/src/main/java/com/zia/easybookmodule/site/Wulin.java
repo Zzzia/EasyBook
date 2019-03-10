@@ -13,7 +13,7 @@ import java.util.List;
 /**
  * Created by zia on 2018/11/30.
  * http://www.50zw.la/
- * 武林中文网
+ * 武林中文网 需要vpn
  */
 public class Wulin extends Site {
 
@@ -23,7 +23,7 @@ public class Wulin extends Site {
     }
 
     @Override
-    public List<Catalog> parseCatalog(String catalogHtml, String url) {
+    public List<Catalog> parseCatalog(String catalogHtml, String rootUrl) {
         String sub = RegexUtil.regexExcept("<ul class=\"chapterlist\">", "</ul>", catalogHtml).get(0);
         String ssub = sub.split("正文</h5>")[1];
         List<String> as = RegexUtil.regexInclude("<a", "</a>", ssub);
@@ -31,7 +31,7 @@ public class Wulin extends Site {
         for (String s : as) {
             RegexUtil.Tag tag = new RegexUtil.Tag(s);
             String name = tag.getText();
-            String href = url + tag.getValue("href");
+            String href = rootUrl + tag.getValue("href");
             list.add(new Catalog(name, href));
         }
         return list;
@@ -48,14 +48,6 @@ public class Wulin extends Site {
             contents.remove(0);
         }
         return contents;
-    }
-
-    public static void main(String[] args) throws Exception {
-        Site site = new Wulin();
-        String url = "http://www.50zw.la/book_165/";
-        System.out.println(site.search("斗破苍穹"));
-        System.out.println(site.parseCatalog(NetUtil.getHtml(url, site.getEncodeType()), url));
-        System.out.println(site.parseContent(NetUtil.getHtml("http://www.50zw.la/book_165/167677.html", site.getEncodeType())));
     }
 
     @Override

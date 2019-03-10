@@ -23,7 +23,7 @@ public class Zhuaji extends Site {
     private static final String root = "https://www.zhuaji.org/";
 
     @Override
-    public List<Catalog> parseCatalog(String catalogHtml, String url) {
+    public List<Catalog> parseCatalog(String catalogHtml, String rootUrl) {
         List<Catalog> catalogs = new ArrayList<>();
 
         Elements dds = Jsoup.parse(catalogHtml).getElementsByTag("dd");
@@ -59,10 +59,6 @@ public class Zhuaji extends Site {
             bookList.add(new Book(bkName, author, bkUrl, imageUrl, "未知", lastUpdateTime, lastChapterName, getSiteName()));
         }
         return bookList;
-    }
-
-    public static void main(String[] args) throws Exception {
-        System.out.println(new Zhuaji().search("斗破苍穹"));
     }
 
     @Override

@@ -25,7 +25,7 @@ public class Wenxuemi extends Site {
     }
 
     @Override
-    public List<Catalog> parseCatalog(String catalogHtml, String url) {
+    public List<Catalog> parseCatalog(String catalogHtml, String rootUrl) {
         return BookGriper.parseBqgCatalogs(catalogHtml, "https://www.wenxuemi6.com");
     }
 
@@ -33,14 +33,6 @@ public class Wenxuemi extends Site {
     public List<String> parseContent(String chapterHtml) {
         String content = RegexUtil.regexExcept("<div id=\"content\">", "</div>", chapterHtml).get(0);
         return BookGriper.getContentsByBR(content);
-    }
-
-    public static void main(String[] args) throws Exception {
-        Site site = new Wenxuemi();
-        String url = "https://www.wenxuemi6.com/files/article/html/9/9551/";
-        System.out.println(site.search("天行"));
-        System.out.println(site.parseCatalog(NetUtil.getHtml(url, site.getEncodeType()), url));
-        System.out.println(site.parseContent(NetUtil.getHtml("https://www.wenxuemi6.com/files/article/html/9/9551/12020560.html", site.getEncodeType())));
     }
 
     @Override

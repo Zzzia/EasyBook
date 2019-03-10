@@ -16,14 +16,14 @@ import java.util.List;
 
 /**
  * Created by zia on 2018/11/5.
- * 书农小说 http://www.shunong.com/
+ * 书农小说 http://www.qxswk.com/
  */
 public class Shunong extends Site {
 
-    private static final String root = "http://www.shunong.com/";
+    private static final String root = "http://www.qxswk.com/";
 
     @Override
-    public List<Catalog> parseCatalog(String catalogHtml, String url) {
+    public List<Catalog> parseCatalog(String catalogHtml, String rootUrl) {
         Elements lis = Jsoup.parse(catalogHtml).getElementsByClass("book_list").first().getElementsByTag("li");
 
         List<Catalog> catalogs = new ArrayList<>();
@@ -57,9 +57,11 @@ public class Shunong extends Site {
                 .add("keyboard", bookName)
                 .add("show", "title")
                 .build();
-        String html = NetUtil.getHtml("http://www.shunong.com/e/search/index.php", requestBody, getEncodeType());
+        String html = NetUtil.getHtml("http://www.qxswk.com/e/search/index.php", requestBody, getEncodeType());
 
         List<Book> books = new ArrayList<>();
+
+        System.out.println(html);
 
         Elements lis = Jsoup.parse(html).getElementsByClass("listbox").first().getElementsByTag("li");
 
@@ -71,10 +73,6 @@ public class Shunong extends Site {
             books.add(new Book(bkName, author, href, imageUrl, "未知", "未知", "未知", getSiteName()));
         }
         return books;
-    }
-
-    public static void main(String[] args) throws Exception {
-        System.out.println(new Shunong().search("斗破苍穹"));
     }
 
     @Override

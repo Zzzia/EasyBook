@@ -32,7 +32,7 @@ public class Shencou extends Site {
     }
 
     @Override
-    public List<Catalog> parseCatalog(String catalogHtml, String url) {
+    public List<Catalog> parseCatalog(String catalogHtml, String rootUrl) {
         return null;
     }
 

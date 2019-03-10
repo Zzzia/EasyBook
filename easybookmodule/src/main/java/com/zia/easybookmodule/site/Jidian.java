@@ -18,7 +18,8 @@ import java.util.List;
 
 /**
  * Created By zia on 2018/10/31.
- * 极点小说网 https://www.toptxtb.com/
+ * 极点小说网 https://www.toptxta.com/
+ * 连接成功率极低，需要vpn=_=
  */
 public class Jidian extends Site {
     @Override
@@ -28,7 +29,7 @@ public class Jidian extends Site {
 
     @Override
     public List<Book> search(String bookName) throws Exception {
-        String url = "https://www.toptxtb.com/modules/article/search.php";
+        String url = "https://www.toptxta.com/modules/article/search.php";
         RequestBody requestBody = new FormBody.Builder()
                 .addEncoded("searchkey", URLEncoder.encode(bookName, "gbk"))
                 .build();
@@ -51,10 +52,10 @@ public class Jidian extends Site {
     }
 
     @Override
-    public List<Catalog> parseCatalog(String catalogHtml, String url) {
+    public List<Catalog> parseCatalog(String catalogHtml, String rootUrl) {
         Elements lists = Jsoup.parse(catalogHtml).getElementsByClass("novel_list");
         List<Catalog> catalogs = new ArrayList<>();
-        String root = url.replace("index.html", "");
+        String root = rootUrl.replace("index.html", "");
         for (Element list : lists) {
             Elements as = list.getElementsByTag("a");
             for (Element a : as) {

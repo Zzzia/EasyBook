@@ -1,13 +1,18 @@
 package com.zia.easybookmodule.site;
 
+import android.support.annotation.NonNull;
 import com.zia.easybookmodule.bean.Book;
 import com.zia.easybookmodule.bean.Catalog;
+import com.zia.easybookmodule.bean.Type;
+import com.zia.easybookmodule.engine.EasyBook;
 import com.zia.easybookmodule.engine.Site;
 import com.zia.easybookmodule.net.NetUtil;
+import com.zia.easybookmodule.rx.Subscriber;
 import com.zia.easybookmodule.util.BookGriper;
 import com.zia.easybookmodule.util.RegexUtil;
 import com.zia.easybookmodule.util.TextUtil;
 
+import java.io.File;
 import java.io.IOException;
 import java.net.URLEncoder;
 import java.util.ArrayList;
@@ -68,7 +73,7 @@ public class Biquge extends Site {
     }
 
     @Override
-    public List<Catalog> parseCatalog(String catalogHtml, String url) {
+    public List<Catalog> parseCatalog(String catalogHtml, String rootUrl) {
         List<String> as = RegexUtil.regexExcept("<dd>", "</dd>", catalogHtml);
         List<Catalog> catalogs = new ArrayList<>();
         for (String a : as) {

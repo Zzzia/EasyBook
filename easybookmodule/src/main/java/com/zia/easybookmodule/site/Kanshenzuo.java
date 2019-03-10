@@ -65,7 +65,7 @@ public class Kanshenzuo extends Site {
     }
 
     @Override
-    public List<Catalog> parseCatalog(String catalogHtml, String url) {
+    public List<Catalog> parseCatalog(String catalogHtml, String rootUrl) {
         String sub = RegexUtil.regexExcept("<div id=\"list\">", "</div>", catalogHtml).get(0);
         String ssub = sub.split("正文</dt>")[1];
         List<String> as = RegexUtil.regexInclude("<a", "</a>", ssub);

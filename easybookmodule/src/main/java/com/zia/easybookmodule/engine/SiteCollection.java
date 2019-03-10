@@ -28,7 +28,7 @@ public class SiteCollection {
         sites.add(new Wenxuemi());
         sites.add(new Dingdian());
         sites.add(new Mainhuatang());
-//        sites.add(new Bishenge());
+        sites.add(new Bishenge());
 
         //anim
         sites.add(new Binhuo());

@@ -45,7 +45,7 @@ public class Mainhuatang extends Site {
     }
 
     @Override
-    public List<Catalog> parseCatalog(String catalogHtml, String url) {
+    public List<Catalog> parseCatalog(String catalogHtml, String rootUrl) {
         Elements dds = Jsoup.parse(catalogHtml).getElementsByTag("dd");
         List<Catalog> catalogs = new ArrayList<>();
         for (Element dd : dds) {

@@ -6,7 +6,13 @@ import com.zia.easybookmodule.engine.Site;
 import com.zia.easybookmodule.net.NetUtil;
 import com.zia.easybookmodule.util.BookGriper;
 import com.zia.easybookmodule.util.RegexUtil;
+import okhttp3.FormBody;
+import okhttp3.RequestBody;
+import org.jsoup.Jsoup;
+import org.jsoup.nodes.Element;
+import org.jsoup.select.Elements;
 
+import java.net.URLEncoder;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -23,25 +29,36 @@ public class Bishenge extends Site {
 
     @Override
     public List<Book> search(String bookName) throws Exception {
-        return BookGriper.baidu( bookName,getSiteName(), "7751645214184726687");
+        String url = "http://www.bishenge.com/pc/so.php";
+        RequestBody requestBody = new FormBody.Builder()
+                .addEncoded("searchkey", URLEncoder.encode(bookName, "gbk"))
+                .add("searchtype", "articlename")
+                .build();
+        String html = NetUtil.getHtml(url, requestBody, getEncodeType());
+        Elements elements = Jsoup.parse(html).getElementById("main").getElementsByTag("tr");
+        //移除表格标题
+        elements.remove(0);
+        List<Book> books = new ArrayList<>();
+        for (Element element : elements) {
+            Elements tds = element.getElementsByTag("td");
+            Element a = tds.first().getElementsByTag("a").first();
+            String bkName = a.text();
+            String bkUrl = "http://www.bishenge.com" + a.attr("href");
+            String author = tds.get(1).text();
+            String updateTime = tds.get(2).text().split(" ")[0];
+            books.add(new Book(bkName, author, bkUrl, "", "", updateTime, "", getSiteName()));
+        }
+        return books;
     }
 
     @Override
-    public List<Catalog> parseCatalog(String catalogHtml, String url) {
-        return BookGriper.parseBqgCatalogs(catalogHtml, url);
+    public List<Catalog> parseCatalog(String catalogHtml, String rootUrl) {
+        return BookGriper.parseBqgCatalogs(catalogHtml, rootUrl);
     }
 
     @Override
     public List<String> parseContent(String chapterHtml) {
         String content = RegexUtil.regexExcept("<div id=\"content\">", "</div>", chapterHtml).get(0);
         return BookGriper.getContentsByBR(content);
-    }
-
-    public static void main(String[] args) throws Exception {
-        Site site = new Bishenge();
-        String url = "https://www.bimo.cc/id6167/";
-        System.out.println(site.search("天行"));
-        System.out.println(site.parseCatalog(NetUtil.getHtml(url, site.getEncodeType()), url));
-        System.out.println(site.parseContent(NetUtil.getHtml("https://www.bimo.cc/id6167/4723726.html", site.getEncodeType())));
     }
 }

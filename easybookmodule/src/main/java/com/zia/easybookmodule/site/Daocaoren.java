@@ -1,14 +1,19 @@
 package com.zia.easybookmodule.site;
 
+import android.support.annotation.NonNull;
 import com.zia.easybookmodule.bean.Book;
 import com.zia.easybookmodule.bean.Catalog;
+import com.zia.easybookmodule.bean.Type;
+import com.zia.easybookmodule.engine.EasyBook;
 import com.zia.easybookmodule.engine.Site;
 import com.zia.easybookmodule.net.NetUtil;
+import com.zia.easybookmodule.rx.Subscriber;
 import com.zia.easybookmodule.util.TextUtil;
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Element;
 import org.jsoup.select.Elements;
 
+import java.io.File;
 import java.net.URLEncoder;
 import java.util.ArrayList;
 import java.util.List;
@@ -22,12 +27,12 @@ public class Daocaoren extends Site {
     private static final String root = "http://www.daocaorenshuwu.com";
 
     @Override
-    public List<Catalog> parseCatalog(String catalogHtml, String url) {
+    public List<Catalog> parseCatalog(String catalogHtml, String rootUrl) {
         Elements as = Jsoup.parse(catalogHtml).getElementById("all-chapter").getElementsByTag("a");
         List<Catalog> catalogs = new ArrayList<>();
         for (Element a : as) {
             String name = a.text();
-            String href = a.attr("href");
+            String href = "https:" + a.attr("href");
             catalogs.add(new Catalog(name, href));
         }
         return catalogs;

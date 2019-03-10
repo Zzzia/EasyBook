@@ -24,16 +24,8 @@ public class Zhuishu extends Site {
         return BookGriper.parseBaiduBooks(html, getSiteName());
     }
 
-    public static void main(String[] args) throws Exception {
-        Site site = new Zhuishu();
-        String url = "https://www.bimo.cc/id6167/";
-        System.out.println(site.search("天行"));
-        System.out.println(site.parseCatalog(NetUtil.getHtml(url, site.getEncodeType()), url));
-        System.out.println(site.parseContent(NetUtil.getHtml("https://www.bimo.cc/id6167/4723726.html", site.getEncodeType())));
-    }
-
     @Override
-    public List<Catalog> parseCatalog(String catalogHtml, String url) {
+    public List<Catalog> parseCatalog(String catalogHtml, String rootUrl) {
         return BookGriper.parseBqgCatalogs(catalogHtml, "https://www.bimo.cc");
     }
 
