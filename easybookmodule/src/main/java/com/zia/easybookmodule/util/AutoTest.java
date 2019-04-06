@@ -6,9 +6,10 @@ import com.zia.easybookmodule.bean.Type;
 import com.zia.easybookmodule.engine.EasyBook;
 import com.zia.easybookmodule.engine.Site;
 import com.zia.easybookmodule.rx.Subscriber;
-import com.zia.easybookmodule.site.Bishenge;
+import com.zia.easybookmodule.site.*;
 
 import java.io.File;
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -16,11 +17,12 @@ import java.util.List;
  */
 public class AutoTest {
     public static void main(String[] args) throws Exception {
-        test(new Bishenge());
+        test(new Zhuaji());
     }
 
     private static void test(final Site site) throws Exception {
-        List<Book> books = site.search("天行");
+        List<Book> books = site.search("修真");
+        System.out.println(new ArrayList<>(books).toString());
         Book book = books.get(0);
         EasyBook.download(book)
                 .setType(Type.TXT)

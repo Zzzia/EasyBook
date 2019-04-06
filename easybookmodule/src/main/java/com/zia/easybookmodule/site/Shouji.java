@@ -1,5 +1,6 @@
 package com.zia.easybookmodule.site;
 
+import com.zia.easybookmodule.BuildConfig;
 import com.zia.easybookmodule.bean.Book;
 import com.zia.easybookmodule.bean.Catalog;
 import com.zia.easybookmodule.engine.Site;
@@ -22,6 +23,7 @@ import java.util.List;
  * 手机看书 http://www.shoujikanshu.cc/
  * 需要vpn
  */
+@Deprecated
 public class Shouji extends Site {
 
     private static final String root = "http://www.sjks.cc";
@@ -33,7 +35,7 @@ public class Shouji extends Site {
 
     @Override
     public List<Book> search(String bookName) throws Exception {
-        int count = 5;
+        int count = 3;
         RequestBody requestBody = new FormBody.Builder()
                 .addEncoded("keyboard", URLEncoder.encode(bookName, "gbk"))
                 .add("show", "title")
@@ -67,6 +69,7 @@ public class Shouji extends Site {
 
     @Override
     public List<Catalog> parseCatalog(String catalogHtml, String rootUrl) {
+        System.out.println(catalogHtml);
         Elements as = Jsoup.parse(catalogHtml).getElementsByClass("list").first().getElementsByTag("a");
         List<Catalog> catalogs = new ArrayList<>();
         for (Element a : as) {
@@ -74,7 +77,6 @@ public class Shouji extends Site {
             String name = a.text();
             catalogs.add(new Catalog(name, href));
         }
-        System.out.println(catalogs);
         return catalogs;
     }
 

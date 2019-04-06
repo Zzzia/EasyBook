@@ -19,7 +19,7 @@ import java.util.List;
  * Created By zia on 2018/10/31.
  * 棉花糖小说 http://www.mianhuatang520.com
  */
-public class Mainhuatang extends Site {
+public class Mianhuatang extends Site {
     @Override
     public String getSiteName() {
         return "棉花糖小说";

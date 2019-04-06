@@ -6,20 +6,42 @@ import com.zia.easybookmodule.engine.Site;
 import com.zia.easybookmodule.net.NetUtil;
 import com.zia.easybookmodule.util.BookGriper;
 import com.zia.easybookmodule.util.RegexUtil;
+import org.jsoup.Jsoup;
+import org.jsoup.nodes.Element;
+import org.jsoup.select.Elements;
 
+import java.net.URLEncoder;
 import java.util.ArrayList;
 import java.util.List;
 
 /**
  * Created by zia on 2018/11/30.
  * http://www.50zw.la/
- * 武林中文网 需要vpn
+ * 武林中文网
  */
 public class Wulin extends Site {
 
     @Override
     public List<Book> search(String bookName) throws Exception {
-        return BookGriper.baidu(bookName, getSiteName(), "13049992925692302651");
+        String url = "https://www.50zw.la/modules/article/search.php?searchkey="
+                + URLEncoder.encode(bookName, "gbk");
+        String html = NetUtil.getHtml(url, getEncodeType());
+        Element grid = Jsoup.parse(html).getElementsByClass("grid").first();
+        Elements trs = grid.getElementsByTag("tr");
+        List<Book> bookList = new ArrayList<>(trs.size());
+        for (int i = 0; i < trs.size(); i++) {
+            if (i == 0) continue;
+            Elements tds = trs.get(i).getElementsByTag("td");
+            String bkName = tds.get(0).getElementsByTag("a").text();
+            String href = tds.get(0).getElementsByTag("a").attr("href");
+            String lastCharpter = tds.get(1).text();
+            String author = tds.get(2).text();
+            String chapterSize = tds.get(3).text();
+            String lastUpdateTime = tds.get(4).text();
+            Book book = new Book(bkName, author, href, "", chapterSize, lastUpdateTime, lastCharpter, getSiteName());
+            bookList.add(book);
+        }
+        return bookList;
     }
 
     @Override

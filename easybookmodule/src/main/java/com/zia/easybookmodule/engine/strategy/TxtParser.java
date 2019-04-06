@@ -22,7 +22,7 @@ public class TxtParser implements ParseStrategy {
             sb.append("\n");
         }
         //章节结束空一行，用来分割下一章节
-        sb.append("\n");
+//        sb.append("\n");
         return sb.toString();
     }
 

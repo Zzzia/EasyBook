@@ -27,7 +27,7 @@ public class SiteCollection {
         sites.add(new Wulin());
         sites.add(new Wenxuemi());
         sites.add(new Dingdian());
-        sites.add(new Mainhuatang());
+        sites.add(new Mianhuatang());
         sites.add(new Bishenge());
 
         //anim
@@ -35,7 +35,7 @@ public class SiteCollection {
         sites.add(new Daocaoren());
 
         //h
-        sites.add(new Shouji());
+//        sites.add(new Shouji());
         sites.add(new Jidian());
 //        sites.add(new Zhai());
     }

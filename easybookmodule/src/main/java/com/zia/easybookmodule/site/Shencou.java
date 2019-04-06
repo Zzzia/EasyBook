@@ -15,6 +15,7 @@ import java.util.List;
  * 神凑轻小说 http://www.shencou.com/
  * 有防爬，告辞
  */
+@Deprecated
 public class Shencou extends Site {
     @Override
     public String getSiteName() {

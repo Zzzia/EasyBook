@@ -19,6 +19,7 @@ import java.util.List;
  * 宅阅读 https://www.zhaiyuedu.com/
  * 需要js渲染
  */
+@Deprecated
 public class Zhai extends Site {
 
     private static final String root = "https://www.zhaiyuedu.com";
