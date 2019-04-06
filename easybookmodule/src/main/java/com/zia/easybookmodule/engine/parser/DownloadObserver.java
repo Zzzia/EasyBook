@@ -271,9 +271,7 @@ public class DownloadObserver implements Observer<File>, Disposable {
             }
         });
         try {
-            File resultFile = new File(savePath);
-            parser.save(newChapters, book, savePath);
-            final File finalResultFile = resultFile;
+            final File finalResultFile = parser.save(newChapters, book, savePath);
             post(new Runnable() {
                 @Override
                 public void run() {
