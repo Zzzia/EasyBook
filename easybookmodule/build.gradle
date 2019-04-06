@@ -4,8 +4,6 @@ apply plugin: 'com.github.dcendents.android-maven'
 android {
     compileSdkVersion 28
 
-
-
     defaultConfig {
         minSdkVersion 15
         targetSdkVersion 28
