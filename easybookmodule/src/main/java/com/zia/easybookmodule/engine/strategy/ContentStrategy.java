@@ -1,20 +1,15 @@
 package com.zia.easybookmodule.engine.strategy;
 
-import com.zia.easybookmodule.bean.Book;
 import com.zia.easybookmodule.bean.Chapter;
-import nl.siegmann.epublib.domain.Author;
-import nl.siegmann.epublib.domain.Metadata;
-import nl.siegmann.epublib.domain.Resource;
-import nl.siegmann.epublib.epub.EpubWriter;
-
-import java.io.*;
-import java.util.List;
 
 /**
  * Created by zia on 2018/11/19.
  * 文本格式策略，用来自定义小说空行等格式
  * 继承该类可修改
+ * 已弃用
+ * @see ParseStrategy
  */
+@Deprecated
 public class ContentStrategy {
 
     private static final String cssName = "bookCss";
@@ -23,6 +18,7 @@ public class ContentStrategy {
      * 生成一章Epub格式的小说
      * 可通过继承{@link #getHtml(String, String)}修改html格式
      * 可通过继承{@link #getCss()}修改css样式
+     *
      * @param chapter 章节，包含章节名(chapterName)和章节内容(contents)
      * @return 章节完整Html
      */
@@ -52,35 +48,6 @@ public class ContentStrategy {
         //章节结束空一行，用来分割下一章节
         sb.append("\n");
         return sb.toString();
-    }
-
-    final public File saveEpub(List<Chapter> chapters, Book book, String savePath) throws IOException {
-        String bookName = book.getBookName() + "-" + book.getSiteName();
-        File file = new File(savePath + File.separator + bookName + ".epub");
-        nl.siegmann.epublib.domain.Book epub = new nl.siegmann.epublib.domain.Book();
-        epub.getResources().add(new Resource(getCss().getBytes(), cssName + ".css"));
-        Metadata metadata = epub.getMetadata();
-        metadata.addTitle(bookName);
-        metadata.addAuthor(new Author(book.getAuthor()));
-        for (Chapter chapter : chapters) {
-            epub.addSection(chapter.getChapterName(),
-                    new Resource(parseEpubContent(chapter).getBytes(), chapter.getChapterName() + ".html"));
-        }
-        EpubWriter epubWriter = new EpubWriter();
-        epubWriter.write(epub, new FileOutputStream(file));
-        return file;
-    }
-
-    final public File saveTxt(List<Chapter> chapters, Book book, String savePath) throws IOException {
-        String bookName = book.getBookName() + "-" + book.getSiteName();
-        savePath += File.separator + bookName + ".txt";
-        File file = new File(savePath);
-        BufferedWriter bufferedWriter = new BufferedWriter(
-                new OutputStreamWriter(new FileOutputStream(file)));
-        for (Chapter chapter : chapters) {
-            bufferedWriter.write(parseTxtContent(chapter));
-        }
-        return file;
     }
 
     protected String getHtml(String title, String content) {

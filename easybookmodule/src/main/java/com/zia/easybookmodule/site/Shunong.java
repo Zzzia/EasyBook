@@ -61,8 +61,6 @@ public class Shunong extends Site {
 
         List<Book> books = new ArrayList<>();
 
-        System.out.println(html);
-
         Elements lis = Jsoup.parse(html).getElementsByClass("listbox").first().getElementsByTag("li");
 
         for (Element li : lis) {

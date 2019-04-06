@@ -36,7 +36,7 @@ public class Zhuaji extends Site {
     }
 
     @Override
-    public List<String> parseContent(String chapterHtml) {
+    public List<String> parseContent(String chapterHtml) throws Exception{
         return BookGriper.getContentsByTextNodes(Jsoup.parse(chapterHtml).getElementById("content").textNodes());
     }
 

@@ -6,7 +6,9 @@ import com.zia.easybookmodule.bean.Chapter;
 import com.zia.easybookmodule.bean.Type;
 import com.zia.easybookmodule.engine.Platform;
 import com.zia.easybookmodule.engine.Site;
-import com.zia.easybookmodule.engine.strategy.ContentStrategy;
+import com.zia.easybookmodule.engine.strategy.EpubParser;
+import com.zia.easybookmodule.engine.strategy.ParseStrategy;
+import com.zia.easybookmodule.engine.strategy.TxtParser;
 import com.zia.easybookmodule.net.NetUtil;
 import com.zia.easybookmodule.rx.Disposable;
 import com.zia.easybookmodule.rx.Observer;
@@ -41,7 +43,8 @@ public class DownloadObserver implements Observer<File>, Disposable {
     private Type type = Type.EPUB;
     private Book book;
     private Platform platform = Platform.get();
-    private ContentStrategy strategy = new ContentStrategy();
+
+    private ParseStrategy parser = new TxtParser();
 
     private LinkedBlockingQueue<Chapter> chapters;
     private LinkedBlockingQueue<Catalog> catalogQueue;
@@ -95,7 +98,8 @@ public class DownloadObserver implements Observer<File>, Disposable {
         }
     }
 
-    void concurrentDownload(final Subscriber<File> subscriber) {
+    //重试次数过多可能产生异常
+    private void concurrentDownload(final Subscriber<File> subscriber) throws Exception {
         post(new Runnable() {
             @Override
             public void run() {
@@ -240,6 +244,9 @@ public class DownloadObserver implements Observer<File>, Disposable {
                                 errorBook.decrementAndGet();
                                 catalogQueue.add(finalCatalog);//重新加入队列，等待下载
 //                                    addQueue(finalCatalog);//重新加入队列，等待下载
+                            } catch (Exception e) {
+                                subscriber.onError(e);
+                                dispose();
                             }
                         }
                     });
@@ -264,15 +271,8 @@ public class DownloadObserver implements Observer<File>, Disposable {
             }
         });
         try {
-            File resultFile = null;
-            switch (type) {
-                case TXT:
-                    resultFile = strategy.saveTxt(newChapters, book, savePath);
-                    break;
-                case EPUB:
-                    resultFile = strategy.saveEpub(newChapters, book, savePath);
-                    break;
-            }
+            File resultFile = new File(savePath);
+            parser.save(newChapters, book, savePath);
             final File finalResultFile = resultFile;
             post(new Runnable() {
                 @Override
@@ -333,11 +333,23 @@ public class DownloadObserver implements Observer<File>, Disposable {
 
     public DownloadObserver setType(Type type) {
         this.type = type;
+        switch (type) {
+            case TXT:
+                parser = new TxtParser();
+                break;
+            case EPUB:
+                parser = new EpubParser();
+                break;
+            default:
+                parser = new TxtParser();
+                break;
+        }
         return this;
     }
 
-    public DownloadObserver setStrategy(ContentStrategy strategy) {
-        this.strategy = strategy;
+    //用于扩充格式
+    public DownloadObserver setStrategy(ParseStrategy parser) {
+        this.parser = parser;
         return this;
     }
 }

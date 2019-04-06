@@ -7,7 +7,7 @@ import com.zia.easybookmodule.bean.Book
 import com.zia.easybookmodule.bean.Catalog
 import com.zia.easybookmodule.bean.Chapter
 import com.zia.easybookmodule.engine.EasyBook
-import com.zia.easybookmodule.engine.strategy.ContentStrategy
+import com.zia.easybookmodule.engine.strategy.TxtParser
 import com.zia.easybookmodule.rx.Subscriber
 import kotlinx.android.synthetic.main.activity_preview.*
 
@@ -15,7 +15,7 @@ class PreviewActivity : AppCompatActivity() {
 
     private lateinit var catalog: Catalog
     private lateinit var book: Book
-    private val contentStrategy = ContentStrategy()
+    private val parser = TxtParser()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -28,7 +28,7 @@ class PreviewActivity : AppCompatActivity() {
             .subscribe(object : Subscriber<List<String>> {
                 override fun onFinish(t: List<String>) {
                     val chapter = Chapter(catalog.chapterName, catalog.index, t)
-                    preview_tv.text = contentStrategy.parseTxtContent(chapter)
+                    preview_tv.text = parser.parseContent(chapter)
                 }
 
                 override fun onError(e: Exception) {
