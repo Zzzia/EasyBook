@@ -10,7 +10,7 @@
 
 QQ群交流：29527219
 
-<img src="https://github.com/Zzzia/EasyBook/blob/master/screenshot/book2.png" width="280"><img src="https://github.com/Zzzia/EasyBook/blob/master/screenshot/book3.png" width="280"><img src="https://github.com/Zzzia/EasyBook/blob/master/screenshot/book4.png" width="280">
+<img src="https://github.com/Zzzia/EasyBook/blob/master/screenshot/1.jpg" width="280"><img src="https://github.com/Zzzia/EasyBook/blob/master/screenshot/2.jpg" width="280"><img src="https://github.com/Zzzia/EasyBook/blob/master/screenshot/3.jpg" width="280">
 
 #### Android平台
 **Step 1**. Add the JitPack repository to your build file
@@ -29,7 +29,7 @@ allprojects {
 ~~~java
 dependencies {
 	implementation 'com.squareup.okhttp3:okhttp:3.11.0'
-    implementation 'com.github.Zzzia:EasyBook:2.41'
+    implementation 'com.github.Zzzia:EasyBook:2.42'
 }
 ~~~
 
@@ -129,6 +129,14 @@ void onDestroy(){
 ~~~java
 //添加一个自己解析的站点类，叫Zhuishushenqi，需要继承Site
 SiteCollection.getInstance().addSite(Zhuishushenqi());
+~~~
+
+~~~
+v2.42
+尝试添加热修复版本控制
+
+v2.40
+添加EPUB封面，更换为xhtml格式，支持更多阅读软件
 ~~~
 
 # Thanks

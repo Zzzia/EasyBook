@@ -1,5 +1,6 @@
 package com.zia.easybookmodule.engine;
 
+import com.zia.easybookmodule.BuildConfig;
 import com.zia.easybookmodule.bean.Book;
 import com.zia.easybookmodule.bean.Catalog;
 import com.zia.easybookmodule.engine.parser.CatalogObserver;
@@ -43,5 +44,13 @@ public class EasyBook {
 
     public static Observer<List<String>> getContent(Book book, Catalog catalog) {
         return new ContentObserver(book, catalog);
+    }
+
+    public static int getVersion(){
+        return BuildConfig.VERSION_CODE;
+    }
+
+    public static String getVersionName(){
+        return BuildConfig.VERSION_NAME;
     }
 }
