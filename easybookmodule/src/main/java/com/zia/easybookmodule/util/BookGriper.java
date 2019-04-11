@@ -71,6 +71,19 @@ public class BookGriper {
         return list;
     }
 
+    public static List<Catalog> parseCatalogs(String content, String url){
+        String ssub = content.split("正文</dt>|正文卷</dt>")[1];
+        List<String> as = RegexUtil.regexInclude("<a", "</a>", ssub);
+        List<Catalog> list = new ArrayList<>();
+        for (String s : as) {
+            RegexUtil.Tag tag = new RegexUtil.Tag(s);
+            String name = tag.getText();
+            String href = url + tag.getValue("href");
+            list.add(new Catalog(name, href));
+        }
+        return list;
+    }
+
     public static List<String> getContentsByBR(String content) {
         String lines[] = content.split("<br>|<br/>|<br />");
         List<String> contents = new ArrayList<>();

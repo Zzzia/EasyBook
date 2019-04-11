@@ -6,10 +6,9 @@ import com.zia.easybookmodule.engine.Site;
 import com.zia.easybookmodule.net.NetUtil;
 import com.zia.easybookmodule.util.BookGriper;
 import org.jsoup.Jsoup;
-import org.jsoup.nodes.Element;
 import org.jsoup.nodes.TextNode;
-import org.jsoup.select.Elements;
 
+import java.net.URLEncoder;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -25,6 +24,11 @@ public class Dingdian extends Site {
 
     @Override
     public List<Book> search(String bookName) throws Exception {
+//        String url = "https://www.booktxt.net/search?searchkey="
+//                + URLEncoder.encode(bookName, "gbk");
+//        String html = NetUtil.getHtml(url, "utf-8");
+//        System.out.println(html);
+//        List<Book> list = new ArrayList<>();
         return BookGriper.baidu(bookName, getSiteName(), "5334330359795686106");
     }
 

@@ -17,11 +17,11 @@ import java.util.List;
  */
 public class AutoTest {
     public static void main(String[] args) throws Exception {
-        test(new Zhuaji());
+        test(new Shuyuewu());
     }
 
     private static void test(final Site site) throws Exception {
-        List<Book> books = site.search("修真");
+        List<Book> books = site.search("天行");
         System.out.println(new ArrayList<>(books).toString());
         Book book = books.get(0);
         EasyBook.download(book)

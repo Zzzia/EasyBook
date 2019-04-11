@@ -155,7 +155,7 @@ public class RegexUtil {
 
         //通过关键字获取属性
         public String getValue(String key) {
-            Matcher matcher = Pattern.compile(key + "='(.*?)'|" + key + "=\"(.*?)\"").matcher(getPrefix());
+            Matcher matcher = Pattern.compile(key + " *= *'(.*?)'|" + key + " *= *\"(.*?)\"").matcher(getPrefix());
             while (matcher.find()) {
                 if (matcher.group(1) != null)
                     return matcher.group(1);

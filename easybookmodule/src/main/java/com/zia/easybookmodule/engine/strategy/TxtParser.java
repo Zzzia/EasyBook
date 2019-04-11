@@ -16,8 +16,8 @@ public class TxtParser implements ParseStrategy {
         sb.append(chapter.getChapterName());
         sb.append("\n");
         for (String line : chapter.getContents()) {
-            //4个空格+正文+换行
-            sb.append("        ");
+            //1个缩进+正文+换行
+            sb.append("\u3000");
             sb.append(line);
             sb.append("\n");
         }
