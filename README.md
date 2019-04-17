@@ -10,7 +10,12 @@
 
 QQ群交流：29527219
 
-<img src="https://github.com/Zzzia/EasyBook/blob/master/screenshot/1.jpg" width="280"><img src="https://github.com/Zzzia/EasyBook/blob/master/screenshot/2.jpg" width="280"><img src="https://github.com/Zzzia/EasyBook/blob/master/screenshot/3.jpg" width="280">
+<img src="https://github.com/Zzzia/Book/blob/master/screenshot/1.jpg"
+width="280"><img
+src="https://github.com/Zzzia/Book/blob/master/screenshot/2.jpg"
+width="280"><img
+src="https://github.com/Zzzia/Book/blob/master/screenshot/3.jpg"
+width="280">
 
 #### Android平台
 **Step 1**. Add the JitPack repository to your build file
@@ -29,7 +34,7 @@ allprojects {
 ~~~java
 dependencies {
 	implementation 'com.squareup.okhttp3:okhttp:3.11.0'
-    implementation 'com.github.Zzzia:EasyBook:2.4'
+    implementation 'com.github.Zzzia:EasyBook:2.44'
 }
 ~~~
 
@@ -146,7 +151,7 @@ EasyBook.getRank(rankInfo);
 
 
 ~~~
-v2.43
+v2.44
 添加对起点中文网的排行解析，用于书城功能
 
 v2.42
