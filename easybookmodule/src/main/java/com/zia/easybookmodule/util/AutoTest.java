@@ -3,6 +3,9 @@ package com.zia.easybookmodule.util;
 import android.support.annotation.NonNull;
 import com.zia.easybookmodule.bean.Book;
 import com.zia.easybookmodule.bean.Type;
+import com.zia.easybookmodule.bean.rank.HottestRank;
+import com.zia.easybookmodule.bean.rank.Rank;
+import com.zia.easybookmodule.bean.rank.RankConstants;
 import com.zia.easybookmodule.engine.EasyBook;
 import com.zia.easybookmodule.engine.Site;
 import com.zia.easybookmodule.rx.Subscriber;
@@ -17,7 +20,28 @@ import java.util.List;
  */
 public class AutoTest {
     public static void main(String[] args) throws Exception {
-        test(new Shuyuewu());
+//        test(new Biquge());
+        EasyBook.getRank(RankConstants.yuepiao).subscribe(new Subscriber<Rank>() {
+            @Override
+            public void onFinish(@NonNull Rank hottestRank) {
+                System.out.println(hottestRank);
+            }
+
+            @Override
+            public void onError(@NonNull Exception e) {
+                e.printStackTrace();
+            }
+
+            @Override
+            public void onMessage(@NonNull String message) {
+
+            }
+
+            @Override
+            public void onProgress(int progress) {
+
+            }
+        });
     }
 
     private static void test(final Site site) throws Exception {

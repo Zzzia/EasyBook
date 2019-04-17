@@ -3,10 +3,12 @@ package com.zia.easybookmodule.engine;
 import com.zia.easybookmodule.BuildConfig;
 import com.zia.easybookmodule.bean.Book;
 import com.zia.easybookmodule.bean.Catalog;
-import com.zia.easybookmodule.engine.parser.CatalogObserver;
-import com.zia.easybookmodule.engine.parser.ContentObserver;
-import com.zia.easybookmodule.engine.parser.DownloadObserver;
-import com.zia.easybookmodule.engine.parser.SearchObserver;
+import com.zia.easybookmodule.bean.rank.HottestRank;
+import com.zia.easybookmodule.bean.rank.Rank;
+import com.zia.easybookmodule.bean.rank.RankInfo;
+import com.zia.easybookmodule.engine.parser.*;
+import com.zia.easybookmodule.engine.parser.rank.HottestRankObserver;
+import com.zia.easybookmodule.engine.parser.rank.RankObserver;
 import com.zia.easybookmodule.rx.Observer;
 
 import java.util.List;
@@ -46,11 +48,19 @@ public class EasyBook {
         return new ContentObserver(book, catalog);
     }
 
-    public static int getVersion(){
+    public static Observer<HottestRank> getHottestRank() {
+        return new HottestRankObserver();
+    }
+
+    public static Observer<Rank> getRank(RankInfo rankInfo) {
+        return new RankObserver(rankInfo);
+    }
+
+    public static int getVersion() {
         return BuildConfig.VERSION_CODE;
     }
 
-    public static String getVersionName(){
+    public static String getVersionName() {
         return BuildConfig.VERSION_NAME;
     }
 }

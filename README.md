@@ -29,7 +29,7 @@ allprojects {
 ~~~java
 dependencies {
 	implementation 'com.squareup.okhttp3:okhttp:3.11.0'
-    implementation 'com.github.Zzzia:EasyBook:2.42'
+    implementation 'com.github.Zzzia:EasyBook:2.4'
 }
 ~~~
 
@@ -131,7 +131,24 @@ void onDestroy(){
 SiteCollection.getInstance().addSite(Zhuishushenqi());
 ~~~
 
+解析起点排行榜：
+
+~~~java
+EasyBook.getHottestRank().subscribe();
 ~~~
+
+解析起点分类排行榜：
+
+~~~java
+EasyBook.getRank(rankInfo);
+~~~
+
+
+
+~~~
+v2.43
+添加对起点中文网的排行解析，用于书城功能
+
 v2.42
 尝试添加热修复版本控制
 

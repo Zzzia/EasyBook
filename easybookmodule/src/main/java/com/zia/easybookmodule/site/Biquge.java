@@ -26,7 +26,7 @@ import java.util.List;
  */
 public class Biquge extends Site {
 
-    private final static String root = "http://www.biquge.com.tw";
+    private final static String root = "http://www.biquge.tw";
 
     @Override
     public String getSiteName() {
@@ -35,7 +35,7 @@ public class Biquge extends Site {
 
     @Override
     public List<Book> search(String bookName) throws Exception {
-        String url = "http://www.biquge.com.tw/modules/article/soshu.php?searchkey="
+        String url = "http://www.biquge.tw/modules/article/soshu.php?searchkey="
                 + URLEncoder.encode(bookName, "gbk");
         String html = NetUtil.getHtml(url, getEncodeType());
         String title = RegexUtil.regexExcept("<title>", "</title>", html).get(0);
