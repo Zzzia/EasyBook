@@ -1,6 +1,9 @@
 package com.zia.easybookmodule.util;
 
-import com.zia.easybookmodule.bean.rank.*;
+import com.zia.easybookmodule.bean.rank.HottestRankClassify;
+import com.zia.easybookmodule.bean.rank.RankBook;
+import com.zia.easybookmodule.bean.rank.RankClassify;
+import com.zia.easybookmodule.bean.rank.RankInfo;
 import org.jsoup.nodes.Document;
 import org.jsoup.nodes.Element;
 import org.jsoup.select.Elements;
@@ -30,22 +33,30 @@ public class RankUtil {
             if (rankClassifies != null) {
                 return rankClassifies;
             }
-            Elements lis = document.getElementsByClass("list_type_detective").first().getElementsByTag("li");
             rankClassifies = new ArrayList<>();
-            for (Element li : lis) {
-                Element a = li.getElementsByTag("a").first();
-                String href = HTTPS + a.attr("href");
-                String data_eid = a.attr("data-eid");
-                String rankName = a.text();
-                RankInfo rankInfo = new RankInfo(href, rankName, data_eid);
-                rankClassifies.add(rankInfo);
+            for (int i = 0; i < 2; i++) {
+                Elements lis = document.getElementsByClass("list_type_detective").get(i).getElementsByTag("li");
+                for (Element li : lis) {
+                    Element a = li.getElementsByTag("a").first();
+                    String href = HTTPS + a.attr("href");
+                    String data_eid = a.attr("data-eid");
+                    String rankName = a.text();
+                    RankInfo rankInfo = new RankInfo(href, rankName, data_eid);
+                    rankClassifies.add(rankInfo);
+                }
             }
             return rankClassifies;
         }
     }
 
     public static List<RankClassify> getRankClassifyList(Document document) throws Exception {
-        Elements as = document.getElementsByClass("type-list").first().getElementsByTag("a");
+        Elements as;
+        try {
+            as = document.getElementsByClass("type-list").first().getElementsByTag("a");
+        } catch (Exception e) {
+            //VIP精品打赏榜可能没有分类
+            return new ArrayList<>(0);
+        }
         List<RankClassify> results = new ArrayList<>();
         for (Element a : as) {
             String chanid = a.attr("data-chanid");
@@ -104,9 +115,6 @@ public class RankUtil {
                     Element infoTag = box.getElementsByTag("i").first();
                     if (infoTag != null) {
                         viewInfo = infoTag.text();
-//                        if (isNumeric(viewInfo)) {
-//                            viewInfo = viewInfo + "月票";
-//                        }
                     }
                     RankBook rankBook = new RankBook(bkName, eid, bid, bkUrl, "", "", "",
                             "", "", "", "", "", "", i + 1, viewInfo);

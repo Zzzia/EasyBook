@@ -3,13 +3,11 @@ package com.zia.easybookmodule.util;
 import android.support.annotation.NonNull;
 import com.zia.easybookmodule.bean.Book;
 import com.zia.easybookmodule.bean.Type;
-import com.zia.easybookmodule.bean.rank.HottestRank;
 import com.zia.easybookmodule.bean.rank.Rank;
 import com.zia.easybookmodule.bean.rank.RankConstants;
 import com.zia.easybookmodule.engine.EasyBook;
 import com.zia.easybookmodule.engine.Site;
 import com.zia.easybookmodule.rx.Subscriber;
-import com.zia.easybookmodule.site.*;
 
 import java.io.File;
 import java.util.ArrayList;
@@ -21,10 +19,10 @@ import java.util.List;
 public class AutoTest {
     public static void main(String[] args) throws Exception {
 //        test(new Biquge());
-        EasyBook.getRank(RankConstants.yuepiao).subscribe(new Subscriber<Rank>() {
+        EasyBook.getRank(RankConstants.vipreward).subscribe(new Subscriber<Rank>() {
             @Override
             public void onFinish(@NonNull Rank hottestRank) {
-                System.out.println(hottestRank);
+                System.out.println(new ArrayList<>(hottestRank.getRankClassifies()));
             }
 
             @Override
