@@ -1,26 +1,19 @@
 package com.zia.easybookmodule.engine.parser;
 
 import com.zia.easybookmodule.bean.Book;
-import com.zia.easybookmodule.bean.Catalog;
 import com.zia.easybookmodule.bean.Chapter;
 import com.zia.easybookmodule.bean.Type;
 import com.zia.easybookmodule.engine.Platform;
-import com.zia.easybookmodule.engine.Site;
 import com.zia.easybookmodule.engine.strategy.EpubParser;
 import com.zia.easybookmodule.engine.strategy.ParseStrategy;
 import com.zia.easybookmodule.engine.strategy.TxtParser;
-import com.zia.easybookmodule.net.NetUtil;
 import com.zia.easybookmodule.rx.Disposable;
 import com.zia.easybookmodule.rx.Observer;
 import com.zia.easybookmodule.rx.Subscriber;
 
 import java.io.File;
 import java.io.IOException;
-import java.util.*;
-import java.util.concurrent.ExecutorService;
-import java.util.concurrent.Executors;
-import java.util.concurrent.LinkedBlockingQueue;
-import java.util.concurrent.atomic.AtomicInteger;
+import java.util.ArrayList;
 
 /**
  * Created by zia on 2018/11/13.
@@ -40,21 +33,12 @@ public class DownloadObserver implements Observer<File>, Disposable {
 
     private int threadCount = 150;
     private String savePath = ".";
-    private Type type = Type.EPUB;
     private Book book;
     private Platform platform = Platform.get();
 
+    private DownloadEngine downloadEngine;
+
     private ParseStrategy parser = new TxtParser();
-
-    private LinkedBlockingQueue<Chapter> chapters;
-    private LinkedBlockingQueue<Catalog> catalogQueue;
-    //    private final Object bufferLock = new Object();
-//    private final Object queueLock = new Object();
-    private ExecutorService threadPool;
-    private Timer timer;
-
-    volatile private boolean needFreshProcess = true;
-    volatile private int tempProgress = 0;
     volatile private boolean attachView = true;
 
     public DownloadObserver(Book book) {
@@ -63,6 +47,7 @@ public class DownloadObserver implements Observer<File>, Disposable {
 
     @Override
     public Disposable subscribe(final Subscriber<File> subscriber) {
+        downloadEngine = new DownloadEngine(book, threadCount);
         new Thread(new Runnable() {
             @Override
             public void run() {
@@ -71,7 +56,7 @@ public class DownloadObserver implements Observer<File>, Disposable {
                     if (!file.exists()) {
                         file.mkdirs();
                     }
-                    concurrentDownload(subscriber);
+                    saveFile(subscriber);
                 } catch (final Exception e) {
                     post(new Runnable() {
                         @Override
@@ -99,179 +84,10 @@ public class DownloadObserver implements Observer<File>, Disposable {
     }
 
     //重试次数过多可能产生异常
-    private void concurrentDownload(final Subscriber<File> subscriber) throws Exception {
-        post(new Runnable() {
-            @Override
-            public void run() {
-                subscriber.onProgress(0);
-                subscriber.onMessage("正在解析目录...");
-            }
-        });
-
-        final Site site = book.getSite();
-        //从目录页获取有序章节
-        String catalogHtml = null;
+    private void saveFile(final Subscriber<File> subscriber) {
+        ArrayList<Chapter> chapters = downloadEngine.download(subscriber);
         try {
-            catalogHtml = NetUtil.getHtml(book.getUrl(), site.getEncodeType());
-        } catch (final IOException e) {
-            post(new Runnable() {
-                @Override
-                public void run() {
-                    subscriber.onMessage("获取目录页面失败");
-                    subscriber.onError(e);
-                }
-            });
-            return;
-        }
-        final List<Catalog> catalogs;
-        try {
-            catalogs = site.parseCatalog(catalogHtml, book.getUrl());
-            //添加序号
-            for (int i = 0; i < catalogs.size(); i++) {
-                catalogs.get(i).setIndex(i + 1);
-            }
-        } catch (final Exception e) {
-            post(new Runnable() {
-                @Override
-                public void run() {
-                    subscriber.onMessage("网站目录结构更改，请联系作者修复");
-                    subscriber.onError(e);
-                }
-            });
-            return;
-        }
-
-        if (catalogs.size() == 0) {
-            post(new Runnable() {
-                @Override
-                public void run() {
-                    subscriber.onMessage("没有解析到目录...");
-                    subscriber.onError(new IOException("没有解析到目录"));
-                }
-            });
-//            System.err.println(catalogHtml);
-            return;
-        }
-
-        chapters = new LinkedBlockingQueue<>(catalogs.size() + 1);
-        //x2是为了防止扩容，应该不会全部都下载失败吧=_=
-        catalogQueue = new LinkedBlockingQueue<>(catalogs.size() * 2);
-        catalogQueue.addAll(catalogs);
-
-        post(new Runnable() {
-            @Override
-            public void run() {
-                subscriber.onMessage("一共" + catalogs.size() + "张，开始下载...");
-            }
-        });
-
-        final int catalogSize = catalogs.size();
-        final AtomicInteger leftBook = new AtomicInteger(catalogSize);
-        final AtomicInteger errorBook = new AtomicInteger(catalogSize);
-
-        timer = new Timer();//用来传递下载进度的计时器
-        timer.schedule(new TimerTask() {
-            @Override
-            public void run() {
-                needFreshProcess = true;
-            }
-        }, 0, 300);
-
-        threadPool = Executors.newFixedThreadPool(threadCount);
-        //自动探测是否全部下载
-        while (chapters.size() < catalogs.size()) {
-            Catalog catalog = catalogQueue.poll();
-            if (catalog == null) {//如果队列为空，释放锁，等待唤醒或者超时后继续探测
-                try {
-                    //不用wait了，感觉会影响性能
-                    Thread.sleep(500);
-//                    queueLock.wait(1000);
-                } catch (final InterruptedException e) {
-                    post(new Runnable() {
-                        @Override
-                        public void run() {
-                            subscriber.onMessage("下载时发生并发错误");
-                            subscriber.onError(e);
-                        }
-                    });
-                }
-            } else {//队列有章节，下载所有
-                while (catalog != null) {
-                    final Catalog finalCatalog = catalog;
-                    threadPool.execute(new Runnable() {
-                        @Override
-                        public void run() {
-                            try {
-                                String chapterHtml = NetUtil.getHtml(finalCatalog.getUrl(), site.getEncodeType());
-                                List<String> contents = site.parseContent(chapterHtml);
-                                if (needFreshProcess) {
-                                    tempProgress = (int) (((errorBook.get() - leftBook.get()) / (float) (2 * catalogSize - errorBook.get())) * 100);
-                                    needFreshProcess = false;
-                                    post(new Runnable() {
-                                        @Override
-                                        public void run() {
-                                            subscriber.onProgress(tempProgress);
-                                        }
-                                    });
-                                }
-                                post(new Runnable() {
-                                    @Override
-                                    public void run() {
-                                        subscriber.onMessage(finalCatalog.getChapterName());
-                                    }
-                                });
-                                Chapter chapter = new Chapter(finalCatalog.getChapterName(), finalCatalog.getIndex(), contents);
-                                leftBook.decrementAndGet();
-                                chapters.add(chapter);
-//                                addChapter(chapter);
-                            } catch (final IOException e) {
-                                post(new Runnable() {
-                                    @Override
-                                    public void run() {
-                                        subscriber.onMessage(e.getMessage() + "  重试章节 ： " + finalCatalog.getChapterName());
-                                    }
-                                });
-                                if (needFreshProcess) {
-                                    tempProgress = (int) (((errorBook.get() - leftBook.get()) / (float) (2 * catalogSize - errorBook.get())) * 100);
-                                    needFreshProcess = false;
-                                    post(new Runnable() {
-                                        @Override
-                                        public void run() {
-                                            subscriber.onProgress(tempProgress);
-                                        }
-                                    });
-                                }
-                                errorBook.decrementAndGet();
-                                catalogQueue.add(finalCatalog);//重新加入队列，等待下载
-//                                    addQueue(finalCatalog);//重新加入队列，等待下载
-                            } catch (Exception e) {
-                                subscriber.onError(e);
-                                dispose();
-                            }
-                        }
-                    });
-                    catalog = catalogQueue.poll();
-                }
-            }
-        }
-        threadPool.shutdown();
-        timer.cancel();
-        post(new Runnable() {
-            @Override
-            public void run() {
-                subscriber.onMessage("下载完成(" + chapters.size() + "章)，等待保存");
-                subscriber.onProgress(100);
-            }
-        });
-        ArrayList<Chapter> newChapters = new ArrayList<>(chapters);
-        Collections.sort(newChapters, new Comparator<Chapter>() {
-            @Override
-            public int compare(Chapter o1, Chapter o2) {
-                return o1.getIndex() - o2.getIndex();
-            }
-        });
-        try {
-            final File finalResultFile = parser.save(newChapters, book, savePath);
+            final File finalResultFile = parser.save(chapters, book, savePath);
             post(new Runnable() {
                 @Override
                 public void run() {
@@ -290,11 +106,8 @@ public class DownloadObserver implements Observer<File>, Disposable {
     }
 
     private void shutdown() {
-        if (threadPool != null) {
-            threadPool.shutdownNow();
-        }
-        if (timer != null) {
-            timer.cancel();
+        if (downloadEngine != null) {
+            downloadEngine.dispose();
         }
     }
 
@@ -330,16 +143,12 @@ public class DownloadObserver implements Observer<File>, Disposable {
     }
 
     public DownloadObserver setType(Type type) {
-        this.type = type;
         switch (type) {
             case TXT:
                 parser = new TxtParser();
                 break;
             case EPUB:
                 parser = new EpubParser();
-                break;
-            default:
-                parser = new TxtParser();
                 break;
         }
         return this;

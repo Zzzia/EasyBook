@@ -80,7 +80,7 @@ public class SearchObserver implements Observer<List<Book>>, Disposable {
                                 post(new Runnable() {
                                     @Override
                                     public void run() {
-                                        subscriber.onMessage(site.getSiteName() + "搜索结果错误，正在尝试其它网站");
+                                        subscriber.onMessage(site.getSiteName() + "搜索遇到错误");
                                     }
                                 });
                                 return;

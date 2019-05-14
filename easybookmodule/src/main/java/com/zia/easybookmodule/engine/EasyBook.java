@@ -40,6 +40,10 @@ public class EasyBook {
         return new DownloadObserver(book);
     }
 
+    public static PartDownloadObserver downloadPart(Book book, int from, int to) {
+        return new PartDownloadObserver(book, from, to);
+    }
+
     public static Observer<List<Catalog>> getCatalog(Book book) {
         return new CatalogObserver(book);
     }
