@@ -34,7 +34,6 @@ public class NetUtil {
             return getHtml(url, null, encodeType);
         } catch (IOException e) {
             System.err.print(url);
-            e.printStackTrace();
             throw e;
         }
     }
@@ -43,7 +42,7 @@ public class NetUtil {
         Request.Builder builder = new Request.Builder()
                 .addHeader("accept", "*/*")
                 .addHeader("connection", "Keep-Alive")
-                .addHeader("Charsert", "gbk")
+                .addHeader("Charsert", encodeType)
                 .addHeader("user-agent", "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_14_0) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/70.0.3538.77 Safari/537.36");
 
         if (requestBody != null) {

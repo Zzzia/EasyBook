@@ -59,7 +59,7 @@ public class BookGriper {
 
     public static List<Catalog> parseBqgCatalogs(String catalogHtml, String url){
         String sub = RegexUtil.regexExcept("<div id=\"list\">", "</div>", catalogHtml).get(0);
-        String ssub = sub.split("正文</dt>")[1];
+        String ssub = sub.split("正文</dt>|正文卷</dt>")[1];
         List<String> as = RegexUtil.regexInclude("<a", "</a>", ssub);
         List<Catalog> list = new ArrayList<>();
         for (String s : as) {
@@ -72,7 +72,8 @@ public class BookGriper {
     }
 
     public static List<Catalog> parseCatalogs(String content, String url){
-        String ssub = content.split("正文</dt>|正文卷</dt>")[1];
+        String sub = RegexUtil.regexExcept("<div id=\"list\">", "</div>", content).get(0);
+        String ssub = sub.split("正文</dt>|正文卷</dt>")[1];
         List<String> as = RegexUtil.regexInclude("<a", "</a>", ssub);
         List<Catalog> list = new ArrayList<>();
         for (String s : as) {

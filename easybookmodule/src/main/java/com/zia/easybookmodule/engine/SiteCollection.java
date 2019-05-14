@@ -20,14 +20,14 @@ public class SiteCollection {
         //normal
         sites.add(new Zhuishu());
         sites.add(new Xbiquge());
-//        sites.add(new Biquge());
+        sites.add(new Biquge());
         sites.add(new BiqugeBiz());
         sites.add(new Zhuaji());
         sites.add(new Shunong());
         sites.add(new Kanshenzuo());
         sites.add(new Wulin());
         sites.add(new Wenxuemi());
-        sites.add(new Shuyuewu());
+//        sites.add(new Shuyuewu());
         sites.add(new Dingdian());
         sites.add(new Mianhuatang());
         sites.add(new Bishenge());

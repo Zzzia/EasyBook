@@ -71,11 +71,20 @@ public class DownloadEngine implements Disposable {
         });
 
         final Site site = book.getSite();
+        if (site == null){
+            post(new Runnable() {
+                @Override
+                public void run() {
+                    mSubscriber.onMessage("没有添加这个网站的支持..");
+                }
+            });
+            return new ArrayList<>();
+        }
         //从目录页获取有序章节
         String catalogHtml = null;
         try {
             catalogHtml = NetUtil.getHtml(book.getUrl(), site.getEncodeType());
-        } catch (final IOException e) {
+        } catch (final Exception e) {
             post(new Runnable() {
                 @Override
                 public void run() {

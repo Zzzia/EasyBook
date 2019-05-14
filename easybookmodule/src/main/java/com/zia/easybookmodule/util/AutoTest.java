@@ -7,7 +7,7 @@ import com.zia.easybookmodule.bean.Type;
 import com.zia.easybookmodule.engine.EasyBook;
 import com.zia.easybookmodule.engine.Site;
 import com.zia.easybookmodule.rx.Subscriber;
-import com.zia.easybookmodule.site.BiqugeBiz;
+import com.zia.easybookmodule.site.*;
 
 import java.io.File;
 import java.util.ArrayList;
@@ -40,15 +40,17 @@ public class AutoTest {
 //
 //            }
 //        });
-        test(new BiqugeBiz());
+        testPart(new Zhuishu());
     }
 
 
     private static void testPart(final Site site) throws Exception {
         List<Book> books = site.search("天行");
-        System.out.println(new ArrayList<>(books).toString());
         Book book = books.get(0);
-        EasyBook.downloadPart(book, 20, 40).setThreadCount(150).subscribe(new Subscriber<ArrayList<Chapter>>() {
+
+        System.out.println(book.toString());
+
+        EasyBook.downloadPart(book, 0, 1).setThreadCount(150).subscribe(new Subscriber<ArrayList<Chapter>>() {
             @Override
             public void onFinish(@NonNull ArrayList<Chapter> chapters) {
                 System.out.println("下载完成," + "size = " + chapters.size());

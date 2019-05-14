@@ -19,6 +19,7 @@ import java.util.List;
  * 书阅屋
  * https://www.shuyuewu.co/
  */
+@Deprecated
 public class Shuyuewu extends Site {
 
     private static final String u = "https://www.shuyuewu.co";
