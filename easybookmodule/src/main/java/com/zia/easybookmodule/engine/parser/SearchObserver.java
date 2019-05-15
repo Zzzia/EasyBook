@@ -5,6 +5,7 @@ import com.zia.easybookmodule.engine.Platform;
 import com.zia.easybookmodule.engine.Site;
 import com.zia.easybookmodule.rx.Disposable;
 import com.zia.easybookmodule.rx.Observer;
+import com.zia.easybookmodule.rx.StepSubscriber;
 import com.zia.easybookmodule.rx.Subscriber;
 
 import java.util.ArrayList;
@@ -20,7 +21,7 @@ import java.util.concurrent.Executors;
  * Created by zia on 2018/11/14.
  * 并发搜索
  */
-public class SearchObserver implements Observer<List<Book>>, Disposable {
+public class SearchObserver implements Observer<List<Book>> {
 
     private String bookName;
     private List<Site> sites;
@@ -31,6 +32,8 @@ public class SearchObserver implements Observer<List<Book>>, Disposable {
     private Platform platform = Platform.get();
     volatile private boolean attachView = true;
 
+    private boolean used = false;
+
     public SearchObserver(String bookName, List<Site> sites) {
         this.bookName = bookName;
         this.sites = sites;
@@ -39,6 +42,11 @@ public class SearchObserver implements Observer<List<Book>>, Disposable {
 
     @Override
     public Disposable subscribe(final Subscriber<List<Book>> subscriber) {
+        if (used) {
+            subscriber.onError(new IllegalAccessException("一个SearchObserver只能使用一次"));
+            return this;
+        }
+        used = true;
         service.execute(new Runnable() {
             @Override
             public void run() {
@@ -85,6 +93,10 @@ public class SearchObserver implements Observer<List<Book>>, Disposable {
                                 });
                                 return;
                             }
+                            sortBook(results);
+                            if (subscriber instanceof StepSubscriber) {
+                                ((StepSubscriber<List<Book>>) subscriber).onPart(results);
+                            }
                             bookListList.add(results);
                         }
                     });
@@ -129,34 +141,7 @@ public class SearchObserver implements Observer<List<Book>>, Disposable {
                     index++;
                 }
                 //微调排序，名字相同的在前，以搜索名开头的在前，长度相同的在前
-                Collections.sort(bookList, new Comparator<Book>() {
-                    @Override
-                    public int compare(Book o1, Book o2) {
-                        //完全相同
-                        if (o1.getBookName().equals(bookName) && !o2.getBookName().equals(bookName)) {
-                            return -1;
-                        } else if (!o1.getBookName().equals(bookName) && o2.getBookName().equals(bookName)) {
-                            return 1;
-                        }
-                        //包含了字符
-                        else if (o1.getBookName().contains(bookName) && !o2.getBookName().contains(bookName)) {
-                            return -1;
-                        } else if (!o1.getBookName().contains(bookName) && o2.getBookName().contains(bookName)) {
-                            return 1;
-                        } else if (o1.getBookName().contains(bookName) && o2.getBookName().contains(bookName)) {
-                            return o1.getBookName().indexOf(bookName) - o2.getBookName().indexOf(bookName);
-                        }
-                        //长度相同
-                        else if (o1.getBookName().length() == bookName.length()
-                                && o2.getBookName().length() != bookName.length()) {
-                            return -1;
-                        } else if (o1.getBookName().length() != bookName.length()
-                                && o2.getBookName().length() == bookName.length()) {
-                            return 1;
-                        }
-                        return 0;
-                    }
-                });
+                sortBook(bookList);
 
                 //切换线程返回结果
                 post(new Runnable() {
@@ -169,6 +154,26 @@ public class SearchObserver implements Observer<List<Book>>, Disposable {
             }
         });
         return this;
+    }
+
+    @Override
+    @Deprecated
+    public List<Book> getSync() throws Exception {
+        return new ArrayList<>();
+    }
+
+    /**
+     * 排序，名字一样的在前面，其余依次是包含了书名，长度一样和剩下的
+     *
+     * @param books
+     */
+    private void sortBook(List<Book> books) {
+        Collections.sort(books, new Comparator<Book>() {
+            @Override
+            public int compare(Book o1, Book o2) {
+                return Book.compare(bookName, o1, o2);
+            }
+        });
     }
 
     @Override

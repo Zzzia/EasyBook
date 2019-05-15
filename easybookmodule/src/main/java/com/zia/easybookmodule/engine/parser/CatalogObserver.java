@@ -16,7 +16,7 @@ import java.util.concurrent.Executors;
 /**
  * Created by zia on 2018/11/15.
  */
-public class CatalogObserver implements Observer<List<Catalog>>, Disposable {
+public class CatalogObserver implements Observer<List<Catalog>> {
 
     private Book book;
 
@@ -40,11 +40,8 @@ public class CatalogObserver implements Observer<List<Catalog>>, Disposable {
         service.execute(new Runnable() {
             @Override
             public void run() {
-                String html = "";
-                Site site = book.getSite();
                 try {
-                    html = NetUtil.getHtml(book.getUrl(), site.getEncodeType());
-                    final List<Catalog> list = site.parseCatalog(html, book.getUrl());
+                    final List<Catalog> list = getSync();
                     post(new Runnable() {
                         @Override
                         public void run() {
@@ -62,6 +59,13 @@ public class CatalogObserver implements Observer<List<Catalog>>, Disposable {
             }
         });
         return this;
+    }
+
+    @Override
+    public List<Catalog> getSync() throws Exception {
+        Site site = book.getSite();
+        String html = NetUtil.getHtml(book.getUrl(), site.getEncodeType());
+        return site.parseCatalog(html, book.getUrl());
     }
 
     private void post(Runnable runnable) {

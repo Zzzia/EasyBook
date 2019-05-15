@@ -51,6 +51,7 @@ public class Zhuaji extends Site {
         List<Book> bookList = new ArrayList<>();
         for (Element li : lis) {
             String lastUpdateTime = li.getElementsByTag("h3").first().getElementsByTag("span").first().text();
+            lastUpdateTime = BookGriper.formatTime(lastUpdateTime);
             String bkName = li.getElementsByTag("h3").first().getElementsByTag("a").first().text();
             String bkUrl = li.getElementsByTag("h3").first().getElementsByTag("a").first().attr("href");
             String author = li.getElementsByTag("p").first().getElementsByTag("span").first().text();

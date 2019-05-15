@@ -8,7 +8,7 @@ import java.io.Serializable;
 /**
  * Created By zia on 2018/10/30.
  */
-public class Book implements Serializable {
+public class Book implements Serializable{
     private String bookName;
     private String author;
     private String url;
@@ -118,5 +118,30 @@ public class Book implements Serializable {
 
     public void setLastChapterName(String lastChapterName) {
         this.lastChapterName = lastChapterName;
+    }
+
+    public static int compare(String targetName,Book o1, Book o2){
+        if (o1.getBookName().equals(targetName) && !o2.getBookName().equals(targetName)) {
+            return -1;
+        } else if (!o1.getBookName().equals(targetName) && o2.getBookName().equals(targetName)) {
+            return 1;
+        }
+        //包含了字符
+        else if (o1.getBookName().contains(targetName) && !o2.getBookName().contains(targetName)) {
+            return -1;
+        } else if (!o1.getBookName().contains(targetName) && o2.getBookName().contains(targetName)) {
+            return 1;
+        } else if (o1.getBookName().contains(targetName) && o2.getBookName().contains(targetName)) {
+            return o1.getBookName().indexOf(targetName) - o2.getBookName().indexOf(targetName);
+        }
+        //长度相同
+        else if (o1.getBookName().length() == targetName.length()
+                && o2.getBookName().length() != targetName.length()) {
+            return -1;
+        } else if (o1.getBookName().length() != targetName.length()
+                && o2.getBookName().length() == targetName.length()) {
+            return 1;
+        }
+        return 0;
     }
 }

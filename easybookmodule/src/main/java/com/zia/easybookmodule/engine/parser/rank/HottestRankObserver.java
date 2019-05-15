@@ -40,16 +40,8 @@ public class HottestRankObserver implements Observer<HottestRank>, Disposable {
         service.execute(new Runnable() {
             @Override
             public void run() {
-                String url = RankUtil.getUrl(hottestRankInfo);
                 try {
-                    String html = NetUtil.getHtml(url, "utf-8");
-                    Document document = Jsoup.parse(html);
-                    //其他排行榜
-                    List<RankInfo> rankInfos = RankUtil.getRankInfoList(document);
-                    List<RankClassify> rankClassifyList = RankUtil.getRankClassifyList(document);
-                    String updateTime = RankUtil.getHottestUpdateTime(document);
-                    List<HottestRankClassify> hottestRankClassifyList = RankUtil.getHottestRankClassifyList(document);
-                    final HottestRank hottestRank = new HottestRank(rankClassifyList, updateTime, hottestRankClassifyList, rankInfos);
+                    final HottestRank hottestRank = getSync();
                     post(new Runnable() {
                         @Override
                         public void run() {
@@ -67,6 +59,19 @@ public class HottestRankObserver implements Observer<HottestRank>, Disposable {
             }
         });
         return this;
+    }
+
+    @Override
+    public HottestRank getSync() throws Exception {
+        String url = RankUtil.getUrl(hottestRankInfo);
+        String html = NetUtil.getHtml(url, "utf-8");
+        Document document = Jsoup.parse(html);
+        //其他排行榜
+        List<RankInfo> rankInfos = RankUtil.getRankInfoList(document);
+        List<RankClassify> rankClassifyList = RankUtil.getRankClassifyList(document);
+        String updateTime = RankUtil.getHottestUpdateTime(document);
+        List<HottestRankClassify> hottestRankClassifyList = RankUtil.getHottestRankClassifyList(document);
+        return new HottestRank(rankClassifyList, updateTime, hottestRankClassifyList, rankInfos);
     }
 
     private void post(Runnable runnable) {

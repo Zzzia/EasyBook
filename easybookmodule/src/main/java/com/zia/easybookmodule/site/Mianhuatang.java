@@ -38,7 +38,7 @@ public class Mianhuatang extends Site {
             String bkUrl = spans.get(1).getElementsByTag("a").first().attr("href");
             String lastChapterName = spans.get(2).getElementsByTag("a").first().text();
             String author = spans.get(3).text();
-            String lastUpdateTime = spans.get(4).text();
+            String lastUpdateTime = BookGriper.formatTime(spans.get(4).text());
             bookList.add(new Book(bkName, author, bkUrl, "未知", lastUpdateTime, lastChapterName, getSiteName()));
         }
         return bookList;

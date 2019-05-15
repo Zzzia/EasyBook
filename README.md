@@ -51,27 +51,32 @@ dependencies {
 
 ~~~java
 EasyBook.search("天行")
-        .subscribe(new Subscriber<List<Book>>() {
+        .subscribe(new StepSubscriber<List<Book>>() {
             @Override
-            public void onFinish(List<Book> books) {
-                //搜索结果，返回book集合，提示用户选择
-                //recyclerviewAdapter.load(books);
+            public void onFinish(@NonNull List<Book> books) {
+                //所有站点小说爬取完后调用这个方法，传入所有站点解析的有序结果
             }
 
             @Override
-            public void onError(Exception e) {
-                //搜索时遇到错误
+            public void onError(@NonNull Exception e) {
+                e.printStackTrace();
             }
 
             @Override
-            public void onMessage(String s) {
-                //搜索的提示，如"正在搜索x趣阁"
+            public void onMessage(@NonNull String message) {
+                //一些搜索中的进度消息，错误原因等，可以用toast弹出
             }
 
             @Override
-            public void onProgress(int i) {
-            //搜索进度，0 ~ 100
-            }});
+            public void onProgress(int progress) {
+                //搜索进度
+            }
+
+            @Override
+            public void onPart(@NonNull List<Book> books) {
+                //某一个站点的小说搜索结果
+            }
+        });
 ~~~
 
 加载目录：
@@ -83,7 +88,7 @@ EasyBook.getCatalog(book)
             public void onFinish(List<Catalog> catalogs) {
                 //加载结果，返回该书籍所有目录
             }
-            ...
+            //...
         });
 ~~~
 
@@ -96,7 +101,7 @@ EasyBook.getContent(book,catalog)
             public void onFinish(List<String> strings) {
                 //返回该章节所有内容，按行保存在集合内，需要自行调整格式
             }
-            ...
+            //...
         });
 ~~~
 
@@ -112,8 +117,28 @@ EasyBook.download(book)
 			public void onFinish(File file) {
 				//下载完成后的文件
 			}
-			...
+			//...
 		});
+~~~
+
+分段下载：
+
+~~~java
+EasyBook.downloadPart(book, 0, 100)
+        .setThreadCount(50)
+        .subscribe(new Subscriber<ArrayList<Chapter>>() {
+            @Override
+            public void onFinish(@NonNull ArrayList<Chapter> chapters) {
+                //返回一个Chapter集合，保证不为空且都有contents
+            }
+            //...
+        });
+~~~
+
+当然也支持同步调用，但不建议使用：
+
+~~~java
+List<Catalog> list = EasyBook.getCatalog(book).getSync();
 ~~~
 
 销毁线程（解决内存泄漏）：
@@ -151,6 +176,11 @@ EasyBook.getRank(rankInfo);
 
 
 ~~~
+v2.46
+支持了分段搜索，以站点为单位陆续返回结果
+为所有解析添加了同步方法，但不建议在含有并发的操作中使用
+提高了爬虫稳定性
+
 v2.45
 更新了分段下载，将并发下载逻辑单独封装，便于使用
 

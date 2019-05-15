@@ -50,7 +50,7 @@ public class Xbiquge extends Site {
             String url = detail.getElementsByTag("a").first().attr("href");
             Elements tags = detail.getElementsByClass("result-game-item-info-tag");
             String author = tags.get(0).getElementsByTag("span").get(1).text();
-            String lastUpdateTime = tags.get(2).getElementsByTag("span").get(1).text();
+            String lastUpdateTime = BookGriper.formatTime(tags.get(2).getElementsByTag("span").get(1).text());
             String lastChapterName = tags.get(3).getElementsByTag("a").text();
             String imageUrl = item.getElementsByTag("img").get(0).attr("src");
             bookList.add(new Book(bkName, author, url, imageUrl, "未知", lastUpdateTime, lastChapterName, getSiteName()));

@@ -48,7 +48,7 @@ public class Shuyuewu extends Site {
     @Override
     public List<Catalog> parseCatalog(String catalogHtml, String rootUrl) throws Exception {
         String sub = RegexUtil.regexExcept("<div class=\"listmain\">", "</div>", catalogHtml).get(0);
-        return BookGriper.parseCatalogs(sub, u);
+        return BookGriper.parseBqgCatalogs(sub, u);
     }
 
     @Override

@@ -57,32 +57,52 @@ public class BookGriper {
         return bookList;
     }
 
-    public static List<Catalog> parseBqgCatalogs(String catalogHtml, String url){
+    public static List<Catalog> parseBqgCatalogs(String catalogHtml, String url) {
         String sub = RegexUtil.regexExcept("<div id=\"list\">", "</div>", catalogHtml).get(0);
-        String ssub = sub.split("正文</dt>|正文卷</dt>")[1];
-        List<String> as = RegexUtil.regexInclude("<a", "</a>", ssub);
+        String[] subs = sub.split("正文</dt>|正文卷</dt>");
+        if (subs.length == 2) {
+            sub = subs[1];
+        }
+        List<String> as = RegexUtil.regexInclude("<a", "</a>", sub);
         List<Catalog> list = new ArrayList<>();
         for (String s : as) {
             RegexUtil.Tag tag = new RegexUtil.Tag(s);
             String name = tag.getText();
-            String href = url + tag.getValue("href");
+            String href = mergeUrl(url, tag.getValue("href"));
             list.add(new Catalog(name, href));
         }
         return list;
     }
 
-    public static List<Catalog> parseCatalogs(String content, String url){
-        String sub = RegexUtil.regexExcept("<div id=\"list\">", "</div>", content).get(0);
-        String ssub = sub.split("正文</dt>|正文卷</dt>")[1];
-        List<String> as = RegexUtil.regexInclude("<a", "</a>", ssub);
-        List<Catalog> list = new ArrayList<>();
-        for (String s : as) {
-            RegexUtil.Tag tag = new RegexUtil.Tag(s);
-            String name = tag.getText();
-            String href = url + tag.getValue("href");
-            list.add(new Catalog(name, href));
+    public static String mergeUrl(String root, String s) {
+        return root + s.substring(getUrlSameLength(root, s));
+    }
+
+    private static int getUrlSameLength(String root, String s) {
+        if (root.length() == 0 || s.length() == 0) return 0;
+        char s1 = s.charAt(0);
+        for (int i = 0; i < root.length(); i++) {
+            char a = root.charAt(i);
+            if (s1 != a) continue;
+            //如果第一位匹配上了，继续匹配
+            int index = 1;
+            for (; index < root.length() - i; index++) {
+                //如果超出第二个字符串范围，跳出
+                if (index >= s.length() - 1) {
+                    break;
+                }
+                //如果有一个没匹配上，跳出
+                if (root.charAt(i + index) != s.charAt(index)) {
+                    break;
+                }
+            }
+            //全部匹配上了，返回下标
+            if (index == root.length() - i) {
+                return index;
+            }
         }
-        return list;
+        //没有匹配
+        return 0;
     }
 
     public static List<String> getContentsByBR(String content) {
@@ -105,5 +125,9 @@ public class BookGriper {
             }
         }
         return contents;
+    }
+
+    public static String formatTime(String time) {
+        return time.substring(0, time.indexOf(" "));
     }
 }

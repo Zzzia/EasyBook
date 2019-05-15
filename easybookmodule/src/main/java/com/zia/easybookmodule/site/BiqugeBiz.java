@@ -34,8 +34,7 @@ public class BiqugeBiz extends Site {
             Element infoItem = item.getElementsByClass("result-game-item-info").first();
             Elements ps = infoItem.getElementsByTag("p");
             String author = ps.get(0).getElementsByTag("span").get(1).text();
-            String updateTime = ps.get(2).getElementsByTag("span").get(1).text();
-            updateTime = updateTime.substring(0, updateTime.indexOf(" "));
+            String updateTime = BookGriper.formatTime(ps.get(2).getElementsByTag("span").get(1).text());
             String lastChapter = ps.get(3).getElementsByTag("a").first().text();
             Book book = new Book(bkName, author, bkUrl, imgUrl, "未知", updateTime, lastChapter, getSiteName());
             results.add(book);

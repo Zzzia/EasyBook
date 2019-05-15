@@ -43,15 +43,8 @@ public class RankObserver implements Observer<Rank>, Disposable {
         service.execute(new Runnable() {
             @Override
             public void run() {
-                String url = RankUtil.getUrl(rankInfo);
                 try {
-                    String html = NetUtil.getHtml(url, "utf-8");
-                    Document document = Jsoup.parse(html);
-                    List<RankClassify> rankClassifies = RankUtil.getRankClassifyList(document);
-                    List<RankBook> rankBookList = RankUtil.getRankBookList(document);
-                    int maxPageSize = RankUtil.getMaxPageSize(document);
-                    int currentPage = RankUtil.getCurrentPage(document);
-                    final Rank rank = new Rank(rankClassifies, rankBookList, rankInfo, maxPageSize, currentPage);
+                    final Rank rank = getSync();
                     post(new Runnable() {
                         @Override
                         public void run() {
@@ -69,6 +62,18 @@ public class RankObserver implements Observer<Rank>, Disposable {
             }
         });
         return null;
+    }
+
+    @Override
+    public Rank getSync() throws Exception {
+        String url = RankUtil.getUrl(rankInfo);
+        String html = NetUtil.getHtml(url, "utf-8");
+        Document document = Jsoup.parse(html);
+        List<RankClassify> rankClassifies = RankUtil.getRankClassifyList(document);
+        List<RankBook> rankBookList = RankUtil.getRankBookList(document);
+        int maxPageSize = RankUtil.getMaxPageSize(document);
+        int currentPage = RankUtil.getCurrentPage(document);
+        return new Rank(rankClassifies, rankBookList, rankInfo, maxPageSize, currentPage);
     }
 
     private void post(Runnable runnable) {

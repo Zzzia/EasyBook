@@ -8,12 +8,14 @@ import com.zia.easybookmodule.engine.strategy.EpubParser;
 import com.zia.easybookmodule.engine.strategy.ParseStrategy;
 import com.zia.easybookmodule.engine.strategy.TxtParser;
 import com.zia.easybookmodule.rx.Disposable;
+import com.zia.easybookmodule.rx.EmptySubscriber;
 import com.zia.easybookmodule.rx.Observer;
 import com.zia.easybookmodule.rx.Subscriber;
 
 import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.List;
 
 /**
  * Created by zia on 2018/11/13.
@@ -29,7 +31,7 @@ import java.util.ArrayList;
  * 最快的始终还是并发集合，所以能用自带的就用自带的
  * https://blog.csdn.net/ganyao939543405/article/details/52486316
  */
-public class DownloadObserver implements Observer<File>, Disposable {
+public class DownloadObserver implements Observer<File> {
 
     private int threadCount = 150;
     private String savePath = ".";
@@ -52,12 +54,17 @@ public class DownloadObserver implements Observer<File>, Disposable {
             @Override
             public void run() {
                 try {
-                    File file = new File(savePath);
-                    if (!file.exists()) {
-                        file.mkdirs();
-                    }
-                    saveFile(subscriber);
+                    checkFile();
+                    ArrayList<Chapter> chapters = downloadEngine.download(subscriber);
+                    final File finalResultFile = saveFile(chapters);
+                    post(new Runnable() {
+                        @Override
+                        public void run() {
+                            subscriber.onFinish(finalResultFile);
+                        }
+                    });
                 } catch (final Exception e) {
+                    subscriber.onMessage("保存文件时发生错误");
                     post(new Runnable() {
                         @Override
                         public void run() {
@@ -69,6 +76,27 @@ public class DownloadObserver implements Observer<File>, Disposable {
             }
         }).start();
         return this;
+    }
+
+    private void checkFile(){
+        File file = new File(savePath);
+        if (!file.exists()) {
+            file.mkdirs();
+        }
+    }
+
+    /**
+     * 不要用这个方法，无法终止，看不到报错和进度，会导致内存泄漏
+     * @return
+     * @throws Exception
+     */
+    @Override
+    @Deprecated
+    public File getSync() throws Exception {
+        downloadEngine = new DownloadEngine(book, threadCount);
+        checkFile();
+        ArrayList<Chapter> chapters = downloadEngine.download(new EmptySubscriber());
+        return saveFile(chapters);
     }
 
     @Override
@@ -83,26 +111,9 @@ public class DownloadObserver implements Observer<File>, Disposable {
         }
     }
 
-    //重试次数过多可能产生异常
-    private void saveFile(final Subscriber<File> subscriber) {
-        ArrayList<Chapter> chapters = downloadEngine.download(subscriber);
-        try {
-            final File finalResultFile = parser.save(chapters, book, savePath);
-            post(new Runnable() {
-                @Override
-                public void run() {
-                    subscriber.onFinish(finalResultFile);
-                }
-            });
-        } catch (final IOException e) {
-            post(new Runnable() {
-                @Override
-                public void run() {
-                    subscriber.onMessage("保存文件时发生错误");
-                    subscriber.onError(e);
-                }
-            });
-        }
+    //这个方法暴露出来，可以把章节集合保存成指定格式的文件
+    public File saveFile(List<Chapter> chapters) throws IOException {
+        return parser.save(chapters, book, savePath);
     }
 
     private void shutdown() {

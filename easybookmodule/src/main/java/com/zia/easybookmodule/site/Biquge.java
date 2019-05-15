@@ -6,15 +6,11 @@ import com.zia.easybookmodule.engine.Site;
 import com.zia.easybookmodule.net.NetUtil;
 import com.zia.easybookmodule.util.BookGriper;
 import com.zia.easybookmodule.util.RegexUtil;
-import com.zia.easybookmodule.util.TextUtil;
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Element;
 import org.jsoup.select.Elements;
 
-import java.io.IOException;
-import java.net.URLEncoder;
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.List;
 
 /**
@@ -48,8 +44,7 @@ public class Biquge extends Site {
             String bkUrl = as.get(0).attr("href");
             String lastChapter = as.get(1).text();
             String author = spans.get(3).text();
-            String lastTime = spans.get(5).text();
-
+            String lastTime = BookGriper.formatTime(spans.get(5).text());
             Book book = new Book(bkName, author, bkUrl, "", "", lastTime, lastChapter, getSiteName());
             bookList.add(book);
         }
@@ -90,14 +85,7 @@ public class Biquge extends Site {
 
     @Override
     public List<Catalog> parseCatalog(String catalogHtml, String rootUrl) {
-//        List<String> as = RegexUtil.regexExcept("<dd>", "</dd>", catalogHtml);
-//        List<Catalog> catalogs = new ArrayList<>();
-//        for (String a : as) {
-//            String name = RegexUtil.regexExcept("\">", "</a>", a).get(0);
-//            String href = root + RegexUtil.regexExcept("<a href=\"", "\">", a).get(0);
-//            catalogs.add(new Catalog(name, href));
-//        }
-        List<Catalog> list = BookGriper.parseBqgCatalogs(catalogHtml, "https://www.xinxs.la");
+        List<Catalog> list = BookGriper.parseBqgCatalogs(catalogHtml, rootUrl);
         System.out.println(list.get(0));
         return list;
     }

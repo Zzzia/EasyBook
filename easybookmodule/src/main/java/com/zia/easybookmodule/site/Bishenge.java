@@ -45,7 +45,7 @@ public class Bishenge extends Site {
             String bkName = a.text();
             String bkUrl = "http://www.bishenge.com" + a.attr("href");
             String author = tds.get(1).text();
-            String updateTime = tds.get(2).text().split(" ")[0];
+            String updateTime = BookGriper.formatTime(tds.get(2).text());
             books.add(new Book(bkName, author, bkUrl, "", "", updateTime, "", getSiteName()));
         }
         return books;

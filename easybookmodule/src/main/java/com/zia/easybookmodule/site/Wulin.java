@@ -37,7 +37,7 @@ public class Wulin extends Site {
             String lastCharpter = tds.get(1).text();
             String author = tds.get(2).text();
             String chapterSize = tds.get(3).text();
-            String lastUpdateTime = tds.get(4).text();
+            String lastUpdateTime = BookGriper.formatTime(tds.get(4).text());
             Book book = new Book(bkName, author, href, "", chapterSize, lastUpdateTime, lastCharpter, getSiteName());
             bookList.add(book);
         }

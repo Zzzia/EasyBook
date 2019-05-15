@@ -2,12 +2,14 @@ package com.zia.easybookmodule.util;
 
 import android.support.annotation.NonNull;
 import com.zia.easybookmodule.bean.Book;
+import com.zia.easybookmodule.bean.Catalog;
 import com.zia.easybookmodule.bean.Chapter;
 import com.zia.easybookmodule.bean.Type;
 import com.zia.easybookmodule.engine.EasyBook;
 import com.zia.easybookmodule.engine.Site;
+import com.zia.easybookmodule.rx.StepSubscriber;
 import com.zia.easybookmodule.rx.Subscriber;
-import com.zia.easybookmodule.site.*;
+import com.zia.easybookmodule.site.Biquge;
 
 import java.io.File;
 import java.util.ArrayList;
@@ -40,17 +42,18 @@ public class AutoTest {
 //
 //            }
 //        });
-        testPart(new Zhuishu());
+        testPart(new Biquge());
+//        testSearch("天行");
     }
 
 
     private static void testPart(final Site site) throws Exception {
-        List<Book> books = site.search("天行");
+        List<Book> books = site.search("修真聊天群");
         Book book = books.get(0);
 
         System.out.println(book.toString());
 
-        EasyBook.downloadPart(book, 0, 1).setThreadCount(150).subscribe(new Subscriber<ArrayList<Chapter>>() {
+        EasyBook.downloadPart(book, 0, 100).setThreadCount(150).subscribe(new Subscriber<ArrayList<Chapter>>() {
             @Override
             public void onFinish(@NonNull ArrayList<Chapter> chapters) {
                 System.out.println("下载完成," + "size = " + chapters.size());
@@ -69,6 +72,46 @@ public class AutoTest {
             @Override
             public void onProgress(int progress) {
                 System.out.println(progress);
+            }
+        });
+    }
+
+    private static void testSearch(String name) {
+        EasyBook.search(name).subscribe(new StepSubscriber<List<Book>>() {
+            @Override
+            public void onFinish(@NonNull List<Book> books) {
+                int size = 9;
+                if (books.size() < 10) {
+                    size = books.size();
+                }
+                System.out.println("finish");
+                System.out.println(new ArrayList<>(books.subList(0, size)));
+            }
+
+            @Override
+            public void onError(@NonNull Exception e) {
+                e.printStackTrace();
+            }
+
+            @Override
+            public void onMessage(@NonNull String message) {
+
+            }
+
+            @Override
+            public void onProgress(int progress) {
+
+            }
+
+            @Override
+            public void onPart(@NonNull List<Book> books) {
+                int size = 9;
+                if (books.size() < 10) {
+                    size = books.size();
+                }
+                System.out.println(new ArrayList<>(books.subList(0,size)));
+                System.out.println();
+                System.out.println();
             }
         });
     }

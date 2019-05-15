@@ -3,6 +3,7 @@ package com.zia.easybookmodule.engine;
 import com.zia.easybookmodule.BuildConfig;
 import com.zia.easybookmodule.bean.Book;
 import com.zia.easybookmodule.bean.Catalog;
+import com.zia.easybookmodule.bean.Chapter;
 import com.zia.easybookmodule.bean.rank.HottestRank;
 import com.zia.easybookmodule.bean.rank.Rank;
 import com.zia.easybookmodule.bean.rank.RankInfo;
@@ -11,6 +12,8 @@ import com.zia.easybookmodule.engine.parser.rank.HottestRankObserver;
 import com.zia.easybookmodule.engine.parser.rank.RankObserver;
 import com.zia.easybookmodule.rx.Observer;
 
+import java.io.File;
+import java.util.ArrayList;
 import java.util.List;
 
 /**
