@@ -1,6 +1,6 @@
 package com.zia.easybookmodule.rx;
 
-import android.support.annotation.NonNull;
+import androidx.annotation.NonNull;
 
 /**
  * Created by zia on 2019-05-15.
@@ -18,6 +18,7 @@ public interface StepSubscriber<T> extends Subscriber<T> {
 
     /**
      * 部分下载的结果
+     *
      * @param t
      */
     void onPart(@NonNull T t);

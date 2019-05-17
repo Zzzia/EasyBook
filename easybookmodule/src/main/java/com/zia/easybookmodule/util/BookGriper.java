@@ -1,5 +1,6 @@
 package com.zia.easybookmodule.util;
 
+import androidx.annotation.Nullable;
 import com.zia.easybookmodule.bean.Book;
 import com.zia.easybookmodule.bean.Catalog;
 import com.zia.easybookmodule.net.NetUtil;
@@ -11,6 +12,7 @@ import org.jsoup.select.Elements;
 import java.io.IOException;
 import java.net.URLEncoder;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 /**
@@ -105,23 +107,50 @@ public class BookGriper {
         return 0;
     }
 
-    public static List<String> getContentsByBR(String content) {
-        String lines[] = content.split("<br>|<br/>|<br />");
-        List<String> contents = new ArrayList<>();
-        for (String line : lines) {
-            if (!line.trim().isEmpty()) {
-                contents.add(TextUtil.cleanContent(line));
-            }
-        }
-        return contents;
+    public interface CustomCleaner {
+        /**
+         * 清理文本广告等
+         * @param line 一行文字内容
+         * @return 返回字符串，或null删除该行
+         */
+        @Nullable String clean(String line);
     }
 
+    public static List<String> getContentsByBR(String content) {
+        return getContentsByBR(content, null);
+    }
+
+    public static List<String> getContentsByBR(String content, CustomCleaner cleaner) {
+        String[] lines = content.split("<br>|<br/>|<br />");
+        return getContents(Arrays.asList(lines), cleaner);
+    }
+
+
     public static List<String> getContentsByTextNodes(List<TextNode> textNodes) {
-        List<String> contents = new ArrayList<>();
+        return getContentsByTextNodes(textNodes, null);
+    }
+
+    public static List<String> getContentsByTextNodes(List<TextNode> textNodes, CustomCleaner cleaner) {
+        List<String> lines = new ArrayList<>();
         for (TextNode textNode : textNodes) {
-            String line = textNode.text();
+            lines.add(textNode.text());
+        }
+        return getContents(lines, cleaner);
+    }
+
+    public static List<String> getContents(List<String> lines, CustomCleaner cleaner) {
+        List<String> contents = new ArrayList<>();
+        for (String line : lines) {
+            //自定义清除
+            if (cleaner != null) {
+                line = cleaner.clean(line);
+            }
+            //如果返回为null，那么删除这一行
+            if (line == null) continue;
+            //清除首尾空格以及特殊字符
+            line = TextUtil.cleanContent(line);
             if (!line.trim().isEmpty()) {
-                contents.add(TextUtil.cleanContent(line));
+                contents.add(line);
             }
         }
         return contents;

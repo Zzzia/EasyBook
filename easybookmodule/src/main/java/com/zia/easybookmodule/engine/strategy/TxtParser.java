@@ -10,6 +10,9 @@ import java.util.List;
  * Created by zia on 2019/4/6.
  */
 public class TxtParser implements ParseStrategy {
+
+    private static final String space = String.valueOf((char) 12288) + (char) 12288;
+
     @Override
     public String parseContent(Chapter chapter) {
         StringBuilder sb = new StringBuilder();
@@ -17,9 +20,11 @@ public class TxtParser implements ParseStrategy {
         sb.append("\n");
         for (String line : chapter.getContents()) {
             //1个缩进+正文+换行
-            sb.append("\u3000");
+            sb.append(space);
             sb.append(line);
-            sb.append("\n");
+            if (!line.endsWith("\n")){
+                sb.append("\n");
+            }
         }
         //章节结束空一行，用来分割下一章节
 //        sb.append("\n");

@@ -34,7 +34,7 @@ allprojects {
 ~~~java
 dependencies {
 	implementation 'com.squareup.okhttp3:okhttp:3.11.0'
-    implementation 'com.github.Zzzia:EasyBook:2.46'
+    implementation 'com.github.Zzzia:EasyBook:2.47'
 }
 ~~~
 
@@ -176,6 +176,10 @@ EasyBook.getRank(rankInfo);
 
 
 ~~~
+v2.47
+完善demo的分段搜索，升级至Androidx
+提高了爬虫稳定性
+
 v2.46
 支持了分段搜索，以站点为单位陆续返回结果
 为所有解析添加了同步方法，但不建议在含有并发的操作中使用

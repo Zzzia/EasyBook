@@ -3,6 +3,7 @@ package com.zia.easybookmodule.engine.strategy;
 import com.zia.easybookmodule.bean.Book;
 import com.zia.easybookmodule.bean.Chapter;
 import com.zia.easybookmodule.net.NetUtil;
+import com.zia.easybookmodule.util.TextUtil;
 import nl.siegmann.epublib.domain.Author;
 import nl.siegmann.epublib.domain.Metadata;
 import nl.siegmann.epublib.domain.Resource;
@@ -35,22 +36,15 @@ public class EpubParser implements ParseStrategy {
     public String parseContent(Chapter chapter) {
         StringBuilder content = new StringBuilder();
         for (String line : chapter.getContents()) {
-            int begin = 0;
-            //删除最开始的空格
-            for (int i = 0; i < line.length(); i++) {
-                if (line.charAt(i) == '\uFEFF' || line.charAt(i) == ' ') {
-                    begin++;
-                } else {
-                    break;
-                }
-            }
-            line = line.substring(begin);
+            line = TextUtil.removeSpaceStart(line);
             if (!line.isEmpty()) {
                 content.append("<p>");
 //                content.append("    ");
                 content.append(line);
                 content.append("</p>");
-                content.append("\n");
+                if (!line.endsWith("\n")){
+                    content.append("\n");
+                }
             }
         }
         return getHtml(chapter.getChapterName(), content.toString());

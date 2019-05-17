@@ -5,12 +5,12 @@ import android.content.Intent
 import android.os.Build
 import android.os.Bundle
 import android.os.Environment
-import android.support.v7.app.AlertDialog
-import android.support.v7.app.AppCompatActivity
-import android.support.v7.widget.LinearLayoutManager
 import android.util.Log
 import android.view.View
 import android.widget.Toast
+import androidx.appcompat.app.AlertDialog
+import androidx.appcompat.app.AppCompatActivity
+import androidx.recyclerview.widget.LinearLayoutManager
 import com.zia.easybookmodule.bean.Book
 import com.zia.easybookmodule.bean.Catalog
 import com.zia.easybookmodule.bean.Type
@@ -54,7 +54,6 @@ class CatalogActivity : AppCompatActivity(), CatalogAdapter.CatalogSelectListene
             .subscribe(object : Subscriber<List<Catalog>> {
                 override fun onFinish(t: List<Catalog>) {
                     val arrayList = ArrayList<Catalog>(t)
-                    arrayList.reverse()
                     adapter.freshCatalogs(arrayList)
                     book_loading.visibility = View.GONE
                 }

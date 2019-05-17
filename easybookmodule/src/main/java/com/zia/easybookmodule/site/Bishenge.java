@@ -59,6 +59,15 @@ public class Bishenge extends Site {
     @Override
     public List<String> parseContent(String chapterHtml) {
         String content = RegexUtil.regexExcept("<div id=\"content\">", "</div>", chapterHtml).get(0);
-        return BookGriper.getContentsByBR(content);
+        return BookGriper.getContentsByBR(content, new BookGriper.CustomCleaner() {
+            @Override
+            public String clean(String line) {
+                if (line.contains("笔神阁中文")){
+                    return null;
+                }else{
+                    return line;
+                }
+            }
+        });
     }
 }

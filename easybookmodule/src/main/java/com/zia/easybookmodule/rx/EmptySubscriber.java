@@ -1,6 +1,6 @@
 package com.zia.easybookmodule.rx;
 
-import android.support.annotation.NonNull;
+import androidx.annotation.NonNull;
 
 /**
  * Created by zia on 2019-05-14.

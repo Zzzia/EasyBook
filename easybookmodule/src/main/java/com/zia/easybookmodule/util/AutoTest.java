@@ -1,8 +1,7 @@
 package com.zia.easybookmodule.util;
 
-import android.support.annotation.NonNull;
+import androidx.annotation.NonNull;
 import com.zia.easybookmodule.bean.Book;
-import com.zia.easybookmodule.bean.Catalog;
 import com.zia.easybookmodule.bean.Chapter;
 import com.zia.easybookmodule.bean.Type;
 import com.zia.easybookmodule.engine.EasyBook;
@@ -109,7 +108,7 @@ public class AutoTest {
                 if (books.size() < 10) {
                     size = books.size();
                 }
-                System.out.println(new ArrayList<>(books.subList(0,size)));
+                System.out.println(new ArrayList<>(books.subList(0, size)));
                 System.out.println();
                 System.out.println();
             }

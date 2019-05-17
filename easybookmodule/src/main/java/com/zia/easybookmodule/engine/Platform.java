@@ -3,7 +3,7 @@ package com.zia.easybookmodule.engine;
 import android.os.Build;
 import android.os.Handler;
 import android.os.Looper;
-import android.support.annotation.Nullable;
+import androidx.annotation.Nullable;
 
 import java.util.concurrent.Executor;
 

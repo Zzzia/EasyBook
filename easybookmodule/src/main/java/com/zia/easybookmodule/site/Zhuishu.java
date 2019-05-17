@@ -1,5 +1,6 @@
 package com.zia.easybookmodule.site;
 
+import androidx.annotation.Nullable;
 import com.zia.easybookmodule.bean.Book;
 import com.zia.easybookmodule.bean.Catalog;
 import com.zia.easybookmodule.engine.Site;
@@ -32,7 +33,14 @@ public class Zhuishu extends Site {
     @Override
     public List<String> parseContent(String chapterHtml) {
         String content = RegexUtil.regexExcept("<div id=\"content\">", "</div>", chapterHtml).get(0);
-        return BookGriper.getContentsByBR(content);
+        return BookGriper.getContentsByBR(content, new BookGriper.CustomCleaner() {
+            @Nullable
+            @Override
+            public String clean(String line) {
+                if (line.contains("追书网")) return null;
+                return line;
+            }
+        });
     }
 
     @Override

@@ -1,8 +1,9 @@
 package com.zia.easybook
 
 import android.os.Bundle
-import android.support.v7.app.AppCompatActivity
+import android.util.Log
 import android.widget.Toast
+import androidx.appcompat.app.AppCompatActivity
 import com.zia.easybookmodule.bean.Book
 import com.zia.easybookmodule.bean.Catalog
 import com.zia.easybookmodule.bean.Chapter
@@ -27,6 +28,7 @@ class PreviewActivity : AppCompatActivity() {
         EasyBook.getContent(book, catalog)
             .subscribe(object : Subscriber<List<String>> {
                 override fun onFinish(t: List<String>) {
+                    Log.d("PreviewActivity", ArrayList<String>(t).toString())
                     val chapter = Chapter(catalog.chapterName, catalog.index, t)
                     preview_tv.text = parser.parseContent(chapter)
                 }

@@ -5,12 +5,12 @@ android {
     compileSdkVersion 28
 
     defaultConfig {
-        minSdkVersion 15
+        minSdkVersion 11
         targetSdkVersion 28
-        versionCode 246
-        versionName "2.46"
+        versionCode 247
+        versionName "2.47"
 
-        testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
+        testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
 
     }
 
@@ -34,5 +34,35 @@ android {
 dependencies {
     implementation fileTree(include: ['*.jar'], dir: 'libs')
     compileOnly 'com.android.support:appcompat-v7:28.0.0'
+    implementation 'androidx.annotation:annotation:1.0.2'
     compileOnly 'com.squareup.okhttp3:okhttp:3.11.0'
+}
+
+// 指定编码
+tasks.withType(JavaCompile) {
+    options.encoding = "UTF-8"
+}
+
+// 打包源码
+task sourcesJar(type: Jar) {
+    from android.sourceSets.main.java.srcDirs
+    classifier = 'sources'
+}
+
+task javadoc(type: Javadoc) {
+    failOnError  false
+    source = android.sourceSets.main.java.sourceFiles
+    classpath += project.files(android.getBootClasspath().join(File.pathSeparator))
+    classpath += configurations.compile
+}
+
+// 制作文档(Javadoc)
+task javadocJar(type: Jar, dependsOn: javadoc) {
+    classifier = 'javadoc'
+    from javadoc.destinationDir
+}
+
+artifacts {
+    archives sourcesJar
+    archives javadocJar
 }
