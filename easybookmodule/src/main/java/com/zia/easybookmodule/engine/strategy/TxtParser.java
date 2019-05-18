@@ -1,5 +1,6 @@
 package com.zia.easybookmodule.engine.strategy;
 
+import androidx.annotation.Nullable;
 import com.zia.easybookmodule.bean.Book;
 import com.zia.easybookmodule.bean.Chapter;
 
@@ -22,7 +23,27 @@ public class TxtParser implements ParseStrategy {
             //1个缩进+正文+换行
             sb.append(space);
             sb.append(line);
-            if (!line.endsWith("\n")){
+            if (!line.endsWith("\n")) {
+                sb.append("\n");
+            }
+        }
+        //章节结束空一行，用来分割下一章节
+//        sb.append("\n");
+        return sb.toString();
+    }
+
+    @Override
+    public String parseContent(@Nullable String chapterName, List<String> contents) {
+        StringBuilder sb = new StringBuilder();
+        if (chapterName != null && chapterName.length() != 0) {
+            sb.append(chapterName);
+            sb.append("\n");
+        }
+        for (String line : contents) {
+            //1个缩进+正文+换行
+            sb.append(space);
+            sb.append(line);
+            if (!line.endsWith("\n")) {
                 sb.append("\n");
             }
         }

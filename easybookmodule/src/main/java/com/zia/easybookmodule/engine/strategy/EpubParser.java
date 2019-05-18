@@ -1,5 +1,6 @@
 package com.zia.easybookmodule.engine.strategy;
 
+import androidx.annotation.Nullable;
 import com.zia.easybookmodule.bean.Book;
 import com.zia.easybookmodule.bean.Chapter;
 import com.zia.easybookmodule.net.NetUtil;
@@ -34,20 +35,25 @@ public class EpubParser implements ParseStrategy {
      */
     @Override
     public String parseContent(Chapter chapter) {
+        return parseContent(chapter.getChapterName(), chapter.getContents());
+    }
+
+    @Override
+    public String parseContent(@Nullable String chapterName, List<String> contents) {
         StringBuilder content = new StringBuilder();
-        for (String line : chapter.getContents()) {
+        for (String line : contents) {
             line = TextUtil.removeSpaceStart(line);
             if (!line.isEmpty()) {
                 content.append("<p>");
 //                content.append("    ");
                 content.append(line);
                 content.append("</p>");
-                if (!line.endsWith("\n")){
+                if (!line.endsWith("\n")) {
                     content.append("\n");
                 }
             }
         }
-        return getHtml(chapter.getChapterName(), content.toString());
+        return getHtml(chapterName, content.toString());
     }
 
     private String encode = "UTF-8";
@@ -121,7 +127,7 @@ public class EpubParser implements ParseStrategy {
 </html>
      */
     protected String getHtml(String title, String content) {
-        return "<?xml version=\"1.0\" encoding=\"" + encode + "\"?>\n" +
+        String html = "<?xml version=\"1.0\" encoding=\"" + encode + "\"?>\n" +
                 "<!DOCTYPE html PUBLIC \"//W3C//DTD XHTML 1.0 Transitional//EN\"\n" +
                 "\"http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd\">\n" +
                 "<html xmlns=\"http://www.w3.org/1999/xhtml\">\n" +
@@ -131,13 +137,15 @@ public class EpubParser implements ParseStrategy {
                 "    <link rel=\"stylesheet\" type=\"text/css\" href=\"" + cssName + ".css" + "\" />\n" +
                 "</head>\n" +
                 "\n" +
-                "<body>\n" +
-                "    <h2>\n" +
-                "        <span style=\"border-bottom:1px solid\">\n" +
-                "            " + title + "\n" +
-                "        </span>\n" +
-                "    </h2>\n" +
-                "    <div>\n" +
+                "<body>\n";
+        if (title != null && title.length() != 0) {
+            html += "    <h2>\n" +
+                    "        <span style=\"border-bottom:1px solid\">\n" +
+                    "            " + title + "\n" +
+                    "        </span>\n" +
+                    "    </h2>\n";
+        }
+        html += "    <div>\n" +
                 "        " + content + "\n" +
                 "    </div>\n" +
                 "</body>\n" +
@@ -152,6 +160,7 @@ public class EpubParser implements ParseStrategy {
 //                "</span></h2>\n<div>\n" +
 //                content +
 //                "\n</div>\n</body>\n</html>\n";
+        return html;
     }
 
 
