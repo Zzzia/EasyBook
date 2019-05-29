@@ -4,8 +4,10 @@ import com.zia.easybookmodule.bean.Book;
 import com.zia.easybookmodule.bean.Catalog;
 import com.zia.easybookmodule.engine.Site;
 import com.zia.easybookmodule.net.NetUtil;
+import com.zia.easybookmodule.util.BookGriper;
 import com.zia.easybookmodule.util.TextUtil;
 import org.jsoup.Jsoup;
+import org.jsoup.nodes.Document;
 import org.jsoup.nodes.Element;
 import org.jsoup.select.Elements;
 
@@ -76,5 +78,26 @@ public class Daocaoren extends Site {
     @Override
     public String getSiteName() {
         return "稻草人书屋";
+    }
+
+    @Override
+    public Book getMoreBookInfo(Book book, String catalogHtml) throws Exception {
+        Document document = Jsoup.parse(catalogHtml);
+        Element media = document.getElementsByClass("media").first();
+        String imgUrl = media.getElementsByClass("book-img-middel").first().attr("src");
+        imgUrl = BookGriper.mergeUrl(root, imgUrl);
+        Elements divs = media.getElementsByClass("row").first().getElementsByClass("col-sm-6");
+        String classify = divs.get(2).text();
+        classify = classify.substring(classify.indexOf("：") + 1);
+        String latestChapterName = divs.get(6).getElementsByTag("a").first().attr("href");
+        latestChapterName = BookGriper.mergeUrl(root, latestChapterName);
+        String latestUpdateTime = divs.get(7).text();
+        String introduce = document.getElementsByClass("book-detail").first().text();
+        book.setImageUrl(imgUrl);
+        book.setClassify(classify);
+        book.setLastChapterName(latestChapterName);
+        book.setLastUpdateTime(latestUpdateTime);
+        book.setIntroduce(introduce);
+        return book;
     }
 }

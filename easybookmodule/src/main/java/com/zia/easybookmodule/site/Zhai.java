@@ -83,4 +83,9 @@ public class Zhai extends Site {
     public String getSiteName() {
         return "宅阅读";
     }
+
+    @Override
+    public Book getMoreBookInfo(Book book, String catalogHtml) throws Exception {
+        return book;
+    }
 }

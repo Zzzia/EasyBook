@@ -52,4 +52,9 @@ public class Zhuishu extends Site {
     public String getSiteName() {
         return "追书网";
     }
+
+    @Override
+    public Book getMoreBookInfo(Book book, String catalogHtml) throws Exception {
+        return BookGriper.getBqgMoreInfo(book, catalogHtml, "https://www.bimo.cc/");
+    }
 }

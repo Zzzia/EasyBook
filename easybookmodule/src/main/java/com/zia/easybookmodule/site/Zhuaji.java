@@ -8,6 +8,7 @@ import com.zia.easybookmodule.util.BookGriper;
 import okhttp3.FormBody;
 import okhttp3.RequestBody;
 import org.jsoup.Jsoup;
+import org.jsoup.nodes.Document;
 import org.jsoup.nodes.Element;
 import org.jsoup.select.Elements;
 
@@ -36,7 +37,7 @@ public class Zhuaji extends Site {
     }
 
     @Override
-    public List<String> parseContent(String chapterHtml) throws Exception{
+    public List<String> parseContent(String chapterHtml) throws Exception {
         return BookGriper.getContentsByTextNodes(Jsoup.parse(chapterHtml).getElementById("content").textNodes());
     }
 
@@ -54,10 +55,13 @@ public class Zhuaji extends Site {
             lastUpdateTime = BookGriper.formatTime(lastUpdateTime);
             String bkName = li.getElementsByTag("h3").first().getElementsByTag("a").first().text();
             String bkUrl = li.getElementsByTag("h3").first().getElementsByTag("a").first().attr("href");
-            String author = li.getElementsByTag("p").first().getElementsByTag("span").first().text();
+            Elements spans = li.getElementsByTag("p").first().getElementsByTag("span");
+            String author = spans.first().text();
+            String chapterSize = spans.get(2).text();
+            String intro = li.getElementsByTag("dd").first().text();
             String lastChapterName = li.getElementsByTag("p").get(1).getElementsByTag("a").first().text();
             String imageUrl = li.getElementsByTag("img").first().attr("src");
-            bookList.add(new Book(bkName, author, bkUrl, imageUrl, "未知", lastUpdateTime, lastChapterName, getSiteName()));
+            bookList.add(new Book(bkName, author, bkUrl, imageUrl, chapterSize, lastUpdateTime, lastChapterName, getSiteName(), intro));
         }
         return bookList;
     }
@@ -70,5 +74,21 @@ public class Zhuaji extends Site {
     @Override
     public String getSiteName() {
         return "爪机书屋";
+    }
+
+    @Override
+    public Book getMoreBookInfo(Book book, String catalogHtml) throws Exception {
+        Document document = Jsoup.parse(catalogHtml);
+        String intro = document.getElementsByClass("intro").first().getElementsByTag("p").first().text();
+        String imgUrl = BookGriper.mergeUrl(root, document.getElementsByClass("cover").first().getElementsByTag("img").first().attr("src"));
+        Element haoshu = document.getElementsByClass("haoshu").first();
+        String lastChapterName = haoshu.getElementsByTag("a").first().text();
+        String lastUpdateTime = haoshu.textNodes().get(1).text();
+        lastUpdateTime = lastUpdateTime.replaceAll("\\(|\\)","");
+        book.setIntroduce(intro);
+        book.setImageUrl(imgUrl);
+        book.setLastUpdateTime(lastUpdateTime);
+        book.setLastChapterName(lastChapterName);
+        return book;
     }
 }

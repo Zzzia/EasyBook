@@ -4,6 +4,7 @@ import com.zia.easybookmodule.bean.Book;
 import com.zia.easybookmodule.bean.Catalog;
 import com.zia.easybookmodule.engine.Site;
 import com.zia.easybookmodule.net.NetUtil;
+import com.zia.easybookmodule.util.BookGriper;
 import com.zia.easybookmodule.util.TextUtil;
 import okhttp3.FormBody;
 import okhttp3.RequestBody;
@@ -66,10 +67,13 @@ public class Shunong extends Site {
 
         for (Element li : lis) {
             String bkName = li.getElementsByTag("font").first().text().replace("在线阅读", "");
-            String href = root + li.getElementsByTag("a").first().attr("href");
+            String href = li.getElementsByTag("a").first().attr("href");
+            href = BookGriper.mergeUrl(root, href);
             String author = li.getElementsByTag("div").first().getElementsByTag("a").first().text();
-            String imageUrl = root + li.getElementsByTag("img").first().attr("src");
-            books.add(new Book(bkName, author, href, imageUrl, "未知", "未知", "未知", getSiteName()));
+            String imageUrl = li.getElementsByTag("img").first().attr("src");
+            imageUrl = BookGriper.mergeUrl(root, imageUrl);
+            String intro = li.getElementsByClass("u").first().text();
+            books.add(new Book(bkName, author, href, imageUrl, "未知", "未知", "未知", getSiteName(), intro));
         }
         return books;
     }
@@ -82,5 +86,12 @@ public class Shunong extends Site {
     @Override
     public String getSiteName() {
         return "书农小说";
+    }
+
+    @Override
+    public Book getMoreBookInfo(Book book, String catalogHtml) throws Exception {
+        String intro = Jsoup.parse(catalogHtml).getElementsByClass("book_info").first().getElementsByTag("p").first().text();
+        book.setIntroduce(intro);
+        return book;
     }
 }

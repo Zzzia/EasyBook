@@ -39,4 +39,9 @@ public class Wenxuemi extends Site {
     public String getSiteName() {
         return "文学迷";
     }
+
+    @Override
+    public Book getMoreBookInfo(Book book, String catalogHtml) throws Exception {
+        return BookGriper.getBqgMoreInfo(book, catalogHtml, "https://www.wenxuemi6.com/");
+    }
 }

@@ -1,5 +1,6 @@
 package com.zia.easybook
 
+import android.annotation.SuppressLint
 import android.app.ProgressDialog
 import android.content.Intent
 import android.os.Build
@@ -52,10 +53,12 @@ class CatalogActivity : AppCompatActivity(), CatalogAdapter.CatalogSelectListene
 
         searchDisposable = EasyBook.getCatalog(book)
             .subscribe(object : Subscriber<List<Catalog>> {
+                @SuppressLint("SetTextI18n")
                 override fun onFinish(t: List<Catalog>) {
                     val arrayList = ArrayList<Catalog>(t)
                     adapter.freshCatalogs(arrayList)
                     book_loading.visibility = View.GONE
+                    catalog_intro.text = 12288.toChar().toString() + 12288.toChar() + book.introduce
                 }
 
                 override fun onError(e: Exception) {

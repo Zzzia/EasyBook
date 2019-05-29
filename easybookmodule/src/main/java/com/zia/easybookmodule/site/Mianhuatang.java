@@ -26,6 +26,11 @@ public class Mianhuatang extends Site {
     }
 
     @Override
+    public Book getMoreBookInfo(Book book, String catalogHtml) throws Exception {
+        return BookGriper.getBqgMoreInfo(book, catalogHtml, "https://");
+    }
+
+    @Override
     public List<Book> search(String bookName) throws Exception {
         String url = "http://www.mianhuatang520.com/search.aspx?bookname=" + URLEncoder.encode(bookName, getEncodeType());
         String html = NetUtil.getHtml(url, getEncodeType());

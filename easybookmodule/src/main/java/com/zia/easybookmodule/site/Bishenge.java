@@ -28,6 +28,11 @@ public class Bishenge extends Site {
     }
 
     @Override
+    public Book getMoreBookInfo(Book book, String catalogHtml) throws Exception {
+        return BookGriper.getBqgMoreInfo(book, catalogHtml, "http://www.bishenge.com/");
+    }
+
+    @Override
     public List<Book> search(String bookName) throws Exception {
         String url = "http://www.bishenge.com/pc/so.php";
         RequestBody requestBody = new FormBody.Builder()
@@ -62,9 +67,9 @@ public class Bishenge extends Site {
         return BookGriper.getContentsByBR(content, new BookGriper.CustomCleaner() {
             @Override
             public String clean(String line) {
-                if (line.contains("笔神阁中文")){
+                if (line.contains("笔神阁中文")) {
                     return null;
-                }else{
+                } else {
                     return line;
                 }
             }

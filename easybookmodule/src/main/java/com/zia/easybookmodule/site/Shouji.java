@@ -34,6 +34,11 @@ public class Shouji extends Site {
     }
 
     @Override
+    public Book getMoreBookInfo(Book book, String catalogHtml) throws Exception {
+        return book;
+    }
+
+    @Override
     public List<Book> search(String bookName) throws Exception {
         int count = 3;
         RequestBody requestBody = new FormBody.Builder()

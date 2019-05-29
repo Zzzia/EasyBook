@@ -61,4 +61,9 @@ public class Shuyuewu extends Site {
     public String getSiteName() {
         return "书阅屋";
     }
+
+    @Override
+    public Book getMoreBookInfo(Book book, String catalogHtml) throws Exception {
+        return book;
+    }
 }

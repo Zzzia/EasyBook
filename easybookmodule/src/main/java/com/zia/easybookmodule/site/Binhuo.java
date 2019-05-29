@@ -62,7 +62,10 @@ public class Binhuo extends Site {
             String author = tr.getElementsByTag("td").get(3).text();
             String size = tr.getElementsByTag("td").get(4).text();
             String lastUpdateTime = tr.getElementsByTag("td").get(5).text();
-            bookList.add(new Book(bkName, author, href, size, lastUpdateTime, lastChapterName, getSiteName()));
+            Book book = new Book(bkName, author, href, size, lastUpdateTime, lastChapterName, getSiteName());
+            String classify = tr.getElementsByTag("td").get(1).getElementsByTag("a").text();
+            book.setClassify(classify);
+            bookList.add(book);
         }
         return bookList;
     }
@@ -70,5 +73,15 @@ public class Binhuo extends Site {
     @Override
     public String getSiteName() {
         return "冰火中文";
+    }
+
+    @Override
+    public Book getMoreBookInfo(Book book, String catalogHtml) throws Exception {
+        Element sideBar = Jsoup.parse(catalogHtml).getElementsByClass("sidebar-cover").first();
+        String imgUrl = sideBar.getElementsByTag("img").first().attr("src");
+        book.setImageUrl(BookGriper.mergeUrl(root, imgUrl));
+        String intro = sideBar.getElementsByClass("intro").text();
+        book.setIntroduce(intro);
+        return book;
     }
 }

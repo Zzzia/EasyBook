@@ -28,6 +28,12 @@ public class Jidian extends Site {
     }
 
     @Override
+    public Book getMoreBookInfo(Book book, String catalogHtml) throws Exception {
+        //太烂了，不解析
+        return book;
+    }
+
+    @Override
     public List<Book> search(String bookName) throws Exception {
         String url = "https://www.toptxta.com/modules/article/search.php";
         RequestBody requestBody = new FormBody.Builder()

@@ -24,6 +24,9 @@ public class CatalogObserver implements Observer<List<Catalog>> {
     volatile private boolean attachView = true;
     private ExecutorService service = Executors.newCachedThreadPool();
 
+    //默认在解析目录时更新book中的内容，如简介等
+    private boolean openGetMoreInfo = true;
+
     public CatalogObserver(Book book) {
         this.book = book;
     }
@@ -65,6 +68,10 @@ public class CatalogObserver implements Observer<List<Catalog>> {
     public List<Catalog> getSync() throws Exception {
         Site site = book.getSite();
         String html = NetUtil.getHtml(book.getUrl(), site.getEncodeType());
+        //解析更多内容
+        if (openGetMoreInfo) {
+            site.getMoreBookInfo(book, html);
+        }
         return site.parseCatalog(html, book.getUrl());
     }
 
@@ -72,5 +79,10 @@ public class CatalogObserver implements Observer<List<Catalog>> {
         if (attachView) {
             platform.defaultCallbackExecutor().execute(runnable);
         }
+    }
+
+    //预留一个关闭解析更多的方法
+    public void setOpenGetMoreInfo(boolean openGetMoreInfo) {
+        this.openGetMoreInfo = openGetMoreInfo;
     }
 }

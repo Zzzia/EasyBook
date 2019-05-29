@@ -23,6 +23,11 @@ public class Shencou extends Site {
     }
 
     @Override
+    public Book getMoreBookInfo(Book book, String catalogHtml) throws Exception {
+        return book;
+    }
+
+    @Override
     public List<Book> search(String bookName) throws Exception {
         String url = "http://www.shencou.com/modules/article/search.php";
         RequestBody requestBody = new FormBody.Builder()

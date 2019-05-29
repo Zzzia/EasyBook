@@ -76,4 +76,22 @@ public class Wulin extends Site {
     public String getSiteName() {
         return "武林中文网";
     }
+
+    @Override
+    public Book getMoreBookInfo(Book book, String catalogHtml) throws Exception {
+        Element info = Jsoup.parse(catalogHtml).getElementsByClass("book_info").first();
+        String imgUrl = info.getElementsByTag("img").first().attr("src");
+        String size = info.getElementsByClass("options").first().getElementsByTag("span").get(1).text();
+        Element update = info.getElementsByClass("update").first();
+        String lastChapterName = update.getElementsByTag("a").first().text();
+        String lastUpdateTime = update.textNodes().get(1).text();
+        lastUpdateTime = lastUpdateTime.replaceAll("\\(|\\)", "");
+        String intro = info.getElementsByClass("bookinfo_intro").first().text();
+        book.setImageUrl(imgUrl);
+        book.setChapterSize(size);
+        book.setLastChapterName(lastChapterName);
+        book.setLastUpdateTime(lastUpdateTime);
+        book.setIntroduce(intro);
+        return book;
+    }
 }

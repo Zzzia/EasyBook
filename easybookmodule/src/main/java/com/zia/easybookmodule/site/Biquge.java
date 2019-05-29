@@ -20,11 +20,16 @@ import java.util.List;
  */
 public class Biquge extends Site {
 
-    private final static String root = "http://www.biquge.tw";
+    private final static String root = "https://www.xinxs.la/";
 
     @Override
     public String getSiteName() {
         return "笔趣阁";
+    }
+
+    @Override
+    public Book getMoreBookInfo(Book book, String catalogHtml) throws Exception {
+        return BookGriper.getBqgMoreInfo(book, catalogHtml, root);
     }
 
     @Override
@@ -46,6 +51,8 @@ public class Biquge extends Site {
             String author = spans.get(3).text();
             String lastTime = BookGriper.formatTime(spans.get(5).text());
             Book book = new Book(bkName, author, bkUrl, "", "", lastTime, lastChapter, getSiteName());
+            String classify = spans.get(0).text().replaceAll("[\\[\\]]", "");
+            book.setClassify(classify);
             bookList.add(book);
         }
         return bookList;

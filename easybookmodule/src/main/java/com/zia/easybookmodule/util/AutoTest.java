@@ -8,7 +8,7 @@ import com.zia.easybookmodule.engine.EasyBook;
 import com.zia.easybookmodule.engine.Site;
 import com.zia.easybookmodule.rx.StepSubscriber;
 import com.zia.easybookmodule.rx.Subscriber;
-import com.zia.easybookmodule.site.Biquge;
+import com.zia.easybookmodule.site.*;
 
 import java.io.File;
 import java.util.ArrayList;
@@ -41,10 +41,16 @@ public class AutoTest {
 //
 //            }
 //        });
-        testPart(new Biquge());
+//        testPart(new Biquge());
 //        testSearch("天行");
+        testMoreInfo(new Zhuishu());
     }
 
+    private static void testMoreInfo(final Site site) throws Exception {
+        Book book = site.search("斗破苍穹").get(0);
+        site.getMoreBookInfo(book);
+        System.out.println(book);
+    }
 
     private static void testPart(final Site site) throws Exception {
         List<Book> books = site.search("修真聊天群");

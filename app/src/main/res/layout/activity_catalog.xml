@@ -86,6 +86,18 @@
             </LinearLayout>
         </RelativeLayout>
 
+        <TextView
+                android:id="@+id/catalog_intro"
+                android:padding="10dp"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="正在加载简介"
+                android:maxHeight="100dp"
+                android:maxLines="6"
+                android:ellipsize="end"
+                tools:text="正在加载简介正在加载简介正在加载简介正在加载简介正在加载简介正在加载简介正在加载简介正在加载简介正在加载简介正在加载简介正在加载简介正在加载简介正在加载简介正在加载简介正在加载简介正在加载简介正在加载简介正在加载简介正在加载简介正在加载简介正在加载简介正在加载简介正在加载简介正在加载简介正在加载简介正在加载简介正在加载简介正在加载简介正在加载简介正在加载简介正在加载简介正在加载简介正在加载简介正在加载简介正在加载简介正在加载简介正在加载简介正在加载简介正在加载简介正在加载简介正在加载简介正在加载简介正在加载简介正在加载简介正在加载简介正在加载简介正在加载简介正在加载简介"
+        />
+
         <FrameLayout android:layout_width="match_parent"
                      android:layout_height="0dp"
                      android:layout_weight="1">

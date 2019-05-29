@@ -5,6 +5,7 @@ import com.zia.easybookmodule.bean.Book;
 import com.zia.easybookmodule.bean.Catalog;
 import com.zia.easybookmodule.net.NetUtil;
 import org.jsoup.Jsoup;
+import org.jsoup.nodes.Document;
 import org.jsoup.nodes.Element;
 import org.jsoup.nodes.TextNode;
 import org.jsoup.select.Elements;
@@ -47,13 +48,20 @@ public class BookGriper {
             Element titleElement = detail.getElementsByClass("result-game-item-title-link").get(0);
             String bkName = titleElement.getElementsByAttribute("title").get(0).text();
             String bkUrl = titleElement.attr("href");
+            String introduce = detail.getElementsByTag("p").get(0).text();
+
             Element infoDiv = item.getElementsByClass("result-game-item-info").first();
+
             Elements ps = infoDiv.getElementsByTag("p");
             String author = ps.get(0).text().replaceAll("作者：|作者:| ", "");
+            String classify = ps.get(1).getElementsByTag("span").get(1).text();
+            if (classify.length() > 3 && classify.endsWith("小说")) {
+                classify = classify.replaceAll("小说", "");
+            }
             String lastUpdateTime = ps.get(2).text().replaceAll("更新时间：|更新时间:| ", "");
             String lastChapterName = ps.get(3).text().replaceAll("最新章节：|最新章节:| ", "");
             String imageUrl = item.getElementsByTag("img").get(0).attr("src");
-            Book book = new Book(bkName, author, bkUrl, imageUrl, "未知", lastUpdateTime, lastChapterName, siteName);
+            Book book = new Book(bkName, author, bkUrl, imageUrl, "未知", lastUpdateTime, lastChapterName, siteName, introduce, classify);
             bookList.add(book);
         }
         return bookList;
@@ -110,10 +118,12 @@ public class BookGriper {
     public interface CustomCleaner {
         /**
          * 清理文本广告等
+         *
          * @param line 一行文字内容
          * @return 返回字符串，或null删除该行
          */
-        @Nullable String clean(String line);
+        @Nullable
+        String clean(String line);
     }
 
     public static List<String> getContentsByBR(String content) {
@@ -156,7 +166,34 @@ public class BookGriper {
         return contents;
     }
 
+    public static Book getBqgMoreInfo(Book book, String catalogHtml, String rootUrl) {
+        Document document = Jsoup.parse(catalogHtml);
+        String intro = document.getElementById("intro").text();
+        String imgUrl = mergeUrl(rootUrl, document.getElementById("fmimg").getElementsByTag("img").first().attr("src"));
+        Elements ps = document.getElementById("info").getElementsByTag("p");
+        try {
+            String lastUpdateTime = ps.get(2).text();
+            int i = lastUpdateTime.indexOf("：");
+            if (i > 0) {
+                lastUpdateTime = lastUpdateTime.substring(i + 1);
+            }
+            String lastChapterName = ps.get(3).getElementsByTag("a").first().text();
+            book.setLastUpdateTime(lastUpdateTime);
+            book.setLastChapterName(lastChapterName);
+        } catch (Exception ignore) {
+            //有可能没有章节名和最新时间
+        }
+        book.setIntroduce(intro);
+        book.setImageUrl(imgUrl);
+
+        return book;
+    }
+
     public static String formatTime(String time) {
-        return time.substring(0, time.indexOf(" "));
+        int index = time.indexOf(" ");
+        if (index <= 0) {
+            return time;
+        }
+        return time.substring(0, index);
     }
 }
