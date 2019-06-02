@@ -34,7 +34,7 @@ allprojects {
 ~~~java
 dependencies {
 	implementation 'com.squareup.okhttp3:okhttp:3.11.0'
-    implementation 'com.github.Zzzia:EasyBook:2.47'
+    implementation 'com.github.Zzzia:EasyBook:2.50'
 }
 ~~~
 
@@ -173,9 +173,25 @@ EasyBook.getHottestRank().subscribe();
 EasyBook.getRank(rankInfo);
 ~~~
 
+添加json站点解析
+~~~kotlin
+val json = getJson()
+val rules = Gson().fromJson<List<XpathSiteRule>>(
+    json, TypeToken.getParameterized(List::class.java, XpathSiteRule::class.java).type
+)
+val sites = ArrayList<Site>()
+rules.forEach {
+      sites.add(CustomXpathSite(it))
+}
+SiteCollection.getInstance().addSites(sites)
+~~~
+
 
 
 ~~~
+v2.49
+增加了自定义json站点规则，基于xpath
+
 v2.48
 增加了更多解析内容，能够解析小说简介了，同时保证了图片等内容的完整性
 在调用目录解析后会自动把内容更新在book里

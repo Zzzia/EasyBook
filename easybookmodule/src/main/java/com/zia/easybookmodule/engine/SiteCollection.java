@@ -2,6 +2,8 @@ package com.zia.easybookmodule.engine;
 
 import com.zia.easybookmodule.site.*;
 
+import javax.xml.xpath.XPath;
+import javax.xml.xpath.XPathFactory;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -12,6 +14,9 @@ import java.util.List;
 public class SiteCollection {
 
     private List<Site> sites = new ArrayList<>();
+
+    private XPath xPath = XPathFactory.newInstance().newXPath();
+
 
     /**
      * 默认添加这些站点解析，需要更改时对集合进行remove就行
@@ -52,6 +57,10 @@ public class SiteCollection {
         if (!sites.contains(site)) {
             sites.add(site);
         }
+    }
+
+    public XPath getxPath() {
+        return xPath;
     }
 
     public List<Site> getAllSites() {

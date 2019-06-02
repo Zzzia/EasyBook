@@ -26,6 +26,8 @@ public class Book implements Serializable {
     private String introduce = "";
     //小说分类
     private String classify = "";
+    //小说状态，连载，完结等
+    private String status = "";
 
     public Site getSite() {
         for (Site site : SiteCollection.getInstance().getAllSites()) {
@@ -39,6 +41,13 @@ public class Book implements Serializable {
     //这个类应该由书名和小说网站名、作者来唯一确定
     @Deprecated
     public Book() {
+    }
+
+    public Book(String bookName, String author, String url,String siteName) {
+        this.bookName = bookName;
+        this.author = author;
+        this.url = url;
+        this.siteName = siteName;
     }
 
     public Book(String bookName, String author, String url, String chapterSize, String lastUpdateTime, String lastChapterName, String siteName) {
@@ -94,7 +103,16 @@ public class Book implements Serializable {
                 ", siteName='" + siteName + '\'' +
                 ", introduce='" + introduce + '\'' +
                 ", classify='" + classify + '\'' +
+                ", status='" + status + '\'' +
                 '}';
+    }
+
+    public String getStatus() {
+        return status;
+    }
+
+    public void setStatus(String status) {
+        this.status = status;
     }
 
     public String getClassify() {

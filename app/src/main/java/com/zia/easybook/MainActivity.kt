@@ -7,6 +7,7 @@ import android.view.View
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.recyclerview.widget.LinearLayoutManager
+import com.google.gson.Gson
 import com.zia.easybookmodule.bean.Book
 import com.zia.easybookmodule.engine.EasyBook
 import com.zia.easybookmodule.rx.Disposable
@@ -25,6 +26,9 @@ class MainActivity : AppCompatActivity(), SearchAdapter.BookSelectListener {
         bookAdapter = SearchAdapter(this)
         searchRv.layoutManager = LinearLayoutManager(this)
         searchRv.adapter = bookAdapter
+
+        //添加自定义站点
+        CustomSite.addCustomSite()
 
         main_bt.setOnClickListener {
             val bookName = main_et.text.toString()

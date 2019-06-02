@@ -1,4 +1,4 @@
-package com.zia.easybookmodule.util;
+package com.zia.easybookmodule.test;
 
 import androidx.annotation.NonNull;
 import com.zia.easybookmodule.bean.Book;
@@ -81,7 +81,7 @@ public class AutoTest {
         });
     }
 
-    private static void testSearch(String name) {
+    public static void testSearch(String name) {
         EasyBook.search(name).subscribe(new StepSubscriber<List<Book>>() {
             @Override
             public void onFinish(@NonNull List<Book> books) {
