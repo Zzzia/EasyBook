@@ -9,6 +9,7 @@ import com.zia.easybookmodule.engine.SiteCollection;
 import com.zia.easybookmodule.net.NetUtil;
 import com.zia.easybookmodule.util.BookGriper;
 import com.zia.easybookmodule.util.TextUtil;
+import okhttp3.FormBody;
 import okhttp3.MediaType;
 import okhttp3.RequestBody;
 import org.htmlcleaner.DomSerializer;
@@ -22,6 +23,7 @@ import javax.xml.xpath.XPath;
 import javax.xml.xpath.XPathConstants;
 import java.net.URLEncoder;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 /**
@@ -69,20 +71,20 @@ public class CustomXpathSite extends Site {
         String param = xpathRule.getSearchParam().replace("{keyword}", URLEncoder.encode(bookName, xpathRule.getSearchEncode()));
 
         String url = xpathRule.getSearchUrl();
-        if (doGet) {
-            url += "?" + param;
-        }
 
         //请求网页html
         String html;
         if (doGet) {
+            url += "?" + param;
             html = NetUtil.getHtml(url, getEncodeType());
         } else {
-            MediaType JSON = MediaType.parse("application/json; charset=utf-8");
+            MediaType JSON = MediaType.parse("application/x-www-form-urlencoded");
             RequestBody requestBody = RequestBody.create(JSON, param);
             html = NetUtil.getHtml(url, requestBody, getEncodeType());
         }
-
+//        if (debug) {
+//            System.out.println(html);
+//        }
         List<Book> result = new ArrayList<>();
         Document dom = new DomSerializer(htmlCleaner.getProperties()).createDOM(htmlCleaner.clean(html));
         XPath xPath = SiteCollection.getInstance().getxPath();
@@ -96,16 +98,17 @@ public class CustomXpathSite extends Site {
                 String searchBookUrl = xPath.evaluate(xpathRule.getSearchBookUrl(), node).trim();
                 searchBookUrl = BookGriper.mergeUrl(xpathRule.getBaseUrl(), searchBookUrl);
                 String searchAuthor = xPath.evaluate(xpathRule.getSearchAuthor(), node).trim();
+                System.out.println(searchAuthor);
                 if (searchBookName.isEmpty() || searchBookUrl.isEmpty()) {
                     continue;
                 }
                 Book book = new Book(searchBookName, searchAuthor, searchBookUrl, getSiteName());
                 getExtraInfo(book, node, xpathRule.getSearchExtraRule());
                 result.add(book);
+                if (debug) {
+                    System.out.println(book);
+                }
             }
-        }
-        if (debug) {
-            System.out.println(result.get(0));
         }
         return result;
     }

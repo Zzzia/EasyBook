@@ -14,20 +14,25 @@ import com.zia.easybookmodule.site.CustomXpathSite;
 
 import java.io.*;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 /**
  * Created by zia on 2019-06-02.
  */
 public class CustomTest {
-
-    private static final String filePath = "/Users/jiangzilai/Downloads/easybook.json";
+    private static final String filePath = "easybook.json";
     private static final String savePath = "/Users/jiangzilai/Documents/book";
 
     public static void main(String[] args) throws Exception {
+//        File file = new File("../");
+//        for (File listFile : file.listFiles()) {
+//            System.out.println(listFile.getName());
+//        }
 //        initEmptyJsonFile(filePath);
+//        System.out.println(Arrays.toString("asdf".split("&")));
         List<XpathSiteRule> rules = getXpathRuleFromFile(filePath);
-        CustomXpathSite site = new CustomXpathSite(rules.get(1));
+        CustomXpathSite site = new CustomXpathSite(rules.get(2));
         site.setDebug(true);
         testSearch(site);
 //        testDownload(site);
