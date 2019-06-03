@@ -34,7 +34,7 @@ allprojects {
 ~~~java
 dependencies {
     implementation 'com.squareup.okhttp3:okhttp:3.11.0'
-    implementation 'com.github.Zzzia:EasyBook:2.49'
+    implementation 'com.github.Zzzia:EasyBook:2.50'
 }
 ~~~
 
@@ -195,6 +195,10 @@ SiteCollection.getInstance().addSites(sites)
 
 
 ~~~
+v2.50
+修复自定义书源问题
+删除了dom4j依赖
+
 v2.49
 增加了自定义json站点规则，基于xpath
 
