@@ -38,6 +38,11 @@ dependencies {
 }
 ~~~
 
+**混淆**
+~~~
+-keep class com.zia.bookdownloader.bean.** { *; }
+~~~
+
 
 #### IDEA平台
 
@@ -173,7 +178,8 @@ EasyBook.getHottestRank().subscribe();
 EasyBook.getRank(rankInfo);
 ~~~
 
-添加json站点解析
+添加json站点解析 json格式如[zzzia源](http://zzzia.net/easybook.json) 
+详细说明如[XpathSiteRule](https://github.com/Zzzia/EasyBook/blob/master/easybookmodule/src/main/java/com/zia/easybookmodule/bean/rule/XpathSiteRule.java)
 ~~~kotlin
 val json = getJson()
 val rules = Gson().fromJson<List<XpathSiteRule>>(
@@ -189,6 +195,9 @@ SiteCollection.getInstance().addSites(sites)
 
 
 ~~~
+v2.50
+删除dom4j依赖，减少体积
+
 v2.49
 增加了自定义json站点规则，基于xpath
 
