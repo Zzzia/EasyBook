@@ -8,11 +8,13 @@ import com.zia.easybookmodule.engine.EasyBook;
 import com.zia.easybookmodule.engine.Site;
 import com.zia.easybookmodule.rx.StepSubscriber;
 import com.zia.easybookmodule.rx.Subscriber;
-import com.zia.easybookmodule.site.*;
 
 import java.io.File;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
+import java.util.Locale;
 
 /**
  * Created by zia on 2019/3/10.
@@ -43,7 +45,9 @@ public class AutoTest {
 //        });
 //        testPart(new Biquge());
 //        testSearch("天行");
-        testMoreInfo(new Zhuishu());
+//        testMoreInfo(new Zhuishu());
+
+        System.out.println(new SimpleDateFormat("yyyy-MM-dd", Locale.CHINA).format(new Date(1559546447437L)));
     }
 
     private static void testMoreInfo(final Site site) throws Exception {

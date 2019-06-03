@@ -71,7 +71,7 @@ public class DownloadEngine implements Disposable {
         });
 
         final Site site = book.getSite();
-        if (site == null){
+        if (site == null) {
             post(new Runnable() {
                 @Override
                 public void run() {
@@ -97,6 +97,7 @@ public class DownloadEngine implements Disposable {
         final List<Catalog> catalogs;
         try {
             List<Catalog> temp = site.parseCatalog(catalogHtml, book.getUrl());
+            site.getMoreBookInfo(book, catalogHtml);
             //添加序号
             for (int i = 0; i < temp.size(); i++) {
                 temp.get(i).setIndex(i + 1);

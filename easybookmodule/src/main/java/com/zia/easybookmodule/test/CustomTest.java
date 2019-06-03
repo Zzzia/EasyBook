@@ -27,7 +27,8 @@ public class CustomTest {
     public static void main(String[] args) throws Exception {
 //        initEmptyJsonFile(filePath);
         List<XpathSiteRule> rules = getXpathRuleFromFile(filePath);
-        Site site = new CustomXpathSite(rules.get(0));
+        CustomXpathSite site = new CustomXpathSite(rules.get(1));
+        site.setDebug(true);
         testSearch(site);
 //        testDownload(site);
     }
@@ -36,8 +37,6 @@ public class CustomTest {
         List<Book> books = site.search("天行");
         SiteCollection.getInstance().addSite(site);
         final Book book = books.get(0);
-
-        System.out.println(book.toString());
 
         EasyBook.download(book).setSavePath(savePath).subscribe(new Subscriber<File>() {
             public void onFinish(@NonNull File file) {
@@ -62,7 +61,7 @@ public class CustomTest {
     }
 
     private static void testSearch(Site site) throws Exception {
-        List<Book> books = site.search("天行");
+        List<Book> books = site.search("逆天邪神");
         SiteCollection.getInstance().addSite(site);
         final Book book = books.get(0);
 
@@ -73,7 +72,6 @@ public class CustomTest {
                     @Override
                     public void onFinish(@NonNull ArrayList<Chapter> chapters) {
                         System.out.println(chapters);
-                        System.out.println(book.toString());
                     }
 
                     @Override

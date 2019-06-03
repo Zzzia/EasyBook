@@ -11,7 +11,6 @@ import com.zia.easybookmodule.util.BookGriper;
 import com.zia.easybookmodule.util.TextUtil;
 import okhttp3.MediaType;
 import okhttp3.RequestBody;
-import org.htmlcleaner.CleanerProperties;
 import org.htmlcleaner.DomSerializer;
 import org.htmlcleaner.HtmlCleaner;
 import org.jsoup.parser.Parser;
@@ -36,6 +35,8 @@ public class CustomXpathSite extends Site {
     private BookGriper.CustomCleaner cleaner;
 
     private HtmlCleaner htmlCleaner = new HtmlCleaner();
+
+    private boolean debug = false;
 
     public CustomXpathSite(final XpathSiteRule xpathRule) {
         this.xpathRule = xpathRule;
@@ -95,10 +96,16 @@ public class CustomXpathSite extends Site {
                 String searchBookUrl = xPath.evaluate(xpathRule.getSearchBookUrl(), node).trim();
                 searchBookUrl = BookGriper.mergeUrl(xpathRule.getBaseUrl(), searchBookUrl);
                 String searchAuthor = xPath.evaluate(xpathRule.getSearchAuthor(), node).trim();
+                if (searchBookName.isEmpty() || searchBookUrl.isEmpty()) {
+                    continue;
+                }
                 Book book = new Book(searchBookName, searchAuthor, searchBookUrl, getSiteName());
                 getExtraInfo(book, node, xpathRule.getSearchExtraRule());
                 result.add(book);
             }
+        }
+        if (debug) {
+            System.out.println(result.get(0));
         }
         return result;
     }
@@ -110,15 +117,18 @@ public class CustomXpathSite extends Site {
         Object catalogHtmlList = xPath.evaluate(xpathRule.getCatalogChapterList(), dom, XPathConstants.NODESET);
         if (catalogHtmlList instanceof NodeList) {
             NodeList nodeList = (NodeList) catalogHtmlList;
-            List<Catalog> catalogList = new ArrayList<>(nodeList.getLength());
+            ArrayList<Catalog> catalogList = new ArrayList<>(nodeList.getLength());
             for (int i = 0; i < nodeList.getLength(); i++) {
                 Node node = nodeList.item(i);
                 String catalogChapterName = xPath.evaluate(xpathRule.getCatalogChapterName(), node).trim();
                 catalogChapterName = Parser.unescapeEntities(catalogChapterName, true);
                 String catalogChapterUrl = xPath.evaluate(xpathRule.getCatalogChapterUrl(), node).trim();
-                catalogChapterUrl = BookGriper.mergeUrl(xpathRule.getBaseUrl(), catalogChapterUrl);
+                catalogChapterUrl = BookGriper.mergeUrl(rootUrl, catalogChapterUrl);
                 Catalog catalog = new Catalog(catalogChapterName, catalogChapterUrl);
                 catalogList.add(catalog);
+            }
+            if (debug) {
+                System.out.println(catalogList.get(0));
             }
             return catalogList;
         }
@@ -132,7 +142,7 @@ public class CustomXpathSite extends Site {
         Object lineHtmlList = xPath.evaluate(xpathRule.getChapterLines(), dom, XPathConstants.NODESET);
         if (lineHtmlList instanceof NodeList) {
             NodeList nodeList = (NodeList) lineHtmlList;
-            List<String> lines = new ArrayList<>(nodeList.getLength());
+            ArrayList<String> lines = new ArrayList<>(nodeList.getLength());
             for (int i = 0; i < nodeList.getLength(); i++) {
                 Node node = nodeList.item(i);
                 String line = node.getNodeValue();
@@ -209,5 +219,12 @@ public class CustomXpathSite extends Site {
             book.setStatus(status);
         } catch (Exception ignore) {
         }
+        if (debug) {
+            System.out.println(book);
+        }
+    }
+
+    public void setDebug(boolean debug) {
+        this.debug = debug;
     }
 }
