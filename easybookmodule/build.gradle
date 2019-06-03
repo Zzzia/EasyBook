@@ -7,8 +7,8 @@ android {
     defaultConfig {
         minSdkVersion 11
         targetSdkVersion 28
-        versionCode 249
-        versionName "2.49"
+        versionCode 250
+        versionName "2.50"
 
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
 
@@ -34,7 +34,6 @@ android {
 dependencies {
     implementation fileTree(include: ['*.jar'], dir: 'libs')
     implementation 'androidx.annotation:annotation:1.0.2'
-    implementation 'com.github.dom4j:dom4j:version-2.1.1'
     compileOnly 'com.squareup.okhttp3:okhttp:3.11.0'
     compileOnly 'com.google.code.gson:gson:2.8.5'
 }
