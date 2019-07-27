@@ -20,7 +20,7 @@ import java.util.List;
 /**
  * Created by zia on 2019-06-02.
  */
-public class CustomTest {
+class CustomTest {
     private static final String filePath = "easybook.json";
     private static final String savePath = "/Users/jiangzilai/Documents/book";
 
@@ -32,7 +32,7 @@ public class CustomTest {
 //        initEmptyJsonFile(filePath);
 //        System.out.println(Arrays.toString("asdf".split("&")));
         List<XpathSiteRule> rules = getXpathRuleFromFile(filePath);
-        CustomXpathSite site = new CustomXpathSite(rules.get(2));
+        CustomXpathSite site = new CustomXpathSite(rules.get(3));
         site.setDebug(true);
         testSearch(site);
 //        testDownload(site);
@@ -68,7 +68,7 @@ public class CustomTest {
     private static void testSearch(Site site) throws Exception {
         List<Book> books = site.search("逆天邪神");
         SiteCollection.getInstance().addSite(site);
-        final Book book = books.get(0);
+        final Book book = books.get(1);
 
         System.out.println(book.toString());
 

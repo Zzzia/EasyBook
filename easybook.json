@@ -1,4 +1,5 @@
-[{
+[
+  {
     "siteName": "官术网",
     "baseUrl": "https://www.biyuwu.cc/",
     "enable": true,
@@ -14,30 +15,31 @@
     "searchBookUrl": ".//div[2]/h3/a/@href",
     "searchAuthor": ".//div[2]/div/p[1]/span[2]/text()",
     "searchExtraRule": {
-        "imageUrl": ".//div[1]/a/img/@src",
-        "bookSize": "",
-        "lastUpdateTime": ".//div[2]/div/p[3]/span[2]/text()",
-        "lastChapterName": ".//div[2]/div/p[4]/a/text()",
-        "introduce": ".//div[2]/p/text()",
-        "classify": ".//div[2]/div/p[2]/span[2]/text()",
-        "status": ""
+      "imageUrl": ".//div[1]/a/img/@src",
+      "bookSize": "",
+      "lastUpdateTime": ".//div[2]/div/p[3]/span[2]/text()",
+      "lastChapterName": ".//div[2]/div/p[4]/a/text()",
+      "introduce": ".//div[2]/p/text()",
+      "classify": ".//div[2]/div/p[2]/span[2]/text()",
+      "status": ""
     },
     "catalogChapterList": "//*[@id='list']/dl/dd",
     "catalogChapterName": ".//a/text()",
     "catalogChapterUrl": ".//a/@href",
     "catalogExtraRule": {
-        "imageUrl": "//*[@id='fmimg']/img/@src",
-        "bookSize": "",
-        "lastUpdateTime": "//*[@id='info']/p[3]/text()",
-        "lastChapterName": "//*[@id='info']/p[4]/a/text()",
-        "introduce": "//*[@id='intro']/p[1]/text()",
-        "classify": "",
-        "status": "//*[@id='info']/p[2]/text()[1]"
+      "imageUrl": "//*[@id='fmimg']/img/@src",
+      "bookSize": "",
+      "lastUpdateTime": "//*[@id='info']/p[3]/text()",
+      "lastChapterName": "//*[@id='info']/p[4]/a/text()",
+      "introduce": "//*[@id='intro']/p[1]/text()",
+      "classify": "",
+      "status": "//*[@id='info']/p[2]/text()[1]"
     },
     "chapterLines": "//*[@id='content']/text()",
     "chapterEncodeType": "UTF-8",
     "cleaner": "官术网|biyuwu.cc"
-}, {
+  },
+  {
     "siteName": "零点看书",
     "baseUrl": "https://www.lindiankanshu.com/",
     "enable": true,
@@ -53,30 +55,31 @@
     "searchBookUrl": ".//span[2]/a/@href",
     "searchAuthor": ".//span[4]/text()",
     "searchExtraRule": {
-        "imageUrl": "",
-        "bookSize": "",
-        "lastUpdateTime": ".//span[6]/text()",
-        "lastChapterName": ".//span[3]/a/text()",
-        "introduce": "",
-        "classify": ".//span[1]/text()",
-        "status": ".//span[7]/text()"
+      "imageUrl": "",
+      "bookSize": "",
+      "lastUpdateTime": ".//span[6]/text()",
+      "lastChapterName": ".//span[3]/a/text()",
+      "introduce": "",
+      "classify": ".//span[1]/text()",
+      "status": ".//span[7]/text()"
     },
     "catalogChapterList": "//*[@id='list']/dl/dd",
     "catalogChapterName": ".//a/text()",
     "catalogChapterUrl": ".//a/@href",
     "catalogExtraRule": {
-        "imageUrl": "//*[@id'fmimg']/img/@src",
-        "bookSize": "",
-        "lastUpdateTime": "//*[@id='info']/p[3]/text()[replace('最后更新：','')]",
-        "lastChapterName": "//*[@id='info']/p[4]/a/text()",
-        "introduce": "//*[@id='intro']/p/text()",
-        "classify": "",
-        "status": ""
+      "imageUrl": "//*[@id'fmimg']/img/@src",
+      "bookSize": "",
+      "lastUpdateTime": "//*[@id='info']/p[3]/text()[replace('最后更新：','')]",
+      "lastChapterName": "//*[@id='info']/p[4]/a/text()",
+      "introduce": "//*[@id='intro']/p/text()",
+      "classify": "",
+      "status": ""
     },
     "chapterLines": "//*[@id='content']/text()",
     "chapterEncodeType": "UTF-8",
     "cleaner": "零点看书|lindiankanshu.com"
-}, {
+  },
+  {
     "siteName": "奇快中文",
     "baseUrl": "https://www.7kzw.com/",
     "enable": true,
@@ -92,27 +95,68 @@
     "searchBookUrl": ".//span[2]/a/@href",
     "searchAuthor": ".//span[3]/a/text()",
     "searchExtraRule": {
-        "imageUrl": "",
-        "bookSize": "",
-        "lastUpdateTime": ".//span[5]/text()",
-        "lastChapterName": ".//span[4]/a/text()",
-        "introduce": "",
-        "classify": "",
-        "status": ""
+      "imageUrl": "",
+      "bookSize": "",
+      "lastUpdateTime": ".//span[5]/text()",
+      "lastChapterName": ".//span[4]/a/text()",
+      "introduce": "",
+      "classify": "",
+      "status": ""
     },
     "catalogChapterList": "//*[@id='list']/dl/dd",
     "catalogChapterName": ".//a/text()",
     "catalogChapterUrl": ".//a/@href",
     "catalogExtraRule": {
-        "imageUrl": "//*[@id='fmimg']/img/@src",
-        "bookSize": "",
-        "lastUpdateTime": "//*[@id='info']/p[3]/text()[replace('最后更新：','')]",
-        "lastChapterName": "//*[@id='info']/p[4]/a/text()",
-        "introduce": "//*[@id='intro']/text()",
-        "classify": "",
-        "status": ""
+      "imageUrl": "//*[@id='fmimg']/img/@src",
+      "bookSize": "",
+      "lastUpdateTime": "//*[@id='info']/p[3]/text()[replace('最后更新：','')]",
+      "lastChapterName": "//*[@id='info']/p[4]/a/text()",
+      "introduce": "//*[@id='intro']/text()",
+      "classify": "",
+      "status": ""
     },
     "chapterLines": "//*[@id='content']/text()",
     "chapterEncodeType": "utf-8",
     "cleaner": "奇快中文|7kzw.com"
-}]
+  },
+  {
+    "siteName": "笔趣阁la",
+    "baseUrl": "https://www.qu.la/",
+    "enable": true,
+    "siteClassify": "普通",
+    "ruleUpdateTime": "1564246172000",
+    "author": "zzzia",
+    "searchUrl": "https://sou.xanbhx.com/search",
+    "searchMethod": "GET",
+    "searchParam": "q={keyword}&s=920895234054625192&siteid=qula",
+    "searchEncode": "utf-8",
+    "searchBookList": "//*[@id='search-main']/div[1]/ul/li[position()>1]",
+    "searchBookName": ".//span[2]/a/text()",
+    "searchBookUrl": ".//span[2]/a/@href",
+    "searchAuthor": ".//span[4]/text()",
+    "searchExtraRule": {
+      "imageUrl": "",
+      "bookSize": "",
+      "lastUpdateTime": ".//span[6]/text()",
+      "lastChapterName": ".//span[3]/a/text()",
+      "introduce": "",
+      "classify": ".//span[1]/text()",
+      "status": ""
+    },
+    "catalogChapterList": "//*[@id='list']/dl/dd",
+    "catalogChapterName": ".//a/text()",
+    "catalogChapterUrl": ".//a/@href",
+    "catalogExtraRule": {
+      "imageUrl": "//*[@id='fmimg']/img/@src",
+      "bookSize": "",
+      "lastUpdateTime": "",
+      "lastChapterName": "//*[@id='info']/p[4]/a/text()",
+      "introduce": "//*[@id='intro']/text()",
+      "classify": "",
+      "status": ""
+    },
+    "chapterLines": "//*[@id='content']/text()",
+    "chapterEncodeType": "utf-8",
+    "cleaner": "笔趣阁|qu.la"
+  }
+]

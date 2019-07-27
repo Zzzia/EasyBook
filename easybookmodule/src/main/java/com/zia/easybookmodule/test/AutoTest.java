@@ -19,7 +19,7 @@ import java.util.Locale;
 /**
  * Created by zia on 2019/3/10.
  */
-public class AutoTest {
+class AutoTest {
     public static void main(String[] args) throws Exception {
 //        test(new Biquge());
 //        EasyBook.getRank(RankConstants.vipreward).subscribe(new Subscriber<Rank>() {
