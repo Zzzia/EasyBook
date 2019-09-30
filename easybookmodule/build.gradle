@@ -33,11 +33,9 @@ android {
 
 dependencies {
     implementation fileTree(include: ['*.jar'], dir: 'libs')
-    api 'androidx.annotation:annotation:1.1.0'
+    implementation 'androidx.annotation:annotation:1.1.0'
     compileOnly 'com.squareup.okhttp3:okhttp:4.0.1'
     compileOnly 'com.google.code.gson:gson:2.8.5'
-    api 'net.sourceforge.htmlcleaner:htmlcleaner:2.22'
-    api 'org.jsoup:jsoup:1.12.1'
 }
 
 // 指定编码

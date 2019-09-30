@@ -33,7 +33,7 @@ allprojects {
 
 ~~~java
 dependencies {
-    implementation 'com.github.Zzzia:EasyBook:2.52'
+    implementation 'com.github.Zzzia:EasyBook:2.54'
     implementation 'com.squareup.okhttp3:okhttp:4.0.1'
     implementation 'com.google.code.gson:gson:2.8.5'
 }
@@ -196,7 +196,7 @@ SiteCollection.getInstance().addSites(sites)
 
 
 ~~~
-v2.51
+v2.54
 删除/增加了几个书源
 修复在线解析规则不能去广告bug
 暴露网络接口供自定义实现
