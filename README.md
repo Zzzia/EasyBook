@@ -3,19 +3,14 @@
 [![](https://jitpack.io/v/Zzzia/EasyBook.svg)](https://jitpack.io/#Zzzia/EasyBook)
 
 
-使用简单的几行代码，打造你自己的小说开源软件，多站点解析，并发搜索下载。
+使用简单的几行代码，打造你自己的小说开源软件，自定义书源，多站点解析，并发搜索下载。
 
 
 [App体验](https://github.com/Zzzia/Book)
 
 QQ群交流：29527219
 
-<img src="https://github.com/Zzzia/Book/blob/master/screenshot/1.jpg"
-width="280"><img
-src="https://github.com/Zzzia/Book/blob/master/screenshot/2.jpg"
-width="280"><img
-src="https://github.com/Zzzia/Book/blob/master/screenshot/3.jpg"
-width="280">
+<img src="https://github.com/Zzzia/Book/blob/master/screenshot/1.png" width="280"><img src="https://github.com/Zzzia/Book/blob/master/screenshot/2.png" width="280"><img src="https://github.com/Zzzia/Book/blob/master/screenshot/3.png" width="280">
 
 #### Android平台
 **Step 1**. Add the JitPack repository to your build file
