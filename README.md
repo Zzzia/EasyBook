@@ -33,7 +33,7 @@ allprojects {
 
 ~~~java
 dependencies {
-    implementation 'com.github.Zzzia:EasyBook:2.52'
+    implementation 'com.github.Zzzia:EasyBook:2.53'
     implementation 'com.squareup.okhttp3:okhttp:4.0.1'
     implementation 'com.google.code.gson:gson:2.8.5'
 }
