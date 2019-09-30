@@ -97,6 +97,14 @@ public class DownloadEngine implements Disposable {
         final List<Catalog> catalogs;
         try {
             List<Catalog> temp = site.parseCatalog(catalogHtml, book.getUrl());
+            Iterator<Catalog> iterator = temp.iterator();
+            //删除空白章节名的章节
+            while (iterator.hasNext()){
+                Catalog c = iterator.next();
+                if (c.getChapterName().isEmpty()){
+                    iterator.remove();
+                }
+            }
             site.getMoreBookInfo(book, catalogHtml);
             //添加序号
             for (int i = 0; i < temp.size(); i++) {

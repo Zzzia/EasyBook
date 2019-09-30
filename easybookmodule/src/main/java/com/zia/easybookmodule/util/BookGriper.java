@@ -1,9 +1,11 @@
 package com.zia.easybookmodule.util;
 
 import androidx.annotation.Nullable;
+
 import com.zia.easybookmodule.bean.Book;
 import com.zia.easybookmodule.bean.Catalog;
 import com.zia.easybookmodule.net.NetUtil;
+
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
 import org.jsoup.nodes.Element;
@@ -68,6 +70,10 @@ public class BookGriper {
     }
 
     public static List<Catalog> parseBqgCatalogs(String catalogHtml, String url) {
+        if (!url.endsWith("/")) {
+            //保证url合并的效果
+            url += "/";
+        }
         String sub = RegexUtil.regexExcept("<div id=\"list\">", "</div>", catalogHtml).get(0);
         String[] subs = sub.split("正文</dt>|正文卷</dt>");
         if (subs.length == 2) {
@@ -78,7 +84,10 @@ public class BookGriper {
         for (String s : as) {
             RegexUtil.Tag tag = new RegexUtil.Tag(s);
             String name = tag.getText();
-            String href = mergeUrl(url, tag.getValue("href"));
+            String href = tag.getValue("href");
+            href = href.replace("http://", "").replace("https://", "");
+            href = mergeUrl(url, href);
+//            String href = mergeUrl(url, tag.getValue("href"));
             list.add(new Catalog(name, href));
         }
         return list;

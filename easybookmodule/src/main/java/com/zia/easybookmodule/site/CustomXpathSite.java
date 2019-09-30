@@ -1,6 +1,7 @@
 package com.zia.easybookmodule.site;
 
 import androidx.annotation.Nullable;
+
 import com.zia.easybookmodule.bean.Book;
 import com.zia.easybookmodule.bean.Catalog;
 import com.zia.easybookmodule.bean.rule.XpathSiteRule;
@@ -9,9 +10,7 @@ import com.zia.easybookmodule.engine.SiteCollection;
 import com.zia.easybookmodule.net.NetUtil;
 import com.zia.easybookmodule.util.BookGriper;
 import com.zia.easybookmodule.util.TextUtil;
-import okhttp3.FormBody;
-import okhttp3.MediaType;
-import okhttp3.RequestBody;
+
 import org.htmlcleaner.DomSerializer;
 import org.htmlcleaner.HtmlCleaner;
 import org.jsoup.parser.Parser;
@@ -19,12 +18,16 @@ import org.w3c.dom.Document;
 import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
 
-import javax.xml.xpath.XPath;
-import javax.xml.xpath.XPathConstants;
 import java.net.URLEncoder;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
+import java.util.regex.Pattern;
+
+import javax.xml.xpath.XPath;
+import javax.xml.xpath.XPathConstants;
+
+import okhttp3.MediaType;
+import okhttp3.RequestBody;
 
 /**
  * Created by zia on 2019-05-31.
@@ -42,18 +45,35 @@ public class CustomXpathSite extends Site {
 
     public CustomXpathSite(final XpathSiteRule xpathRule) {
         this.xpathRule = xpathRule;
-        cleaner = new BookGriper.CustomCleaner() {
-            @Nullable
-            @Override
-            public String clean(String line) {
-                String cleanRule = xpathRule.getCleaner();
-                if (cleanRule != null && !cleanRule.isEmpty() && line.contains(cleanRule)) {
-                    return null;
-                } else {
+        String cleanRule = xpathRule.getCleaner();
+        if (cleanRule != null && !cleanRule.isEmpty()) {
+            StringBuilder regex = new StringBuilder();
+            for (String s : cleanRule.split("\\|")) {
+                regex.append(".*").append(s).append(".*").append("|");
+            }
+            regex.delete(regex.length() - 1, regex.length());
+
+            final Pattern pattern = Pattern.compile(regex.toString());
+            cleaner = new BookGriper.CustomCleaner() {
+                @Nullable
+                @Override
+                public String clean(String line) {
+                    if (pattern.matcher(line).matches()) {
+                        return null;
+                    } else {
+                        return line;
+                    }
+                }
+            };
+        } else {
+            cleaner = new BookGriper.CustomCleaner() {
+                @Nullable
+                @Override
+                public String clean(String line) {
                     return line;
                 }
-            }
-        };
+            };
+        }
         htmlCleaner.getProperties().setTranslateSpecialEntities(false);
     }
 
@@ -82,9 +102,9 @@ public class CustomXpathSite extends Site {
             RequestBody requestBody = RequestBody.create(JSON, param);
             html = NetUtil.getHtml(url, requestBody, getEncodeType());
         }
-//        if (debug) {
-//            System.out.println(html);
-//        }
+        if (debug) {
+            System.out.println(html);
+        }
         List<Book> result = new ArrayList<>();
         Document dom = new DomSerializer(htmlCleaner.getProperties()).createDOM(htmlCleaner.clean(html));
         XPath xPath = SiteCollection.getInstance().getxPath();
@@ -98,7 +118,6 @@ public class CustomXpathSite extends Site {
                 String searchBookUrl = xPath.evaluate(xpathRule.getSearchBookUrl(), node).trim();
                 searchBookUrl = BookGriper.mergeUrl(xpathRule.getBaseUrl(), searchBookUrl);
                 String searchAuthor = xPath.evaluate(xpathRule.getSearchAuthor(), node).trim();
-                System.out.println(searchAuthor);
                 if (searchBookName.isEmpty() || searchBookUrl.isEmpty()) {
                     continue;
                 }
@@ -149,12 +168,12 @@ public class CustomXpathSite extends Site {
             for (int i = 0; i < nodeList.getLength(); i++) {
                 Node node = nodeList.item(i);
                 String line = node.getNodeValue();
+                //清除首尾空格以及特殊字符
+                line = TextUtil.cleanContent(line).trim();
                 line = cleaner.clean(line);
                 //如果返回为null，那么删除这一行
                 if (line == null) continue;
-                //清除首尾空格以及特殊字符
-                line = TextUtil.cleanContent(line);
-                if (!line.trim().isEmpty()) {
+                if (!line.isEmpty()) {
                     line = Parser.unescapeEntities(line, true);
                     lines.add(line);
                 }
@@ -221,9 +240,6 @@ public class CustomXpathSite extends Site {
             String status = xPath.evaluate(extraRule.getStatus(), node).trim();
             book.setStatus(status);
         } catch (Exception ignore) {
-        }
-        if (debug) {
-            System.out.println(book);
         }
     }
 

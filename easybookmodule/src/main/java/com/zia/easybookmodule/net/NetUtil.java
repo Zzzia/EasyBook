@@ -1,17 +1,20 @@
 package com.zia.easybookmodule.net;
 
-import okhttp3.OkHttpClient;
-import okhttp3.Request;
-import okhttp3.RequestBody;
-import okhttp3.ResponseBody;
-
 import java.io.IOException;
+import java.util.Map;
 import java.util.concurrent.TimeUnit;
+
+import okhttp3.OkHttpClient;
+import okhttp3.RequestBody;
 
 /**
  * Created By zia on 2018/10/21.
  */
 public class NetUtil {
+
+    //把网络请求暴露出去
+    private static EasyBookNet net = new OkHttpNet();
+
     public static OkHttpClient okHttpClient = new OkHttpClient.Builder()
 //            .sslSocketFactory(SSLSocketClient.getSSLSocketFactory())
 //            .hostnameVerifier(SSLSocketClient.getHostnameVerifier())
@@ -26,42 +29,26 @@ public class NetUtil {
      * 同步获取html文件，默认编码gbk
      */
     public static String getHtml(String url) throws IOException {
-        return getHtml(url, "gbk");
+        return net.getHtml(url, "gbk");
     }
 
     public static String getHtml(String url, String encodeType) throws IOException {
-        try {
-            return getHtml(url, null, encodeType);
-        } catch (IOException e) {
-            System.err.print(url);
-            throw e;
-        }
+        return net.getHtml(url, null, null, encodeType);
     }
 
     public static String getHtml(String url, RequestBody requestBody, String encodeType) throws IOException {
-        Request.Builder builder = new Request.Builder()
-                .addHeader("accept", "*/*")
-                .addHeader("connection", "Keep-Alive")
-                .addHeader("Charsert", encodeType)
-                .addHeader("user-agent", "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_14_0) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/70.0.3538.77 Safari/537.36");
-
-        if (requestBody != null) {
-            builder.post(requestBody);
-        }
-
-        Request request = builder
-                .url(url)
-                .build();
-
-        ResponseBody body = okHttpClient.newCall(request).execute().body();
-        if (body == null) {
-            return "";
-        } else {
-            return new String(body.bytes(), encodeType);
-        }
+        return net.getHtml(url, null, requestBody, encodeType);
     }
 
-//    private static Random mRandom = new Random();
+    public static String getHtml(String url, Map<String, String> header, RequestBody requestBody, String encodeType) throws IOException {
+        return net.getHtml(url, header, requestBody, encodeType);
+    }
+
+    public static void setNet(EasyBookNet net) {
+        NetUtil.net = net;
+    }
+
+    //    private static Random mRandom = new Random();
 //
 //    /**
 //     * 获取随机ip地址

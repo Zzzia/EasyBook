@@ -21,6 +21,7 @@ import java.util.List;
  * 极点小说网 https://www.toptxta.com/
  * 连接成功率极低，需要vpn=_=
  */
+@Deprecated
 public class Jidian extends Site {
     @Override
     public String getSiteName() {

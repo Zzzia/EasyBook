@@ -5,6 +5,7 @@ import com.zia.easybookmodule.bean.Catalog;
 import com.zia.easybookmodule.engine.Site;
 import com.zia.easybookmodule.net.NetUtil;
 import com.zia.easybookmodule.util.BookGriper;
+
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Element;
 import org.jsoup.nodes.TextNode;
@@ -66,7 +67,7 @@ public class Xbiquge extends Site {
         Element listElement = Jsoup.parse(catalogHtml).getElementById("list");
         List<Catalog> catalogs = new ArrayList<>();
         for (Element a : listElement.getElementsByTag("a")) {
-            String bkUrl = root + a.attr("href");
+            String bkUrl = BookGriper.mergeUrl(rootUrl, a.attr("href"));
             String name = a.text();
             catalogs.add(new Catalog(name, bkUrl));
         }

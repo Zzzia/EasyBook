@@ -13,6 +13,7 @@ import java.util.List;
  * Created By zia on 2018/10/31.
  * 顶点小说 https://www.booktxt.net/
  */
+@Deprecated
 public class Dingdian extends Site {
     @Override
     public String getSiteName() {

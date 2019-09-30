@@ -34,7 +34,7 @@ allprojects {
 ~~~java
 dependencies {
     implementation 'com.squareup.okhttp3:okhttp:3.11.0'
-    implementation 'com.github.Zzzia:EasyBook:2.50'
+    implementation 'com.github.Zzzia:EasyBook:2.51'
 }
 ~~~
 
@@ -195,6 +195,11 @@ SiteCollection.getInstance().addSites(sites)
 
 
 ~~~
+v2.51
+删除/增加了几个书源
+修复在线解析规则不能去广告bug
+暴露网络接口供自定义实现
+
 v2.50
 修复自定义书源问题
 删除了dom4j依赖

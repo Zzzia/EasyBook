@@ -1,6 +1,7 @@
 package com.zia.easybookmodule.test;
 
 import androidx.annotation.NonNull;
+
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
 import com.zia.easybookmodule.bean.Book;
@@ -12,9 +13,15 @@ import com.zia.easybookmodule.engine.SiteCollection;
 import com.zia.easybookmodule.rx.Subscriber;
 import com.zia.easybookmodule.site.CustomXpathSite;
 
-import java.io.*;
+import java.io.BufferedReader;
+import java.io.BufferedWriter;
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.io.InputStreamReader;
+import java.io.OutputStreamWriter;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
 
 /**
@@ -32,13 +39,13 @@ class CustomTest {
 //        initEmptyJsonFile(filePath);
 //        System.out.println(Arrays.toString("asdf".split("&")));
         List<XpathSiteRule> rules = getXpathRuleFromFile(filePath);
-        CustomXpathSite site = new CustomXpathSite(rules.get(3));
+        CustomXpathSite site = new CustomXpathSite(rules.get(7));
         site.setDebug(true);
         testSearch(site);
 //        testDownload(site);
     }
 
-    private static void testDownload(Site site) throws Exception{
+    private static void testDownload(Site site) throws Exception {
         List<Book> books = site.search("天行");
         SiteCollection.getInstance().addSite(site);
         final Book book = books.get(0);
@@ -66,13 +73,14 @@ class CustomTest {
     }
 
     private static void testSearch(Site site) throws Exception {
-        List<Book> books = site.search("逆天邪神");
-        SiteCollection.getInstance().addSite(site);
-        final Book book = books.get(1);
+        List<Book> books = site.search("斗破苍穹");
+        final Book book = books.get(0);
 
         System.out.println(book.toString());
+        System.out.println();
 
-        EasyBook.downloadPart(book, 0, 1)
+        SiteCollection.getInstance().addSite(site);
+        EasyBook.downloadPart(book, 0, 3)
                 .subscribe(new Subscriber<ArrayList<Chapter>>() {
                     @Override
                     public void onFinish(@NonNull ArrayList<Chapter> chapters) {
@@ -91,7 +99,7 @@ class CustomTest {
 
                     @Override
                     public void onProgress(int progress) {
-                        System.out.println(progress);
+
                     }
                 });
     }

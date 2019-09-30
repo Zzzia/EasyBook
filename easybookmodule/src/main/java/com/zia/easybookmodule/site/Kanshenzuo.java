@@ -23,6 +23,7 @@ import java.util.List;
  * 书挺全的，更新也比较及时
  * 测试约500k/s
  */
+@Deprecated
 public class Kanshenzuo extends Site {
 
     private static final String root = "http://www.kanshenzuo.com";

@@ -29,12 +29,13 @@ public class SiteCollection {
         sites.add(new BiqugeBiz());
         sites.add(new Zhuaji());
         sites.add(new Shunong());
-        sites.add(new Kanshenzuo());
+        sites.add(new Biduo());
+//        sites.add(new Kanshenzuo());
         sites.add(new Wulin());
         sites.add(new Wenxuemi());
 //        sites.add(new Shuyuewu());
-        sites.add(new Dingdian());
-        sites.add(new Mianhuatang());
+//        sites.add(new Dingdian());
+//        sites.add(new Mianhuatang());
         sites.add(new Bishenge());
 
         //anim
@@ -43,7 +44,7 @@ public class SiteCollection {
 
         //h
 //        sites.add(new Shouji());
-        sites.add(new Jidian());
+//        sites.add(new Jidian());
 //        sites.add(new Zhai());
     }
 
