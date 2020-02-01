@@ -28,8 +28,8 @@ allprojects {
 
 ~~~java
 dependencies {
-    implementation 'com.github.Zzzia:EasyBook:2.55'
-    implementation 'com.squareup.okhttp3:okhttp:4.0.1'
+    implementation 'com.github.Zzzia:EasyBook:2.56'
+    implementation 'com.squareup.okhttp3:okhttp:4.2.2'
     implementation 'com.google.code.gson:gson:2.8.5'
 }
 ~~~
