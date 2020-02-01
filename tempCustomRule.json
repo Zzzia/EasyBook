@@ -1,0 +1,42 @@
+[
+  {
+    "siteName": "顶点new",
+    "baseUrl": "https://www.booktxt.net/",
+    "enable": true,
+    "siteClassify": "缓慢",
+    "ruleUpdateTime": "1580548851000",
+    "author": "zzzia",
+    "searchUrl": "https://search1.booktxt.net/modules/article/search.php",
+    "searchMethod": "GET",
+    "searchParam": "searchkey={keyword}",
+    "searchEncode": "gbk",
+    "searchBookList": "//*[@id=\"nr\"]",
+    "searchBookName": ".//td[1]/a/text()",
+    "searchBookUrl": ".//td[1]/a/@href",
+    "searchAuthor": ".//td[3]/text()",
+    "searchExtraRule": {
+      "imageUrl": "",
+      "bookSize": ".//td[4]/text()",
+      "lastUpdateTime": ".//td[5]/text()",
+      "lastChapterName": ".//td[2]/a/text()",
+      "introduce": "",
+      "classify": "",
+      "status": ""
+    },
+    "catalogChapterList": "//*[@id=\"list\"]/dl/dd",
+    "catalogChapterName": ".//a/text()",
+    "catalogChapterUrl": ".//a/@href",
+    "catalogExtraRule": {
+      "imageUrl": "//*[@id=\"fmimg\"]/img/@src",
+      "bookSize": "",
+      "lastUpdateTime": "",
+      "lastChapterName": "",
+      "introduce": "//*[@id=\"intro\"]/p/text()",
+      "classify": "",
+      "status": ""
+    },
+    "chapterLines": "//*[@id=\"content\"]/text()",
+    "chapterEncodeType": "gbk",
+    "cleaner": ""
+  }
+]

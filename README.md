@@ -10,7 +10,7 @@
 
 QQ群交流：29527219
 
-<img src="https://github.com/Zzzia/Book/blob/master/screenshot/1.png" width="280"><img src="https://github.com/Zzzia/Book/blob/master/screenshot/2.png" width="280"><img src="https://github.com/Zzzia/Book/blob/master/screenshot/3.png" width="280">
+<img src="screenshot/1.png" width="280"><img src="screenshot/2.png" width="280"><img src="screenshot/3.png" width="280">
 
 #### Android平台
 **Step 1**. Add the JitPack repository to your build file
@@ -34,7 +34,7 @@ dependencies {
 }
 ~~~
 
-**混淆**
+**混淆(默认自动加入)**
 ~~~
 -keep class com.zia.bookdownloader.bean.** { *; }
 ~~~
@@ -157,6 +157,9 @@ void onDestroy(){
 ~~~
 
 添加自己的站点解析：
+
+[教程]("CustomRule.md")
+
 ~~~java
 //添加一个自己解析的站点类，叫Zhuishushenqi，需要继承Site
 SiteCollection.getInstance().addSite(Zhuishushenqi());
@@ -191,6 +194,11 @@ SiteCollection.getInstance().addSites(sites)
 
 
 ~~~
+v2.56
+修复了书源并部分转移至在线书源
+修复了一些在线书源的小问题
+添加了在线书源制作教程
+
 v2.55
 删除/增加了几个书源
 修复在线解析规则不能去广告bug

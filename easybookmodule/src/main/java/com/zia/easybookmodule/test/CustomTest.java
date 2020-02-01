@@ -29,18 +29,18 @@ import java.util.List;
  */
 class CustomTest {
     private static final String filePath = "easybook.json";
+//    private static final String filePath = "tempCustomRule.json";
     private static final String savePath = "/Users/jiangzilai/Documents/book";
 
     public static void main(String[] args) throws Exception {
-//        File file = new File("../");
-//        for (File listFile : file.listFiles()) {
-//            System.out.println(listFile.getName());
-//        }
-//        initEmptyJsonFile(filePath);
-//        System.out.println(Arrays.toString("asdf".split("&")));
+        AutoTest.trustAll();
+
         List<XpathSiteRule> rules = getXpathRuleFromFile(filePath);
-        CustomXpathSite site = new CustomXpathSite(rules.get(7));
+        CustomXpathSite site = new CustomXpathSite(rules.get(11));
         site.setDebug(true);
+
+        SiteCollection.getInstance().addSite(site);
+
         testSearch(site);
 //        testDownload(site);
     }
@@ -73,13 +73,15 @@ class CustomTest {
     }
 
     private static void testSearch(Site site) throws Exception {
-        List<Book> books = site.search("斗破苍穹");
+        List<Book> books = site.search("天行");
         final Book book = books.get(0);
 
         System.out.println(book.toString());
         System.out.println();
 
-        SiteCollection.getInstance().addSite(site);
+        // 解析更多信息
+        tryMoreInfo(book);
+
         EasyBook.downloadPart(book, 0, 3)
                 .subscribe(new Subscriber<ArrayList<Chapter>>() {
                     @Override
@@ -113,6 +115,11 @@ class CustomTest {
         }
         in.close();
         return new Gson().fromJson(sb.toString(), TypeToken.getParameterized(List.class, XpathSiteRule.class).getType());
+    }
+
+    private static void tryMoreInfo(final Book book) throws Exception {
+        EasyBook.getCatalog(book).getSync();
+        System.out.println("[more info]:" + book.toString());
     }
 
     private static void initEmptyJsonFile(String filePath) throws IOException {

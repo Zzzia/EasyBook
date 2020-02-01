@@ -7,8 +7,8 @@ android {
     defaultConfig {
         minSdkVersion 11
         targetSdkVersion 28
-        versionCode 250
-        versionName "2.50"
+        versionCode 256
+        versionName "2.56"
 
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
 
@@ -17,7 +17,7 @@ android {
     buildTypes {
         release {
             minifyEnabled false
-            proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
+            consumerProguardFiles 'proguard-rules.pro'
         }
     }
 
@@ -34,7 +34,7 @@ android {
 dependencies {
     implementation fileTree(include: ['*.jar'], dir: 'libs')
     implementation 'androidx.annotation:annotation:1.1.0'
-    compileOnly 'com.squareup.okhttp3:okhttp:4.0.1'
+    compileOnly 'com.squareup.okhttp3:okhttp:4.2.2'
     compileOnly 'com.google.code.gson:gson:2.8.5'
 }
 

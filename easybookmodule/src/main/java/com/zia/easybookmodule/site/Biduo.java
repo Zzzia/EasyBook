@@ -15,11 +15,14 @@ import java.util.List;
  * https://www.biduo.cc/
  */
 public class Biduo extends Site {
+
+    private final String baseUrl = "https://www.biduo.cc/";
+
     @Override
     public List<Book> search(String bookName) throws Exception {
-        String url = "https://www.biduo.cc/search.php?keyword=" + bookName;
+        String url = baseUrl + "search.php?q=" + bookName;
         String html = NetUtil.getHtml(url, "utf-8");
-        return BookGriper.parseBaiduBooks(html, getSiteName());
+        return BookGriper.parseBaiduBooks(baseUrl, html, getSiteName());
     }
 
     @Override
@@ -40,6 +43,6 @@ public class Biduo extends Site {
 
     @Override
     public Book getMoreBookInfo(Book book, String catalogHtml) throws Exception {
-        return BookGriper.getBqgMoreInfo(book, catalogHtml, "https://www.biduo.cc");
+        return BookGriper.getBqgMoreInfo(book, catalogHtml, baseUrl);
     }
 }

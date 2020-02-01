@@ -10,11 +10,6 @@ import com.zia.easybookmodule.engine.Site;
 import com.zia.easybookmodule.net.NetUtil;
 import com.zia.easybookmodule.rx.StepSubscriber;
 import com.zia.easybookmodule.rx.Subscriber;
-import com.zia.easybookmodule.site.Biduo;
-import com.zia.easybookmodule.site.Binhuo;
-import com.zia.easybookmodule.site.Biquge;
-import com.zia.easybookmodule.site.BiqugeBiz;
-import com.zia.easybookmodule.site.Xbiquge;
 import com.zia.easybookmodule.site.Zhuishu;
 
 import java.io.File;
@@ -61,7 +56,7 @@ class AutoTest {
 //
 //            }
 //        });
-        testDownloadPart(new BiqugeBiz());
+        testDownloadPart(new Zhuishu());
 //        testSearch("天行");
 //        testMoreInfo(new Biduo());
     }
@@ -175,7 +170,7 @@ class AutoTest {
                 });
     }
 
-    private static void trustAll() {
+    static void trustAll() {
         NetUtil.okHttpClient = new OkHttpClient.Builder()
                 .sslSocketFactory(SSLSocketClient.getSSLSocketFactory())
                 .hostnameVerifier(SSLSocketClient.getHostnameVerifier())

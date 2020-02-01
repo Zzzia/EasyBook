@@ -7,6 +7,7 @@ import com.zia.easybookmodule.net.NetUtil;
 import com.zia.easybookmodule.util.BookGriper;
 import com.zia.easybookmodule.util.RegexUtil;
 
+import java.net.URLEncoder;
 import java.util.List;
 
 /**
@@ -15,9 +16,11 @@ import java.util.List;
  */
 public class BiqugeBiz extends Site {
 
+    private final String baseUrl = "https://www.biquge.biz/";
+
     @Override
     public List<Book> search(String bookName) throws Exception {
-        String url = "https://www.biquge.biz/search.php?keyword=" + bookName;
+        String url = baseUrl + "search.php?q=" + URLEncoder.encode(bookName, "utf-8");
         String html = NetUtil.getHtml(url, "utf-8");
 //        Elements items = Jsoup.parse(html).getElementsByClass("result-list").first().getElementsByClass("result-item");
 //        List<Book> results = new ArrayList<>();
@@ -35,13 +38,13 @@ public class BiqugeBiz extends Site {
 //            results.add(book);
 //        }
 //        return results;
-        return BookGriper.parseBaiduBooks(html, getSiteName());
+        return BookGriper.parseBaiduBooks(baseUrl, html, getSiteName());
     }
 
     @Override
     public List<Catalog> parseCatalog(String catalogHtml, String rootUrl) throws Exception {
 //        System.out.println(BookGriper.parseBqgCatalogs(catalogHtml, "https://www.biquge.biz"));
-        return BookGriper.parseBqgCatalogs(catalogHtml, "https://www.biquge.biz");
+        return BookGriper.parseBqgCatalogs(catalogHtml, baseUrl);
     }
 
     @Override
@@ -57,6 +60,6 @@ public class BiqugeBiz extends Site {
 
     @Override
     public Book getMoreBookInfo(Book book, String catalogHtml) throws Exception {
-        return BookGriper.getBqgMoreInfo(book, catalogHtml, "https://www.biquge.biz/");
+        return BookGriper.getBqgMoreInfo(book, catalogHtml, baseUrl);
     }
 }

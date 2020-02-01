@@ -1,11 +1,22 @@
 package com.zia.easybookmodule.engine;
 
-import com.zia.easybookmodule.site.*;
+import com.zia.easybookmodule.site.Biduo;
+import com.zia.easybookmodule.site.Binhuo;
+import com.zia.easybookmodule.site.Biquge;
+import com.zia.easybookmodule.site.BiqugeBiz;
+import com.zia.easybookmodule.site.Daocaoren;
+import com.zia.easybookmodule.site.Shunong;
+import com.zia.easybookmodule.site.Wenxuemi;
+import com.zia.easybookmodule.site.Zhuaji;
+import com.zia.easybookmodule.site.Zhuishu;
+
+import org.jetbrains.annotations.Nullable;
+
+import java.util.ArrayList;
+import java.util.List;
 
 import javax.xml.xpath.XPath;
 import javax.xml.xpath.XPathFactory;
-import java.util.ArrayList;
-import java.util.List;
 
 /**
  * Created By zia on 2018/10/30.
@@ -24,19 +35,12 @@ public class SiteCollection {
     private SiteCollection() {
         //normal
         sites.add(new Zhuishu());
-        sites.add(new Xbiquge());
         sites.add(new Biquge());
         sites.add(new BiqugeBiz());
         sites.add(new Zhuaji());
         sites.add(new Shunong());
         sites.add(new Biduo());
-//        sites.add(new Kanshenzuo());
-        sites.add(new Wulin());
         sites.add(new Wenxuemi());
-//        sites.add(new Shuyuewu());
-//        sites.add(new Dingdian());
-//        sites.add(new Mianhuatang());
-        sites.add(new Bishenge());
 
         //anim
         sites.add(new Binhuo());
@@ -58,6 +62,16 @@ public class SiteCollection {
         if (!sites.contains(site)) {
             sites.add(site);
         }
+    }
+
+    @Nullable
+    public Site findSite(String siteName) {
+        for (Site site : sites) {
+            if (site.getSiteName().equals(siteName)) {
+                return site;
+            }
+        }
+        return null;
     }
 
     public XPath getxPath() {

@@ -1,6 +1,7 @@
 package com.zia.easybookmodule.site;
 
 import androidx.annotation.Nullable;
+
 import com.zia.easybookmodule.bean.Book;
 import com.zia.easybookmodule.bean.Catalog;
 import com.zia.easybookmodule.engine.Site;
@@ -18,16 +19,21 @@ import java.util.List;
  * 追书网
  */
 public class Zhuishu extends Site {
+
+    private static final String baseUrl = "https://www.mangg.net/";
+
     @Override
     public List<Book> search(String bookName) throws Exception {
-        String html = NetUtil.getHtml("https://www.bimo.cc/search.aspx?keyword=" + URLEncoder.encode(bookName, getEncodeType())
-                , getEncodeType());
-        return BookGriper.parseBaiduBooks(html, getSiteName());
+        String url = baseUrl + "search.php?q=" + URLEncoder.encode(bookName, "utf-8");
+        System.out.println(url);
+        String html = NetUtil.getHtml(url, getEncodeType());
+        System.out.println(html);
+        return BookGriper.parseBaiduBooks(baseUrl, html, getSiteName());
     }
 
     @Override
     public List<Catalog> parseCatalog(String catalogHtml, String rootUrl) {
-        return BookGriper.parseBqgCatalogs(catalogHtml, "https://www.bimo.cc");
+        return BookGriper.parseBqgCatalogs(catalogHtml, baseUrl);
     }
 
     @Override
@@ -55,6 +61,6 @@ public class Zhuishu extends Site {
 
     @Override
     public Book getMoreBookInfo(Book book, String catalogHtml) throws Exception {
-        return BookGriper.getBqgMoreInfo(book, catalogHtml, "https://www.bimo.cc/");
+        return BookGriper.getBqgMoreInfo(book, catalogHtml, baseUrl);
     }
 }

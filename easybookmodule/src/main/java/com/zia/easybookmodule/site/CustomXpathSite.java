@@ -25,6 +25,7 @@ import java.util.regex.Pattern;
 
 import javax.xml.xpath.XPath;
 import javax.xml.xpath.XPathConstants;
+import javax.xml.xpath.XPathException;
 
 import okhttp3.MediaType;
 import okhttp3.RequestBody;
@@ -103,6 +104,7 @@ public class CustomXpathSite extends Site {
             html = NetUtil.getHtml(url, requestBody, getEncodeType());
         }
         if (debug) {
+            System.out.println(url);
             System.out.println(html);
         }
         List<Book> result = new ArrayList<>();
@@ -139,18 +141,28 @@ public class CustomXpathSite extends Site {
         Object catalogHtmlList = xPath.evaluate(xpathRule.getCatalogChapterList(), dom, XPathConstants.NODESET);
         if (catalogHtmlList instanceof NodeList) {
             NodeList nodeList = (NodeList) catalogHtmlList;
+            if (nodeList.getLength() == 0) {
+                throw new XPathException("Xpath获取node个数为0");
+            }
             ArrayList<Catalog> catalogList = new ArrayList<>(nodeList.getLength());
             for (int i = 0; i < nodeList.getLength(); i++) {
                 Node node = nodeList.item(i);
                 String catalogChapterName = xPath.evaluate(xpathRule.getCatalogChapterName(), node).trim();
                 catalogChapterName = Parser.unescapeEntities(catalogChapterName, true);
                 String catalogChapterUrl = xPath.evaluate(xpathRule.getCatalogChapterUrl(), node).trim();
+                if (catalogChapterName.isEmpty() && catalogChapterUrl.isEmpty()) {
+                    continue;
+                }
                 catalogChapterUrl = BookGriper.mergeUrl(rootUrl, catalogChapterUrl);
                 Catalog catalog = new Catalog(catalogChapterName, catalogChapterUrl);
                 catalogList.add(catalog);
             }
             if (debug) {
-                System.out.println(catalogList.get(0));
+                if (catalogList.isEmpty()) {
+                    System.out.println("catalogList is empty!");
+                } else {
+                    System.out.println(catalogList.get(0));
+                }
             }
             return catalogList;
         }

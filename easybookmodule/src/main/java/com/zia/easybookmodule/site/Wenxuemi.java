@@ -17,16 +17,18 @@ import java.util.List;
  */
 public class Wenxuemi extends Site {
 
+    private final String baseUrl = "https://www.wenxuemi6.com/";
+
     @Override
     public List<Book> search(String bookName) throws Exception {
-        String html = NetUtil.getHtml("https://www.wenxuemi6.com/search.php?keyword=" + URLEncoder.encode(bookName, "utf-8")
+        String html = NetUtil.getHtml(baseUrl + "search.php?keyword=" + URLEncoder.encode(bookName, "utf-8")
                 , "utf-8");
-        return BookGriper.parseBaiduBooks(html, getSiteName());
+        return BookGriper.parseBaiduBooks(baseUrl, html, getSiteName());
     }
 
     @Override
     public List<Catalog> parseCatalog(String catalogHtml, String rootUrl) {
-        return BookGriper.parseBqgCatalogs(catalogHtml, "https://www.wenxuemi6.com");
+        return BookGriper.parseBqgCatalogs(catalogHtml, baseUrl);
     }
 
     @Override
@@ -42,6 +44,6 @@ public class Wenxuemi extends Site {
 
     @Override
     public Book getMoreBookInfo(Book book, String catalogHtml) throws Exception {
-        return BookGriper.getBqgMoreInfo(book, catalogHtml, "https://www.wenxuemi6.com/");
+        return BookGriper.getBqgMoreInfo(book, catalogHtml, baseUrl);
     }
 }
