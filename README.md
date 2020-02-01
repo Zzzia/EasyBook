@@ -10,12 +10,6 @@
 
 QQ群交流：29527219
 
-<img src="https://github.com/Zzzia/Book/blob/master/screenshot/1.jpg"
-width="280"><img
-src="https://github.com/Zzzia/Book/blob/master/screenshot/2.jpg"
-width="280"><img
-src="https://github.com/Zzzia/Book/blob/master/screenshot/3.jpg"
-width="280">
 <img src="https://github.com/Zzzia/Book/blob/master/screenshot/1.png" width="280"><img src="https://github.com/Zzzia/Book/blob/master/screenshot/2.png" width="280"><img src="https://github.com/Zzzia/Book/blob/master/screenshot/3.png" width="280">
 
 #### Android平台
