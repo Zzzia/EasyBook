@@ -10,7 +10,7 @@
 
 QQ群交流：29527219
 
-<img src="screenshot/1.png" width="280"><img src="screenshot/2.png" width="280"><img src="screenshot/3.png" width="280">
+<img src="https://github.com/Zzzia/Book/blob/master/screenshot/1.png" width="280"><img src="https://github.com/Zzzia/Book/blob/master/screenshot/2.png" width="280"><img src="https://github.com/Zzzia/Book/blob/master/screenshot/3.png" width="280">
 
 #### Android平台
 **Step 1**. Add the JitPack repository to your build file
@@ -28,8 +28,8 @@ allprojects {
 
 ~~~java
 dependencies {
-    implementation 'com.github.Zzzia:EasyBook:2.55'
-    implementation 'com.squareup.okhttp3:okhttp:4.0.1'
+    implementation 'com.github.Zzzia:EasyBook:2.57'
+    implementation 'com.squareup.okhttp3:okhttp:4.2.2'
     implementation 'com.google.code.gson:gson:2.8.5'
 }
 ~~~
@@ -158,7 +158,7 @@ void onDestroy(){
 
 添加自己的站点解析：
 
-[教程]("CustomRule.md")
+[教程](CustomRule.md)
 
 ~~~java
 //添加一个自己解析的站点类，叫Zhuishushenqi，需要继承Site
@@ -194,7 +194,7 @@ SiteCollection.getInstance().addSites(sites)
 
 
 ~~~
-v2.56
+v2.57
 修复了书源并部分转移至在线书源
 修复了一些在线书源的小问题
 添加了在线书源制作教程

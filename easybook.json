@@ -522,7 +522,7 @@
   {
     "siteName": "顶点new",
     "baseUrl": "https://www.booktxt.net/",
-    "enable": true,
+    "enable": false,
     "siteClassify": "缓慢",
     "ruleUpdateTime": "1580548851000",
     "author": "zzzia",

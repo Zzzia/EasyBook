@@ -29,42 +29,43 @@ class CustomSite {
             return """[{
     "siteName": "官术网",
     "baseUrl": "https://www.biyuwu.cc/",
-    "siteClassify": "",
-    "ruleUpdateTime": "",
+    "enable": true,
+    "siteClassify": "普通",
+    "ruleUpdateTime": "1580548851000",
     "author": "zzzia",
     "searchUrl": "https://www.biyuwu.cc/search.php",
     "searchMethod": "GET",
-    "searchParam": "keyword={keyword}",
+    "searchParam": "q={keyword}",
     "searchEncode": "UTF-8",
     "searchBookList": "/html/body/div[3]/div",
     "searchBookName": ".//div[2]/h3/a/@title",
     "searchBookUrl": ".//div[2]/h3/a/@href",
     "searchAuthor": ".//div[2]/div/p[1]/span[2]/text()",
     "searchExtraRule": {
-        "imageUrl": ".//div[1]/a/img/@src",
-        "bookSize": "",
-        "lastUpdateTime": ".//div[2]/div/p[3]/span[2]/text()",
-        "lastChapterName": ".//div[2]/div/p[4]/a/text()",
-        "introduce": ".//div[2]/p/text()",
-        "classify": ".//div[2]/div/p[2]/span[2]/text()",
-        "status": ""
+      "imageUrl": ".//div[1]/a/img/@src",
+      "bookSize": "",
+      "lastUpdateTime": ".//div[2]/div/p[3]/span[2]/text()",
+      "lastChapterName": ".//div[2]/div/p[4]/a/text()",
+      "introduce": ".//div[2]/p/text()",
+      "classify": ".//div[2]/div/p[2]/span[2]/text()",
+      "status": ""
     },
     "catalogChapterList": "//*[@id='list']/dl/dd",
     "catalogChapterName": ".//a/text()",
     "catalogChapterUrl": ".//a/@href",
     "catalogExtraRule": {
-        "imageUrl": "//*[@id='fmimg']/img/@src",
-        "bookSize": "",
-        "lastUpdateTime": "//*[@id='info']/p[3]/text()",
-        "lastChapterName": "//*[@id='info']/p[4]/a/text()",
-        "introduce": "//*[@id='intro']/p[1]/text()",
-        "classify": "",
-        "status": "//*[@id='info']/p[2]/text()[1]"
+      "imageUrl": "//*[@id='fmimg']/img/@src",
+      "bookSize": "",
+      "lastUpdateTime": "//*[@id='info']/p[3]/text()",
+      "lastChapterName": "//*[@id='info']/p[4]/a/text()",
+      "introduce": "//*[@id='intro']/p[1]/text()",
+      "classify": "",
+      "status": "//*[@id='info']/p[2]/text()[1]"
     },
     "chapterLines": "//*[@id='content']/text()",
-    "chapterEncodeType": "utf-8",
+    "chapterEncodeType": "UTF-8",
     "cleaner": "官术网|biyuwu.cc"
-}]"""
+  }]"""
         }
     }
 }
