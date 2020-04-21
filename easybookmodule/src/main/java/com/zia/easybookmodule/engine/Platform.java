@@ -3,7 +3,10 @@ package com.zia.easybookmodule.engine;
 import android.os.Build;
 import android.os.Handler;
 import android.os.Looper;
-import androidx.annotation.Nullable;
+
+import androidx.annotation.NonNull;
+
+import org.jetbrains.annotations.NotNull;
 
 import java.util.concurrent.Executor;
 
@@ -34,7 +37,7 @@ public class Platform {
         return new Platform();
     }
 
-    @Nullable
+    @NonNull
     public Executor defaultCallbackExecutor() {
         return new Executor() {
             @Override
@@ -50,6 +53,7 @@ public class Platform {
 
     static class Android extends Platform {
 
+        @NotNull
         @Override
         public Executor defaultCallbackExecutor() {
             return new MainThreadExecutor();

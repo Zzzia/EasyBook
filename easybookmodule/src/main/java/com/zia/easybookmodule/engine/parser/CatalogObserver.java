@@ -8,6 +8,11 @@ import com.zia.easybookmodule.net.NetUtil;
 import com.zia.easybookmodule.rx.Disposable;
 import com.zia.easybookmodule.rx.Observer;
 import com.zia.easybookmodule.rx.Subscriber;
+import com.zia.easybookmodule.site.CustomXpathSite;
+
+import org.htmlcleaner.DomSerializer;
+import org.htmlcleaner.HtmlCleaner;
+import org.w3c.dom.Document;
 
 import java.util.List;
 import java.util.concurrent.ExecutorService;
@@ -69,6 +74,15 @@ public class CatalogObserver implements Observer<List<Catalog>> {
         Site site = book.getSite();
         String html = NetUtil.getHtml(book.getUrl(), site.getEncodeType());
         //解析更多内容
+        if (site instanceof CustomXpathSite) {
+            // 优化自定义站点解析dom生成时间
+            HtmlCleaner htmlCleaner = ((CustomXpathSite) site).getHtmlCleaner();
+            Document dom = new DomSerializer(htmlCleaner.getProperties()).createDOM(htmlCleaner.clean(html));
+            if (openGetMoreInfo) {
+                ((CustomXpathSite) site).getMoreBookInfo(book, dom);
+            }
+            return ((CustomXpathSite) site).parseCatalog(dom, book.getUrl());
+        }
         if (openGetMoreInfo) {
             site.getMoreBookInfo(book, html);
         }

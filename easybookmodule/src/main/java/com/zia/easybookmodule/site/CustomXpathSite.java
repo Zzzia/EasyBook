@@ -6,7 +6,6 @@ import com.zia.easybookmodule.bean.Book;
 import com.zia.easybookmodule.bean.Catalog;
 import com.zia.easybookmodule.bean.rule.XpathSiteRule;
 import com.zia.easybookmodule.engine.Site;
-import com.zia.easybookmodule.engine.SiteCollection;
 import com.zia.easybookmodule.net.NetUtil;
 import com.zia.easybookmodule.util.BookGriper;
 import com.zia.easybookmodule.util.TextUtil;
@@ -26,6 +25,7 @@ import java.util.regex.Pattern;
 import javax.xml.xpath.XPath;
 import javax.xml.xpath.XPathConstants;
 import javax.xml.xpath.XPathException;
+import javax.xml.xpath.XPathFactory;
 
 import okhttp3.MediaType;
 import okhttp3.RequestBody;
@@ -37,6 +37,8 @@ import okhttp3.RequestBody;
 public class CustomXpathSite extends Site {
 
     private XpathSiteRule xpathRule;
+
+    private XPath xPath = XPathFactory.newInstance().newXPath();
 
     private BookGriper.CustomCleaner cleaner;
 
@@ -109,7 +111,6 @@ public class CustomXpathSite extends Site {
         }
         List<Book> result = new ArrayList<>();
         Document dom = new DomSerializer(htmlCleaner.getProperties()).createDOM(htmlCleaner.clean(html));
-        XPath xPath = SiteCollection.getInstance().getxPath();
         Object bookHtmlList = xPath.evaluate(xpathRule.getSearchBookList(), dom, XPathConstants.NODESET);
         if (bookHtmlList instanceof NodeList) {
             NodeList nodeList = (NodeList) bookHtmlList;
@@ -137,7 +138,10 @@ public class CustomXpathSite extends Site {
     @Override
     public List<Catalog> parseCatalog(String catalogHtml, String rootUrl) throws Exception {
         Document dom = new DomSerializer(htmlCleaner.getProperties()).createDOM(htmlCleaner.clean(catalogHtml));
-        XPath xPath = SiteCollection.getInstance().getxPath();
+        return parseCatalog(dom, rootUrl);
+    }
+
+    public List<Catalog> parseCatalog(Document dom, String rootUrl) throws Exception {
         Object catalogHtmlList = xPath.evaluate(xpathRule.getCatalogChapterList(), dom, XPathConstants.NODESET);
         if (catalogHtmlList instanceof NodeList) {
             NodeList nodeList = (NodeList) catalogHtmlList;
@@ -172,7 +176,10 @@ public class CustomXpathSite extends Site {
     @Override
     public List<String> parseContent(String chapterHtml) throws Exception {
         Document dom = new DomSerializer(htmlCleaner.getProperties()).createDOM(htmlCleaner.clean(chapterHtml));
-        XPath xPath = SiteCollection.getInstance().getxPath();
+        return parseContent(dom);
+    }
+
+    public List<String> parseContent(Document dom) throws Exception {
         Object lineHtmlList = xPath.evaluate(xpathRule.getChapterLines(), dom, XPathConstants.NODESET);
         if (lineHtmlList instanceof NodeList) {
             NodeList nodeList = (NodeList) lineHtmlList;
@@ -203,6 +210,11 @@ public class CustomXpathSite extends Site {
     @Override
     public Book getMoreBookInfo(Book book, String catalogHtml) throws Exception {
         Document dom = new DomSerializer(htmlCleaner.getProperties()).createDOM(htmlCleaner.clean(catalogHtml));
+        getMoreBookInfo(book, dom);
+        return book;
+    }
+
+    public Book getMoreBookInfo(Book book, Document dom) {
         getExtraInfo(book, dom, xpathRule.getCatalogExtraRule());
         return book;
     }
@@ -213,49 +225,94 @@ public class CustomXpathSite extends Site {
     }
 
     private void getExtraInfo(Book book, Node node, XpathSiteRule.ExtraRule extraRule) {
-        XPath xPath = SiteCollection.getInstance().getxPath();
-        try {
-            String imageUrl = xPath.evaluate(extraRule.getImageUrl(), node).trim();
-            imageUrl = BookGriper.mergeUrl(xpathRule.getBaseUrl(), imageUrl);
-            book.setImageUrl(imageUrl);
-        } catch (Exception ignore) {
+        if (!extraRule.getImageUrl().isEmpty()) {
+            try {
+                String imageUrl = xPath.evaluate(extraRule.getImageUrl(), node).trim();
+                imageUrl = BookGriper.mergeUrl(xpathRule.getBaseUrl(), imageUrl);
+                book.setImageUrl(imageUrl);
+            } catch (Exception e) {
+                if (debug) {
+                    e.printStackTrace();
+                }
+            }
         }
-        try {
-            String bookSize = xPath.evaluate(extraRule.getBookSize(), node).trim();
-            bookSize = Parser.unescapeEntities(bookSize, true);
-            book.setChapterSize(bookSize);
-        } catch (Exception ignore) {
+
+        if (!extraRule.getBookSize().isEmpty()) {
+            try {
+                String bookSize = xPath.evaluate(extraRule.getBookSize(), node).trim();
+//                bookSize = Parser.unescapeEntities(bookSize, true);
+                book.setChapterSize(bookSize);
+            } catch (Exception e) {
+                if (debug) {
+                    e.printStackTrace();
+                }
+            }
         }
-        try {
-            String lastUpdateTime = xPath.evaluate(extraRule.getLastUpdateTime(), node).trim();
-            book.setLastUpdateTime(lastUpdateTime);
-        } catch (Exception ignore) {
+
+        if (!extraRule.getLastUpdateTime().isEmpty()) {
+            try {
+                String lastUpdateTime = xPath.evaluate(extraRule.getLastUpdateTime(), node).trim();
+                book.setLastUpdateTime(lastUpdateTime);
+            } catch (Exception e) {
+                if (debug) {
+                    e.printStackTrace();
+                }
+            }
         }
-        try {
-            String lastChapterName = xPath.evaluate(extraRule.getLastChapterName(), node).trim();
-            lastChapterName = Parser.unescapeEntities(lastChapterName, true);
-            book.setLastChapterName(lastChapterName);
-        } catch (Exception ignore) {
+
+        if (!extraRule.getLastChapterName().isEmpty()) {
+            try {
+                String lastChapterName = xPath.evaluate(extraRule.getLastChapterName(), node).trim();
+                lastChapterName = Parser.unescapeEntities(lastChapterName, true);
+                book.setLastChapterName(lastChapterName);
+            } catch (Exception e) {
+                if (debug) {
+                    e.printStackTrace();
+                }
+            }
         }
-        try {
-            String introduce = xPath.evaluate(extraRule.getIntroduce(), node).trim();
-            introduce = Parser.unescapeEntities(introduce, true);
-            book.setIntroduce(introduce);
-        } catch (Exception ignore) {
+
+        if (!extraRule.getIntroduce().isEmpty()) {
+            try {
+                String introduce = xPath.evaluate(extraRule.getIntroduce(), node).trim();
+                introduce = Parser.unescapeEntities(introduce, true);
+                book.setIntroduce(introduce);
+            } catch (Exception e) {
+                if (debug) {
+                    e.printStackTrace();
+                }
+            }
         }
-        try {
-            String classify = xPath.evaluate(extraRule.getClassify(), node).trim();
-            book.setClassify(classify);
-        } catch (Exception ignore) {
+
+        if (!extraRule.getClassify().isEmpty()) {
+            try {
+                String classify = xPath.evaluate(extraRule.getClassify(), node).trim();
+                book.setClassify(classify);
+            } catch (Exception e) {
+                if (debug) {
+                    e.printStackTrace();
+                }
+            }
         }
-        try {
-            String status = xPath.evaluate(extraRule.getStatus(), node).trim();
-            book.setStatus(status);
-        } catch (Exception ignore) {
+
+        if (!extraRule.getStatus().isEmpty()) {
+            try {
+                String status = xPath.evaluate(extraRule.getStatus(), node).trim();
+                book.setStatus(status);
+            } catch (Exception e) {
+                if (debug) {
+                    e.printStackTrace();
+                }
+            }
         }
+
     }
 
     public void setDebug(boolean debug) {
         this.debug = debug;
+    }
+
+    public HtmlCleaner getHtmlCleaner() {
+        return htmlCleaner;
     }
 }

@@ -26,9 +26,6 @@ public class SiteCollection {
 
     private List<Site> sites = new ArrayList<>();
 
-    private XPath xPath = XPathFactory.newInstance().newXPath();
-
-
     /**
      * 默认添加这些站点解析，需要更改时对集合进行remove就行
      */
@@ -72,10 +69,6 @@ public class SiteCollection {
             }
         }
         return null;
-    }
-
-    public XPath getxPath() {
-        return xPath;
     }
 
     public List<Site> getAllSites() {

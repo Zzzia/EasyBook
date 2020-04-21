@@ -36,7 +36,7 @@ class CustomTest {
         AutoTest.trustAll();
 
         List<XpathSiteRule> rules = getXpathRuleFromFile(filePath);
-        CustomXpathSite site = new CustomXpathSite(rules.get(11));
+        CustomXpathSite site = new CustomXpathSite(rules.get(12));
         site.setDebug(true);
 
         SiteCollection.getInstance().addSite(site);

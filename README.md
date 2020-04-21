@@ -194,6 +194,10 @@ SiteCollection.getInstance().addSites(sites)
 
 
 ~~~
+v2.58
+修复url merge规则bug
+提高自定义书源目录解析速度
+
 v2.57
 修复了书源并部分转移至在线书源
 修复了一些在线书源的小问题
