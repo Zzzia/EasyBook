@@ -8,7 +8,7 @@
 
 [App体验](https://github.com/Zzzia/Book)
 
-QQ群交流：29527219
+QQ交流群：29527219
 
 <img src="https://github.com/Zzzia/Book/blob/master/screenshot/1.png" width="280"><img src="https://github.com/Zzzia/Book/blob/master/screenshot/2.png" width="280"><img src="https://github.com/Zzzia/Book/blob/master/screenshot/3.png" width="280">
 
@@ -28,7 +28,7 @@ allprojects {
 
 ~~~java
 dependencies {
-    implementation 'com.github.Zzzia:EasyBook:2.57'
+    implementation 'com.github.Zzzia:EasyBook:2.58'
     implementation 'com.squareup.okhttp3:okhttp:4.2.2'
     implementation 'com.google.code.gson:gson:2.8.5'
 }
