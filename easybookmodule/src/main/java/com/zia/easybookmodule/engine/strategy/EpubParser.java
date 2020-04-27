@@ -1,21 +1,23 @@
 package com.zia.easybookmodule.engine.strategy;
 
 import androidx.annotation.Nullable;
+
 import com.zia.easybookmodule.bean.Book;
 import com.zia.easybookmodule.bean.Chapter;
 import com.zia.easybookmodule.net.NetUtil;
 import com.zia.easybookmodule.util.TextUtil;
+
+import java.io.File;
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.util.List;
+
 import nl.siegmann.epublib.domain.Author;
 import nl.siegmann.epublib.domain.Metadata;
 import nl.siegmann.epublib.domain.Resource;
 import nl.siegmann.epublib.epub.EpubWriter;
 import okhttp3.Request;
 import okhttp3.Response;
-
-import java.io.File;
-import java.io.FileOutputStream;
-import java.io.IOException;
-import java.util.List;
 
 /**
  * Created by zia on 2019/4/6.
@@ -56,13 +58,11 @@ public class EpubParser implements ParseStrategy {
         return getHtml(chapterName, content.toString());
     }
 
-    private String encode = "UTF-8";
+    public static String encode = "UTF-8";
 
     @Override
     public File save(List<Chapter> chapters, Book book, String savePath) throws IOException {
         String bookName = book.getBookName() + "-" + book.getSiteName();
-
-        encode = book.getSite().getEncodeType();
 
         nl.siegmann.epublib.domain.Book epub = new nl.siegmann.epublib.domain.Book();
         //添加css

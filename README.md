@@ -40,12 +40,6 @@ dependencies {
 ~~~
 
 
-#### IDEA平台
-
-将release内的压缩包下载下来，解压后依次添加依赖，一共有7个jar。
-
----
-
 #### 使用说明：（具体可参照项目内简单示例或我写的[小说神器](https://github.com/Zzzia/Book)）
 
 搜索：（Android会自动切换到主线程）
@@ -194,6 +188,9 @@ SiteCollection.getInstance().addSites(sites)
 
 
 ~~~
+v2.59
+将生成的epub指定为utf-8格式
+
 v2.58
 修复url merge规则bug
 提高自定义书源目录解析速度
